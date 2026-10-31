@@ -15,10 +15,11 @@
  *
  * DEO numbers differ from legislative districts: 1st district -> 1st DEO,
  * 2nd -> 4th DEO, 3rd -> 6th DEO, 4th -> 2nd DEO, 5th -> 3rd DEO, City lone
- * -> City DEO. No 5th DEO exists. The 6th DEO has no GAA label for 2020–2024
- * (missing, not zero). The 4th DEO's 2020–2024 budgets covered both the 2nd
- * and 3rd legislative districts. That reading note is on the About page:
- * this config has no field for it.
+ * -> City DEO. No 5th DEO exists. The API maps the Iloilo 4th DEO only to
+ * the 2nd District. The Iloilo 6th DEO, which now serves the 3rd District,
+ * has no labelled amounts before 2025 (missing, not zero), so 2020–2024
+ * office figures for the 3rd District cannot be attributed from this data.
+ * That reading note is on the About page: this config has no field for it.
  */
 import { defineConfig } from './src/config';
 
