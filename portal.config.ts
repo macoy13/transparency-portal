@@ -3,7 +3,7 @@
  * What each field means: src/config.ts. Generate one with `npm run setup`;
  * check it against the live API with `npm run check`.
  *
- * Iloilo Province and Iloilo City, an unofficial civic transparency portal.
+ * Iloilo Transparency, an unofficial civic transparency portal.
  * Its six DPWH district engineering offices bring in every DPWH line listed
  * under them; the place name brings in lines from all four programs whose
  * title names Iloilo (Central Office projects, farm-to-market roads, health
@@ -18,9 +18,9 @@ import { defineConfig } from './src/config';
 export default defineConfig({
   id: 'iloilo',
   kind: 'province',
-  name: 'Iloilo Province and Iloilo City',
+  name: 'Iloilo Transparency',
   shortName: 'Iloilo',
-  operator: { name: 'TODO: operator name' },
+  operator: { name: 'Iloilo Transparency, an independent volunteer project' },
   siteUrl: 'https://iloilotransparency.info',
   scope: {
     offices: [
