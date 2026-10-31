@@ -7,7 +7,9 @@
  * Its six DPWH district engineering offices bring in every DPWH line listed
  * under them; the place name brings in lines from all four programs whose
  * title names Iloilo (Central Office projects, farm-to-market roads, health
- * facilities, irrigation), kept to region VI.
+ * facilities, irrigation). The search is not limited to one region: some
+ * Iloilo Central Office lines are tagged NCR. Three namesakes are excluded
+ * by hand, with reasons.
  *
  * DEO numbers differ from legislative districts: 1st district -> 1st DEO,
  * 2nd -> 4th DEO, 3rd -> 6th DEO, 4th -> 2nd DEO, 5th -> 3rd DEO, City lone
@@ -31,7 +33,7 @@ export default defineConfig({
       'Iloilo 4th District Engineering Office',
       'Iloilo 6th District Engineering Office',
     ],
-    places: [{ label: 'Iloilo', region: 'VI' }],
+    places: [{ label: 'Iloilo' }],
     districts: [
       'leg:iloilo-city:lone',
       'leg:iloilo:1st',
@@ -40,7 +42,20 @@ export default defineConfig({
       'leg:iloilo:4th',
       'leg:iloilo:5th',
     ],
-    exclude: [],
+    exclude: [
+      {
+        key: 'dpwh:house-reading:16062',
+        reason: 'A nationwide PPP bundle. The title names the Iloilo-Capiz-Aklan Expressway among many other projects, so this line is not specific to Iloilo.',
+      },
+      {
+        key: 'dpwh:house-reading:15595',
+        reason: 'Barangay New Iloilo, Tantangan, South Cotabato, not Iloilo Province or Iloilo City.',
+      },
+      {
+        key: 'dpwh:house-reading:15705',
+        reason: 'Barangay New Iloilo, Tantangan, South Cotabato, not Iloilo Province or Iloilo City.',
+      },
+    ],
   },
   reporting: { enabled: false },
 });
