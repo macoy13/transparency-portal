@@ -188,9 +188,9 @@ function DeoMappingNote() {
       </ul>
       <p>There is no Iloilo 5th District Engineering Office.</p>
       <p>
-        Before the 6th District Engineering Office existed, the 4th District Engineering Office’s budgets for 2020 to 2024
-        covered both the 2nd and 3rd legislative districts. The 6th District Engineering Office’s labels for 2020 to 2024
-        are missing, not zero.
+        The API maps the Iloilo 4th DEO only to the 2nd District. The Iloilo 6th DEO, which now serves the 3rd District,
+        has no labelled amounts before 2025 (missing, not zero), so 2020–2024 office figures for the 3rd District cannot
+        be attributed from this data.
       </p>
     </section>
   );
