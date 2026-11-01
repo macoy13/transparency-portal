@@ -14,7 +14,6 @@ import { date } from '../lib/format';
 import { NATIONAL_URL, SOURCE_CODE_URL } from '../lib/links';
 
 const BETTERGOV_LOGO = '/brand/bettergov-horizontal-primary.png';
-const WINDOW_MARK = '/brand/iloilo/window-mark.svg';
 
 /** The configured sentence, with each " · " separator hidden from assistive tech, as the kind line is. */
 function KickerText({ text }: { text: string }) {
@@ -46,6 +45,7 @@ const COMPACT_NAV = [
   { to: '/gaa', hash: '', label: 'Enacted budgets' },
   { to: '/', hash: '#projects', label: 'Project explorer' },
   { to: '/', hash: '#offices', label: 'Offices' },
+  { to: '/about', hash: '', label: 'About the data' },
 ];
 
 /** Sets `data-chrome` on <html> so CSS tokens apply without a framework. */
@@ -157,13 +157,19 @@ function DefaultMasthead() {
 function CompactMasthead() {
   const { config } = usePortal();
   const { pathname, hash } = useLocation();
+  const mark = config.brand?.mark;
   return (
     <>
       <a className="skip-link" href="#main">Skip to content</a>
       <header className="site-header">
         <div className="site-header-bar">
-          <Link to="/" className="nav-brand" aria-label="Iloilo Transparency, home" onClick={() => pathname === '/' && window.scrollTo(0, 0)}>
-            <img src={WINDOW_MARK} alt="" width="36" height="36" className="nav-brand-mark" />
+          <Link
+            to="/"
+            className="nav-brand"
+            aria-label={`${config.name}, home`}
+            onClick={() => pathname === '/' && window.scrollTo(0, 0)}
+          >
+            {mark && <img src={mark} alt="" width="36" height="36" className="nav-brand-mark" />}
             <span className="nav-brand-text">
               <span className="nav-brand-name">{config.name}</span>
               <span className="nav-brand-sub">
@@ -174,16 +180,19 @@ function CompactMasthead() {
           </Link>
           <nav className="site-nav" aria-label="Primary">
             {COMPACT_NAV.map((n) => {
-              const onHome = pathname === '/';
-              const active =
-                n.to === '/' && n.hash === ''
-                  ? onHome && hash !== '#offices' && hash !== '#projects'
-                  : pathname === n.to && (n.hash ? hash === n.hash : true);
+              // Hash links never get aria-current. Overview only when on `/` with no hash;
+              // other path links when their pathname matches.
+              const currentPage =
+                n.hash !== ''
+                  ? false
+                  : n.to === '/'
+                    ? pathname === '/' && !hash
+                    : pathname === n.to;
               return (
                 <Link
                   key={n.label}
                   to={{ pathname: n.to, hash: n.hash }}
-                  aria-current={active ? 'page' : undefined}
+                  aria-current={currentPage ? 'page' : undefined}
                   onClick={() => !n.hash && pathname === n.to && window.scrollTo(0, 0)}
                 >
                   {n.label}
@@ -266,16 +275,27 @@ function CompactFooter() {
               <p className="footer-notice">{meta.notice}</p>
             </details>
           )}
-          <PortalCredits />
           <p>
-            This portal: {shortNameOf(config)}, run by {config.operator.name}
+            This portal: {shortNameOf(config)}, run by{' '}
+            {config.operator.url ? (
+              <a href={config.operator.url} target="_blank" rel="noopener">{config.operator.name}</a>
+            ) : (
+              config.operator.name
+            )}
             {config.operator.email && (
               <>
                 {' '}
                 · Corrections: <a href={`mailto:${config.operator.email}`}>{config.operator.email}</a>
               </>
             )}
+            {' · '}
+            <Link to="/about">About the data</Link>
           </p>
+          <p>
+            Every project, nationwide:{' '}
+            <a href={NATIONAL_URL} target="_blank" rel="noopener">budget.bettergov.ph ↗</a>
+          </p>
+          <PortalCredits />
         </div>
         <a className="footer-powered" href="https://bettergov.ph" target="_blank" rel="noopener">
           <span className="label">Data from</span>
@@ -317,6 +337,7 @@ export function PageHead({
   if (compact && fyLabel) {
     return (
       <div className="page-head">
+        <p className="eyebrow">{eyebrow}</p>
         <div className="page-head-row">
           <h1>{title}</h1>
           <span className="fy-badge">{fyLabel}</span>

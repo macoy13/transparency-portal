@@ -208,7 +208,50 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
   const clearFilters = () => {
     setParams(new URLSearchParams(), { replace: true });
     setShown(PAGE);
+    // Prefer the filter group; fall back to the list heading — never leave focus on BODY.
+    const target =
+      document.getElementById('status-filters') ??
+      document.getElementById('list-h');
+    target?.focus({ preventScroll: true });
   };
+
+  const statusFilters = (
+    <div
+      className="groups"
+      role="group"
+      id={compact ? 'status-filters' : undefined}
+      tabIndex={compact ? -1 : undefined}
+      aria-label={compact ? undefined : 'Filter by status'}
+      aria-labelledby={compact ? 'groups-filter-label' : undefined}
+    >
+      {BRIDGE_GROUPS.map((g) => {
+        const cell = summary.groups[g];
+        const info = groups[g];
+        const active = status === g;
+        const empty = !cell.rows;
+        return (
+          <button
+            key={g}
+            type="button"
+            className={`group-tile${active ? ' active' : ''}`}
+            disabled={empty}
+            aria-pressed={active}
+            title={info.help}
+            onClick={() => setParam('status', active ? '' : g)}
+          >
+            <span className="group-label">
+              <span className={`status-dot g-${g}`} aria-hidden="true" />
+              {info.label}
+              {compact && empty && <span className="sr-only">, no projects</span>}
+            </span>
+            {info.sub && <span className="label">{info.sub}</span>}
+            <span className="group-count num">{count(cell.rows)}</span>
+            <span className="group-php num">{groupAmount(g, cell)}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
 
   return (
     <>
@@ -238,43 +281,26 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
 
       <section className="section" aria-labelledby="groups-h">
         <h2 id="groups-h" className="section-h">What the House bill did to them</h2>
-        {compact && <p className="groups-filter-label" id="groups-filter-label">Filter by status</p>}
-        <div className={compact ? 'groups-row' : undefined}>
-          <div className="groups" role="group" aria-label="Filter by status" aria-labelledby={compact ? 'groups-filter-label' : undefined}>
-            {BRIDGE_GROUPS.map((g) => {
-              const cell = summary.groups[g];
-              const info = groups[g];
-              const active = status === g;
-              return (
-                <button
-                  key={g}
-                  type="button"
-                  className={`group-tile${active ? ' active' : ''}`}
-                  disabled={!cell.rows}
-                  aria-pressed={active}
-                  aria-label={cell.rows ? `Filter by status: ${info.label}` : `${info.label}, no projects`}
-                  title={info.help}
-                  onClick={() => setParam('status', active ? '' : g)}
-                >
-                  <span className="group-label"><span className={`status-dot g-${g}`} aria-hidden="true" />{info.label}</span>
-                  {info.sub && <span className="label">{info.sub}</span>}
-                  <span className="group-count num">{count(cell.rows)}</span>
-                  <span className="group-php num">{groupAmount(g, cell)}</span>
+        {compact ? (
+          <>
+            <p className="groups-filter-label" id="groups-filter-label">Filter by status</p>
+            <div className="groups-row">
+              {statusFilters}
+              {narrowed && (
+                <button type="button" className="clear-filters" onClick={clearFilters}>
+                  Clear filters
                 </button>
-              );
-            })}
-          </div>
-          {compact && narrowed && (
-            <button type="button" className="clear-filters" onClick={clearFilters}>
-              Clear filters
-            </button>
-          )}
-        </div>
+              )}
+            </div>
+          </>
+        ) : (
+          statusFilters
+        )}
       </section>
 
       <section className="section" id="projects" aria-labelledby="list-h">
         <div className="list-head">
-          <h2 id="list-h" className="section-h" tabIndex={leadSearch ? -1 : undefined}>
+          <h2 id="list-h" className="section-h" tabIndex={leadSearch || compact ? -1 : undefined}>
             {narrowed ? `${count(filtered.length)} of ${plural(all.length, 'project')}` : `Every project (${count(all.length)})`}
           </h2>
           <button type="button" className="button button-quiet" onClick={() => downloadText(`${config.id}-fy2027-projects.csv`, projectsCsv(filtered))}>

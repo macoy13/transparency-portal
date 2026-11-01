@@ -1,38 +1,15 @@
 /* =============================================================
-   Theme: BetterGov defaults, with an opt-in compact brand layer
-   (html[data-chrome="compact"]) that applies the Iloilo R0 palette
-   and self-hosted Manrope / Source Sans 3.
-   ============================================================= */
+   Theme: the budget.bettergov.ph tokens, so every portal reads as
+   part of the same family. Change the accent here if a fork must,
+   but keep the type roles.
 
-/* Self-hosted OFL fonts — loaded for every build; used when compact. */
-@font-face {
-  font-family: "Manrope";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("/fonts/Manrope-SemiBold.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Manrope";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("/fonts/Manrope-Bold.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("/fonts/SourceSans3-Regular.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url("/fonts/SourceSans3-Semibold.woff2") format("woff2");
-}
+   Republic of the Philippines brand guidelines, section 04:
+   "Figtree speaks. Inter works. Mono labels."
+
+   Compact branded chrome (html[data-chrome="compact"]) remaps the
+   palette and type; @font-face for Manrope / Source Sans 3 lives in
+   /fonts/compact-fonts.css and is linked only when compact is on.
+   ============================================================= */
 
 :root {
   /* Paper and ink */
@@ -54,26 +31,20 @@
   --negative: #b8341f;
   --neutral: #8a7c5a;
 
-  /* Contrast roles (R0): amber fill vs amber text; teal for fills/large text; blue for UI */
-  --amber-fill: #b7791f;
-  --amber-text: #7a5216;
-  --teal: #218579;
-
-  /* Type roles — BetterGov defaults; compact remaps below */
+  /* Type roles */
   --font-hero: "Figtree", "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: "Inter", "Source Sans 3", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* Layout */
   --page: 1280px;
   --gutter: 32px;
 
-  --focus-ring: 0 0 0 3px var(--paper), 0 0 0 5px var(--accent);
-  --motion-control: 180ms ease;
-  --radius: 0;
+  /* Shared motion token (matches prior .12s control fades; 0 under reduced motion) */
+  --motion-control: .12s;
 }
 
-/* Iloilo compact brand: R0 palette + self-hosted type */
+/* Iloilo / fork compact brand: R0 palette + self-hosted type stacks */
 html[data-chrome="compact"] {
   --paper: #ffffff;
   --paper-2: #f7f8f5;
@@ -88,7 +59,12 @@ html[data-chrome="compact"] {
   --accent: #3659b8;       /* interface blue only */
   --accent-deep: #294696;
   --accent-soft: #edf2fc;
-  --neutral: #b7791f;      /* amber fill role for status dots that used warm neutral */
+  --neutral: #b7791f;      /* amber fill role */
+
+  /* Contrast roles (R0): amber fill vs amber text; teal for fills/large text */
+  --amber-fill: #b7791f;
+  --amber-text: #7a5216;
+  --teal: #218579;
 
   --font-hero: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -98,11 +74,12 @@ html[data-chrome="compact"] {
   --gutter: 1.25rem;
   --radius: 6px;
   --focus-ring: 0 0 0 3px var(--paper-2), 0 0 0 5px var(--accent);
+  --motion-control: 180ms ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --motion-control: 0ms;
+    --motion-control: 0s;
   }
 }
 
@@ -182,18 +159,6 @@ html[data-chrome="compact"] h3 {
 }
 .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .muted { color: var(--ink-3); }
-
-/* Amber / teal contrast roles — fills vs text */
-.tag-warn {
-  border-color: var(--amber-fill);
-  color: var(--amber-text);
-  background: #fff8e8;
-}
-.tier-B, .tier-mixed {
-  border-color: var(--amber-fill);
-  color: var(--amber-text);
-  background: #fff8e8;
-}
 
 .skip-link {
   position: absolute;

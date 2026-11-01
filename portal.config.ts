@@ -35,6 +35,7 @@ export default defineConfig({
   // No GitHub "build your own" links, and no links to the API docs. BetterGov.ph pages stay.
   // Compact branded chrome (R0 tokens, mark, header/footer) is Iloilo-only.
   chrome: { sourceLinks: false, apiLinks: false, compact: true },
+  brand: { mark: '/brand/iloilo/window-mark.svg' },
   // The project search sits under the lede, so the first screen offers a place to look up.
   home: { searchUnderLede: true },
   name: 'Iloilo Transparency',

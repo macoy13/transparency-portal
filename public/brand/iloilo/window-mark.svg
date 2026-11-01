@@ -1,13 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-hidden="true" focusable="false">
-  <!-- Open-window mark: central frame + left/right shutters. Sampled fill #1950D2. -->
-  <g stroke="#1950D2" stroke-width="5" stroke-linejoin="round" stroke-linecap="square">
-    <!-- Left shutter (perspective, open toward viewer) -->
-    <path d="M4 10 L22 14 V50 L4 54 Z"/>
-    <path d="M4 32 L22 32"/>
-    <!-- Central frame -->
-    <rect x="22" y="14" width="20" height="36"/>
-    <!-- Right shutter -->
-    <path d="M42 14 L60 10 V54 L42 50 Z"/>
-    <path d="M42 32 L60 32"/>
+  <!-- Open-window mark: central frame + left/right shutters. Sampled stroke #1950D2. -->
+  <g fill="none" stroke="#1950D2" stroke-width="5" stroke-linejoin="round" stroke-linecap="square">
+    <path fill="none" d="M4 10 L22 14 V50 L4 54 Z"/>
+    <path fill="none" d="M4 32 L22 32"/>
+    <rect fill="none" x="22" y="14" width="20" height="36"/>
+    <path fill="none" d="M42 14 L60 10 V54 L42 50 Z"/>
+    <path fill="none" d="M42 32 L60 32"/>
   </g>
 </svg>
