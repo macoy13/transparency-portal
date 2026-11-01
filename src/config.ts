@@ -86,6 +86,19 @@ export interface PortalConfig {
     /** The header "API" link, the footer API link, and a project's API-record link. */
     apiLinks?: boolean;
   };
+  /**
+   * Home-page presentation. Omitted, the home page stays as it is upstream:
+   * the project search lives in the list toolbar, under the office cards.
+   */
+  home?: {
+    /**
+     * The same project search (`q`) sits just under the lede, before the
+     * office cards, and still filters the one list. On a narrow screen the
+     * lede moves below the four totals so that search is on the first screen.
+     * Off unless set to true.
+     */
+    searchUnderLede?: boolean;
+  };
   /** Budget API host. Default https://budget.bettergov.ph. VITE_API_BASE overrides it. */
   api?: string;
   scope: {
@@ -165,4 +178,9 @@ export function showBuildStrip(config: PortalConfig): boolean {
 /** Links to the Budget API docs and to a project's API record. On unless `chrome.apiLinks` is false. */
 export function showApiLinks(config: PortalConfig): boolean {
   return config.chrome?.apiLinks !== false;
+}
+
+/** The home-page search sits under the lede. Off unless `home.searchUnderLede` is true. */
+export function homeSearchUnderLede(config: PortalConfig): boolean {
+  return config.home?.searchUnderLede === true;
 }
