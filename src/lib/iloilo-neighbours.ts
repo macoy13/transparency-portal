@@ -22,7 +22,7 @@ export const ILOILO_PORTAL_ID = 'iloilo';
  * in the order the About page prints them.
  */
 export const ILOILO_NEIGHBOUR_SHARES: readonly { year: number; percent: string }[] = [
-  { year: 2020, percent: '28.4' },
+  { year: 2020, percent: '28.5' },
   { year: 2021, percent: '19.2' },
   { year: 2022, percent: '28.9' },
   { year: 2023, percent: '19.8' },
