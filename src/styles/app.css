@@ -421,13 +421,6 @@ code { font-family: var(--font-mono); font-size: 0.9em; background: var(--paper-
   .masthead-top-inner > span:first-child { display: none; }
   .masthead-links { justify-content: flex-start; gap: 14px; }
   .masthead-name { font-size: 22px; }
-  /* A long configured kicker gets the full row; the short kind line stays beside the logo. */
-  .masthead-main:has(.masthead-kicker-custom) {
-    flex-wrap: wrap;
-    row-gap: 10px;
-  }
-  .masthead-main:has(.masthead-kicker-custom) .masthead-title { flex: 1 1 100%; }
-  .masthead-main:has(.masthead-kicker-custom) .masthead-with { margin-left: auto; }
   .masthead-with .label { display: none; }
   .masthead-with img { height: 20px; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -466,6 +459,17 @@ code { font-family: var(--font-mono); font-size: 0.9em; background: var(--paper-
   .bar-track { height: 70px; }
   .bars { gap: 3px; }
   .queries .tr > span:first-child { grid-column: 1 / -1; }
+}
+
+/* The Iloilo sentence stays on one line beside the mark from 492px up.
+   Below that it wraps, so the mark moves to the next row. */
+@media (max-width: 490px) {
+  .masthead-main:has(.masthead-kicker-custom) {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+  .masthead-main:has(.masthead-kicker-custom) .masthead-title { flex: 1 1 100%; }
+  .masthead-main:has(.masthead-kicker-custom) .masthead-with { margin-left: auto; }
 }
 
 @media (max-width: 560px) {
