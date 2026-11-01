@@ -142,10 +142,9 @@
     return '₱' + n.toFixed(1) + 'B';
   }
 
-  function officeRow(meta, amounts, groups) {
+  function officeRow(meta, amounts, groups, scaleMaxB) {
     const both = groups.unchanged + groups.increased + groups.decreased;
     const lines = both + groups.house_only + groups.nep_only;
-    const maxB = Math.max(amounts.nepB, amounts.houseB);
     return {
       id: meta.id,
       printed: meta.printed,
@@ -157,8 +156,9 @@
       house: phpB(amounts.houseB),
       nepB: amounts.nepB,
       houseB: amounts.houseB,
-      nepPct: (amounts.nepB / maxB) * 100,
-      housePct: (amounts.houseB / maxB) * 100,
+      scaleMaxB,
+      nepPct: (amounts.nepB / scaleMaxB) * 100,
+      housePct: (amounts.houseB / scaleMaxB) * 100,
       change: amounts.change,
       changePct: amounts.changePct,
       changeLabel: amounts.change + ' (' + amounts.changePct + ')',
@@ -174,13 +174,16 @@
   }
 
   const CHIP_COUNTS = { all: 360, unchanged: 186, increased: 96, decreased: 48, house_only: 20, nep_only: 10 };
+  /** Table chips: office counts (every DEO has each bridge group in the full sample). */
+  const TABLE_CHIP_COUNTS = { all: 6, unchanged: 6, increased: 6, decreased: 6, house_only: 6, nep_only: 6 };
 
   const scopes = {
     all: {
       filterLabel: 'All',
       activeChip: 'all',
       chips: CHIP_COUNTS,
-      tableChips: { all: 6 },
+      tableChips: TABLE_CHIP_COUNTS,
+      scaleMaxB: 3.9,
       summary: {
         records: 360,
         nep: '₱16.0B',
@@ -190,13 +193,14 @@
         houseNote: 'House on 350 records (sample)',
       },
       showFullNotes: true,
-      offices: OFFICE_META.map((m) => officeRow(m, m.full, { ...m.groups })),
+      offices: OFFICE_META.map((m) => officeRow(m, m.full, { ...m.groups }, 3.9)),
     },
     increased: {
       filterLabel: 'Higher in House',
       activeChip: 'increased',
       chips: CHIP_COUNTS,
-      tableChips: { all: 6 },
+      tableChips: { all: 6, unchanged: 0, increased: 6, decreased: 0, house_only: 0, nep_only: 0 },
+      scaleMaxB: 2.7,
       summary: {
         records: 96,
         nep: '₱10.4B',
@@ -211,6 +215,7 @@
           m,
           { ...m.increased, wholeNep: null, unconfirmed: 0 },
           { house_only: 0, nep_only: 0, unchanged: 0, increased: 16, decreased: 0 },
+          2.7,
         ),
       ),
     },

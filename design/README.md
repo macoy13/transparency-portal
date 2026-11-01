@@ -13,7 +13,7 @@ Mark’s target mockup (revision 3): **straight to figures and data** — compac
 | `/about` | About | Accordion rows on overview |
 | `/districts` | → `/#offices` | Office section |
 
-**Header:** logo placeholder, **Iloilo Transparency**, **Independent · Unofficial**, nav Overview / Enacted budgets / Project explorer / Offices, FY2027 selector. No route kicker under the selector.
+**Header:** logo placeholder, **Iloilo Transparency**, **Independent · Unofficial**, nav Overview / Enacted budgets / Project explorer / Offices. FY2027 sits beside the H1 (under the H1 on mobile). No route kicker.
 
 ## Summary & chips (reconciled sample)
 
@@ -30,9 +30,11 @@ Chip text and the **Showing:** label use the **same words** (e.g. Showing: Highe
 
 Office amounts (₱B): City 3.6/3.9, 1st 2.8/3.0, 2nd 2.7/2.9, 3rd 2.5/2.6, 4th 2.4/2.5, 6th 2.0/2.1. Totals ₱16.0B / ₱17.0B. Per-card both + House-only + NEP-only = 60.
 
+**Bar scale:** one shared max across offices shown — **₱3.9B** by default, **₱2.7B** when filtered to Higher in House. Width = value / max. Stated in the card legend and `aria-label`.
+
 ## Office cards
 
-Modeled on Mark’s grid: Region VI eyebrow, records badge, Proposed · NEP / House version, change pill (+₱ and %), two thin bars on a shared zero-based scale, legislative district representative (local portrait, District Representative, Bills + District page), Coverage and source details (includes neighbouring-province caveat), View projects.
+Modeled on Mark’s grid: Region VI eyebrow, records badge, Proposed · NEP / House version, change pill (+₱ and %) to the right of the figures, two thin bars on a shared zero-based scale, legislative district representative (local portrait, District Representative, Bills + District page), Coverage and source details (per-office notes only), View projects. Capiz/Antique shares live in Coverage and methodology, not on the cards.
 
 **DEO mapping** (unchanged): City→Lone; 1st→1st; 4th DEO→2nd; 6th→3rd; 2nd DEO→4th; 3rd DEO→5th. No 5th DEO.
 

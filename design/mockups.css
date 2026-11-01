@@ -157,7 +157,6 @@ select:focus-visible {
 }
 
 .fy-select {
-  margin-left: auto;
   font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 600;
@@ -167,13 +166,30 @@ select:focus-visible {
   background: var(--color-card);
   color: var(--color-heading);
   min-height: 2.5rem;
+  flex-shrink: 0;
+}
+
+.page-head-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.page-head-row .page-title {
+  margin-bottom: 0;
+  flex: 1 1 12rem;
 }
 
 /* —— Page —— */
 .page-wrap {
+  width: 100%;
   max-width: var(--page-max);
   margin: 0 auto;
   padding: var(--space-5) var(--gutter) var(--space-8);
+  box-sizing: border-box;
 }
 
 .page-title {
@@ -442,10 +458,18 @@ select:focus-visible {
   white-space: nowrap;
 }
 
+.ocard-amounts-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+}
+
 .ocard-amounts {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3);
+  flex: 1 1 12rem;
 }
 
 .ocard-fig {
@@ -456,14 +480,15 @@ select:focus-visible {
 
 .change-pill {
   display: inline-flex;
-  align-self: flex-start;
-  margin: 0;
+  align-self: flex-end;
+  margin: 0 0 0.15rem auto;
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--color-primary);
   background: var(--color-selection);
   border-radius: 999px;
   padding: 0.25rem 0.65rem;
+  white-space: nowrap;
 }
 
 .mini-bar-row {
@@ -682,7 +707,7 @@ select:focus-visible {
   color: var(--color-heading);
   list-style: none;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-3);
 }
 .accordion summary::-webkit-details-marker { display: none; }
@@ -691,6 +716,20 @@ select:focus-visible {
   height: 1.25rem;
   color: var(--color-primary);
   flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+.accordion-summary-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1;
+}
+.accordion-sub {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-secondary);
 }
 .accordion-body {
   padding: 0 var(--space-4) var(--space-4);
@@ -698,7 +737,7 @@ select:focus-visible {
   color: var(--color-text);
 }
 .accordion-body p { margin: 0 0 var(--space-3); }
-.accordion .chevron { margin-left: auto; }
+.accordion .chevron { margin-left: auto; flex-shrink: 0; }
 
 .portraits-credit {
   margin: var(--space-4) 0 0;
@@ -727,9 +766,23 @@ select:focus-visible {
   flex: 1 1 18rem;
   font-size: 0.8125rem;
   color: var(--color-secondary);
-  max-width: 36rem;
+  max-width: 40rem;
 }
 .footer-meta p { margin: 0 0 var(--space-2); }
+.footer-legal { margin: 0 0 var(--space-2); }
+.footer-notice-details {
+  margin: 0 0 var(--space-2);
+}
+.footer-notice-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-secondary);
+}
+.footer-notice {
+  margin: var(--space-2) 0 0;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
 
 .footer-powered {
   display: flex;
@@ -904,6 +957,46 @@ select:focus-visible {
   border-right: 1px solid var(--color-border);
   min-height: 100vh;
   background: var(--color-page);
+}
+
+/* Viewport media queries must not collapse the 360px mobile frame into a multi-col grid. */
+.mockup-frame--mobile .office-grid,
+.mockup-frame--mobile .summary-cards {
+  grid-template-columns: 1fr !important;
+}
+
+.mockup-frame--mobile .mini-bar-track {
+  min-width: 4rem;
+}
+
+.components-page .page-title,
+.components-page .t-display,
+.components-page .component-row,
+.components-page .component-grid {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.components-page .office-card {
+  max-width: 100% !important;
+}
+
+.components-page .data-table-wrap {
+  max-width: 100%;
+}
+
+@media (max-width: 400px) {
+  .components-page .t-display {
+    font-size: clamp(1.25rem, 8vw, 2rem);
+  }
+  .components-page .page-title {
+    font-size: clamp(1.25rem, 7vw, 1.75rem);
+  }
+  .components-page .site-header-bar {
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
 }
 
 .kicker {

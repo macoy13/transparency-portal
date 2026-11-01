@@ -26,15 +26,14 @@
             <a href="explorer.html">Project explorer</a>
             <a href="overview-desktop.html#offices">Offices</a>
           </nav>
-          <select class="fy-select" aria-label="Fiscal year">
-            <option>FY2020–2026</option>
-          </select>
         </div>
       </header>
 
       <main id="main" class="page-wrap">
-        <p class="kicker">GAA · Route <code>/gaa</code></p>
-        <h1 class="page-title">248 programs and projects in the 2020–2026 budgets name Iloilo, Ilo-ilo <span class="sample-badge">Sample</span></h1>
+        <div class="page-head-row">
+          <h1 class="page-title">248 programs and projects in the 2020–2026 budgets name Iloilo, Ilo-ilo <span class="sample-badge">Sample</span></h1>
+          <select class="fy-select" aria-label="Fiscal year"><option>FY2020–2026</option></select>
+        </div>
         <p class="lede">
           The General Appropriations Act (GAA) is the budget Congress passes and the President signs each year: the authority to
           spend, not the money spent. These are the budgets for 2020 to 2026; the 2027 budget is still a bill.
@@ -146,13 +145,16 @@
         <div class="footer-inner">
           <div class="footer-meta">
             <p>Source: General Appropriations Acts 2020–2026 · via the BetterGov.ph Budget API</p>
-            <p>
+            <details class="footer-notice-details">
+              <summary>Independent and unofficial — full notice</summary>
+              <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
+            </details>
+            <p class="footer-legal">
               <a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a>
-              · Data licensed
-              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" aria-label="CC BY 4.0 (opens in new tab)">CC BY 4.0</a>,
-              filtered and summarised for this portal.
+              · Data: BetterGov.ph Budget API, licensed
+              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" aria-label="CC BY 4.0 (opens in new tab)">CC BY 4.0</a>, filtered and summarised for this portal.
             </p>
-            <p>Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+            <p>This portal: Iloilo, run by Iloilo Transparency, an independent volunteer project · Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
           </div>
           <a class="footer-powered" href="https://bettergov.ph/" target="_blank" rel="noopener" aria-label="BetterGov.ph (opens in new tab)">
             <span class="label">Powered by</span>

@@ -36,6 +36,7 @@
     const linesLabel = `${o.lines} records for ${o.printed}`;
     const billsLabel = `Bills by Rep. ${rep.name} (opens in new tab)`;
     const distLabel = `${rep.districtLabel} district page (opens in new tab)`;
+    const scaleNote = `shared scale ₱0–₱${o.scaleMaxB.toFixed(1)}B across offices shown`;
     const coverage = showFullNotes
       ? `<details class="ocard-details">
           <summary>Coverage and source details ${ICON_CHEVRON}</summary>
@@ -48,7 +49,6 @@
                 : ''
             }</p>
             <p><a href="enacted.html#${esc(o.gaaHash)}">${esc(o.printed)} budget each year since 2020 →</a></p>
-            <p id="neighbour-caveat-${esc(o.id)}"><strong>Neighbouring provinces:</strong> Many enacted-budget lines also name Capiz or Antique, mostly shared roads and the Panay River Basin. Each line is shown in full; its amount is not divided between the provinces.</p>
             <p>An office’s budget is never split across the districts it serves. There is no Iloilo 5th District Engineering Office.</p>
           </div>
         </details>`
@@ -56,7 +56,6 @@
           <summary>Coverage and source details ${ICON_CHEVRON}</summary>
           <div class="ocard-details-body">
             <p>Showing filtered named projects only (${o.lines} records). Whole-office and unconfirmed notes are hidden while a filter is active.</p>
-            <p id="neighbour-caveat-${esc(o.id)}"><strong>Neighbouring provinces:</strong> Many enacted-budget lines also name Capiz or Antique, mostly shared roads and the Panay River Basin. Each line is shown in full; its amount is not divided between the provinces.</p>
           </div>
         </details>`;
 
@@ -71,29 +70,31 @@
         </div>
         <span class="records-badge anim-value"><span class="is-visible" aria-label="${esc(linesLabel)}">${o.lines} records</span></span>
       </header>
-      <div class="ocard-amounts">
-        <div>
-          <p class="stat-label">Proposed · NEP <span class="sample-badge">Sample</span></p>
-          <p class="ocard-fig num anim-value"><span class="is-visible">${esc(o.nep)}</span></p>
+      <div class="ocard-amounts-row">
+        <div class="ocard-amounts">
+          <div>
+            <p class="stat-label">Proposed · NEP <span class="sample-badge">Sample</span></p>
+            <p class="ocard-fig num anim-value"><span class="is-visible">${esc(o.nep)}</span></p>
+          </div>
+          <div>
+            <p class="stat-label">House version <span class="sample-badge">Sample</span></p>
+            <p class="ocard-fig num anim-value"><span class="is-visible">${esc(o.house)}</span></p>
+          </div>
         </div>
-        <div>
-          <p class="stat-label">House version <span class="sample-badge">Sample</span></p>
-          <p class="ocard-fig num anim-value"><span class="is-visible">${esc(o.house)}</span></p>
-        </div>
+        <p class="change-pill anim-value"><span class="is-visible">${esc(o.changeLabel)}</span></p>
       </div>
-      <p class="change-pill anim-value"><span class="is-visible">${esc(o.changeLabel)}</span></p>
-      <div class="ocard-bars" role="img" aria-label="NEP ${esc(o.nep)} and House ${esc(o.house)} on a shared scale from zero">
+      <div class="ocard-bars" role="img" aria-label="NEP ${esc(o.nep)}, House ${esc(o.house)}; ${scaleNote}">
         <div class="mini-bar-row">
           <span class="mini-bar-label">NEP</span>
-          <span class="mini-bar-track"><span class="mini-bar-fill mini-bar-nep" style="width:${o.nepPct.toFixed(1)}%"></span></span>
+          <span class="mini-bar-track"><span class="mini-bar-fill mini-bar-nep" style="width:${o.nepPct.toFixed(2)}%"></span></span>
           <span class="mini-bar-val num anim-value"><span class="is-visible">${o.nepB.toFixed(1)}B</span></span>
         </div>
         <div class="mini-bar-row">
           <span class="mini-bar-label">House</span>
-          <span class="mini-bar-track"><span class="mini-bar-fill mini-bar-house" style="width:${o.housePct.toFixed(1)}%"></span></span>
+          <span class="mini-bar-track"><span class="mini-bar-fill mini-bar-house" style="width:${o.housePct.toFixed(2)}%"></span></span>
           <span class="mini-bar-val num anim-value"><span class="is-visible">${o.houseB.toFixed(1)}B</span></span>
         </div>
-        <p class="bar-legend"><span class="swatch swatch-nep"></span> NEP <span class="swatch swatch-house"></span> House · compared, not added</p>
+        <p class="bar-legend"><span class="swatch swatch-nep"></span> NEP <span class="swatch swatch-house"></span> House · ${esc(scaleNote)}</p>
       </div>
       <div class="ocard-rep">
         <p class="ocard-eyebrow">Legislative district representative</p>
@@ -117,17 +118,17 @@
     </article>`;
   }
 
-  function renderChips(scope, hostId) {
+  function renderChipButtons(scope, hostId, counts, wireSame) {
     const chipHost = document.getElementById(hostId);
     if (!chipHost) return;
     const wired = new Set(data.wiredChips);
     chipHost.innerHTML = data.chipOrder
       .map((g) => {
-        const n = scope.chips[g];
+        const n = counts[g];
         const pressed = scope.activeChip === g;
         const label = data.chipLabels[g];
         const isWired = wired.has(g);
-        return `<button type="button" class="chip" data-bridge="${g}" aria-pressed="${pressed}"${
+        return `<button type="button" class="chip" data-bridge="${g}" data-chip-host="${hostId}" aria-pressed="${pressed}"${
           isWired ? '' : ' disabled'
         }>${esc(label)} <span class="num">(${n})</span>${
           isWired ? '' : ' <span class="chip-demo-note">(demo: not wired)</span>'
@@ -136,10 +137,9 @@
       .join('');
   }
 
-  function renderTableChips(scope) {
-    const host = document.getElementById('table-chips');
-    if (!host) return;
-    host.innerHTML = `<button type="button" class="chip" aria-pressed="true">All <span class="num">(${scope.tableChips.all})</span></button>`;
+  function renderChips(scope) {
+    renderChipButtons(scope, 'bridge-chips', scope.chips);
+    renderChipButtons(scope, 'table-chips', scope.tableChips);
   }
 
   function renderTable(scope) {
@@ -190,8 +190,7 @@
     currentScope = key in data.scopes ? key : 'all';
     const grid = document.getElementById('office-grid');
     if (grid) grid.innerHTML = scope.offices.map((o) => officeCard(o, scope.showFullNotes)).join('');
-    renderChips(scope, 'bridge-chips');
-    renderTableChips(scope);
+    renderChips(scope);
     renderTable(scope);
     renderSummary(scope);
     animateValues(document);
@@ -199,7 +198,7 @@
   }
 
   function bindChips() {
-    document.querySelectorAll('#bridge-chips .chip:not([disabled])').forEach((btn) => {
+    document.querySelectorAll('#bridge-chips .chip:not([disabled]), #table-chips .chip:not([disabled])').forEach((btn) => {
       btn.onclick = () => {
         const g = btn.getAttribute('data-bridge');
         if (g === 'all') applyScope('all');
