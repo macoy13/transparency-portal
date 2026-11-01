@@ -25,6 +25,62 @@ const verbose = argv.includes('--verbose');
 // --config=examples/deo.config.ts checks another file; default portal.config.ts.
 const configPath = resolve(cwd(), argv.find((a) => a.startsWith('--config='))?.slice('--config='.length) ?? 'portal.config.ts');
 
+// Node's fetch waits up to five minutes for response headers, and a body read
+// can stall after the headers have arrived. Bound each request. "fetch failed"
+// and "The operation was aborted due to timeout" do not name the URL, so both
+// paths below do. Messages stay the request URL and the cause: no headers.
+const REQUEST_MS = 30_000;
+const fetchImpl = globalThis.fetch.bind(globalThis);
+
+function requestUrl(input: RequestInfo | URL): string {
+  if (typeof input === 'string' || input instanceof URL) return String(input);
+  return input.url;
+}
+
+/** Our deadline aborted the request. Another signal's abort is left alone. */
+function timedOut(err: unknown, deadline: AbortSignal): boolean {
+  if (!deadline.aborted || !(err instanceof Error)) return false;
+  return err.name === 'TimeoutError' || err.name === 'AbortError';
+}
+
+// Headers already arrived; res.json() rejects with a bare TimeoutError.
+function guardJson(res: Response, url: string, deadline: AbortSignal): Response {
+  const read = res.json.bind(res);
+  Object.defineProperty(res, 'json', {
+    configurable: true,
+    writable: true,
+    value: async () => {
+      try {
+        return await read();
+      } catch (err) {
+        if (!timedOut(err, deadline)) throw err;
+        throw new Error(`timed out after ${REQUEST_MS / 1000}s reading ${url}`, { cause: err });
+      }
+    },
+  });
+  return res;
+}
+
+globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+  const deadline = AbortSignal.timeout(REQUEST_MS);
+  const signal = init?.signal ? AbortSignal.any([init.signal, deadline]) : deadline;
+  const url = requestUrl(input);
+  try {
+    return guardJson(await fetchImpl(input, { ...init, signal }), url, deadline);
+  } catch (err) {
+    if (!timedOut(err, deadline)) throw err;
+    throw new Error(`no response within ${REQUEST_MS / 1000}s from ${url}`, { cause: err });
+  }
+}) as typeof globalThis.fetch;
+
+/** `fetch failed`, plus the underlying cause when Node hid it there. */
+function describeFailure(err: unknown): string {
+  if (!(err instanceof Error)) return String(err);
+  const cause = err.cause;
+  const detail = cause instanceof Error ? cause.message : '';
+  return detail && detail !== err.message ? `${err.message}: ${detail}` : err.message;
+}
+
 async function main() {
   const config = ((await import(pathToFileURL(configPath).href)) as { default: PortalConfig }).default;
   const problems = configProblems(config);
@@ -138,6 +194,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error(err instanceof Error ? err.message : err);
+  console.error(describeFailure(err));
   exit(1);
 });
