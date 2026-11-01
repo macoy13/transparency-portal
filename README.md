@@ -34,6 +34,10 @@ npm run dev       # http://localhost:5132
 `npm run setup` asks a few questions, looks up exact names and ids in the API, and
 writes `portal.config.ts`. That file is the only one a fork needs to change.
 
+GitHub Actions runs `npm run lint`, `npm run build` and `npm run check` (every query
+reconciled against the live BetterGov API) on pull requests, pushes to `main`, daily at
+03:17 Asia/Manila (19:17 UTC), and when started by hand.
+
 ## What the portal shows
 
 | Page | What is on it |

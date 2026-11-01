@@ -25,6 +25,33 @@ const verbose = argv.includes('--verbose');
 // --config=examples/deo.config.ts checks another file; default portal.config.ts.
 const configPath = resolve(cwd(), argv.find((a) => a.startsWith('--config='))?.slice('--config='.length) ?? 'portal.config.ts');
 
+// Node's fetch waits up to five minutes for response headers. A host that
+// accepts the TCP connection and then stays silent would hang CI. Bound each
+// request. "fetch failed" on its own does not say whether the host refused
+// the connection, did not resolve, or timed out, so the catch below prints
+// the cause too.
+const REQUEST_MS = 30_000;
+const fetchImpl = globalThis.fetch.bind(globalThis);
+globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+  const deadline = AbortSignal.timeout(REQUEST_MS);
+  const signal = init?.signal ? AbortSignal.any([init.signal, deadline]) : deadline;
+  try {
+    return await fetchImpl(input, { ...init, signal });
+  } catch (err) {
+    if (!deadline.aborted) throw err;
+    const url = typeof input === 'string' || input instanceof URL ? String(input) : input.url;
+    throw new Error(`no response within ${REQUEST_MS / 1000}s from ${url}`, { cause: err });
+  }
+}) as typeof globalThis.fetch;
+
+/** `fetch failed`, plus the underlying cause when Node hid it there. */
+function describeFailure(err: unknown): string {
+  if (!(err instanceof Error)) return String(err);
+  const cause = err.cause;
+  const detail = cause instanceof Error ? cause.message : '';
+  return detail && detail !== err.message ? `${err.message}: ${detail}` : err.message;
+}
+
 async function main() {
   const config = ((await import(pathToFileURL(configPath).href)) as { default: PortalConfig }).default;
   const problems = configProblems(config);
@@ -138,6 +165,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error(err instanceof Error ? err.message : err);
+  console.error(describeFailure(err));
   exit(1);
 });

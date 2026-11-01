@@ -1,0 +1,49 @@
+# Reconciles this portal with the live BetterGov API.
+# Daily at 03:17 Asia/Manila (UTC+8), which is 19:17 UTC.
+# Asia/Manila does not observe daylight saving. Minute 17 avoids the
+# start-of-hour Actions queue, when scheduled runs are often delayed or dropped.
+
+name: Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '17 19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Lint, build, and live API check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Check against the live BetterGov API
+        run: npm run check
