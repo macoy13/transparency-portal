@@ -1,11 +1,38 @@
 /* =============================================================
-   Theme: the budget.bettergov.ph tokens, so every portal reads as
-   part of the same family. Change the accent here if a fork must,
-   but keep the type roles.
-
-   Republic of the Philippines brand guidelines, section 04:
-   "Figtree speaks. Inter works. Mono labels."
+   Theme: BetterGov defaults, with an opt-in compact brand layer
+   (html[data-chrome="compact"]) that applies the Iloilo R0 palette
+   and self-hosted Manrope / Source Sans 3.
    ============================================================= */
+
+/* Self-hosted OFL fonts — loaded for every build; used when compact. */
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/Manrope-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/Manrope-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/SourceSans3-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/SourceSans3-Semibold.woff2") format("woff2");
+}
 
 :root {
   /* Paper and ink */
@@ -27,14 +54,56 @@
   --negative: #b8341f;
   --neutral: #8a7c5a;
 
-  /* Type roles */
+  /* Contrast roles (R0): amber fill vs amber text; teal for fills/large text; blue for UI */
+  --amber-fill: #b7791f;
+  --amber-text: #7a5216;
+  --teal: #218579;
+
+  /* Type roles — BetterGov defaults; compact remaps below */
   --font-hero: "Figtree", "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter", "Source Sans 3", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* Layout */
   --page: 1280px;
   --gutter: 32px;
+
+  --focus-ring: 0 0 0 3px var(--paper), 0 0 0 5px var(--accent);
+  --motion-control: 180ms ease;
+  --radius: 0;
+}
+
+/* Iloilo compact brand: R0 palette + self-hosted type */
+html[data-chrome="compact"] {
+  --paper: #ffffff;
+  --paper-2: #f7f8f5;
+  --paper-3: #edf2fc;
+  --rule: #dce3ec;
+  --rule-soft: #e7eaef;
+  --ink: #243247;
+  --ink-2: #243247;
+  --ink-3: #56647a;
+  --ink-mute: #56647a;
+
+  --accent: #3659b8;       /* interface blue only */
+  --accent-deep: #294696;
+  --accent-soft: #edf2fc;
+  --neutral: #b7791f;      /* amber fill role for status dots that used warm neutral */
+
+  --font-hero: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --page: 72rem;
+  --gutter: 1.25rem;
+  --radius: 6px;
+  --focus-ring: 0 0 0 3px var(--paper-2), 0 0 0 5px var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-control: 0ms;
+  }
 }
 
 * { box-sizing: border-box; }
@@ -52,6 +121,13 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
+html[data-chrome="compact"],
+html[data-chrome="compact"] body {
+  background: var(--paper-2);
+  font-size: 16px;
+  overflow-x: clip;
+}
+
 #root { min-height: 100svh; display: flex; flex-direction: column; }
 
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
@@ -61,6 +137,10 @@ button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+html[data-chrome="compact"] :focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--focus-ring);
+}
 
 h1, h2, h3 {
   font-family: var(--font-hero);
@@ -68,6 +148,13 @@ h1, h2, h3 {
   letter-spacing: -0.02em;
   line-height: 1.12;
   margin: 0;
+}
+
+html[data-chrome="compact"] h1,
+html[data-chrome="compact"] h2,
+html[data-chrome="compact"] h3 {
+  font-weight: 600;
+  color: #192d50;
 }
 
 .sr-only {
@@ -95,3 +182,32 @@ h1, h2, h3 {
 }
 .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .muted { color: var(--ink-3); }
+
+/* Amber / teal contrast roles — fills vs text */
+.tag-warn {
+  border-color: var(--amber-fill);
+  color: var(--amber-text);
+  background: #fff8e8;
+}
+.tier-B, .tier-mixed {
+  border-color: var(--amber-fill);
+  color: var(--amber-text);
+  background: #fff8e8;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

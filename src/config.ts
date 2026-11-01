@@ -85,6 +85,12 @@ export interface PortalConfig {
     sourceLinks?: boolean;
     /** The header "API" link, the footer API link, and a project's API-record link. */
     apiLinks?: boolean;
+    /**
+     * Compact branded chrome: R0 header/footer, self-hosted type, and the
+     * portal's own mark. Off unless set to true, so other BetterGov forks keep
+     * the default masthead.
+     */
+    compact?: boolean;
   };
   /**
    * Home-page presentation. Omitted, the home page stays as it is upstream:
@@ -178,6 +184,11 @@ export function showBuildStrip(config: PortalConfig): boolean {
 /** Links to the Budget API docs and to a project's API record. On unless `chrome.apiLinks` is false. */
 export function showApiLinks(config: PortalConfig): boolean {
   return config.chrome?.apiLinks !== false;
+}
+
+/** Compact branded header/footer and tokens. Off unless `chrome.compact` is true. */
+export function compactChrome(config: PortalConfig): boolean {
+  return config.chrome?.compact === true;
 }
 
 /** The home-page search sits under the lede. Off unless `home.searchUnderLede` is true. */

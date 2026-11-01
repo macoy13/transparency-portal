@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import type { DistrictCard, DistrictOffice, Envelope } from '../api/types';
 import { GAA_YEARS } from '../api/types';
-import { shortNameOf } from '../config';
+import { compactChrome, shortNameOf } from '../config';
 import { Await, Disclaimers, External } from '../components/Bits';
 import { PageHead } from '../components/Chrome';
 import { downloadText } from '../lib/csv';
@@ -50,10 +50,12 @@ export default function Enacted() {
   }, [hash, districts.status]);
 
   const placeList = places.map((p) => p.label).join(', ');
+  const compact = compactChrome(config);
   return (
-    <main className="page main">
+    <main id="main" className="page main">
       <PageHead
         eyebrow={<>GAA<span className="sep">·</span>FY {FIRST}–{LAST}<span className="sep">·</span>{name}</>}
+        fyLabel={compact ? `FY${FIRST}–${LAST}` : undefined}
         title={
           state.status === 'ready'
             ? `${plural(state.value.rows.length, 'program and project', 'programs and projects')} in the ${FIRST}–${LAST} budgets name ${placeList}`

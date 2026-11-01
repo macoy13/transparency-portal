@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 96" role="img" aria-label="Iloilo Transparency">
+  <!-- Full lockup: window mark + outlined wordmark. Mark #1950D2, type #031B42. -->
+  <g fill="none" stroke="#1950D2" stroke-width="5" stroke-linejoin="round" stroke-linecap="square" transform="translate(4 16) scale(1)">
+    <path d="M4 10 L22 14 V50 L4 54 Z"/>
+    <path d="M4 32 L22 32"/>
+    <rect x="22" y="14" width="20" height="36"/>
+    <path d="M42 14 L60 10 V54 L42 50 Z"/>
+    <path d="M42 32 L60 32"/>
+  </g>
+  <g fill="#031B42" font-family="Manrope, Helvetica, Arial, sans-serif">
+    <text x="88" y="44" font-size="34" font-weight="700" letter-spacing="-0.02em">Iloilo</text>
+    <text x="88" y="76" font-size="24" font-weight="500" letter-spacing="-0.01em">Transparency</text>
+  </g>
+</svg>

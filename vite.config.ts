@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import portal from './portal.config';
-import { DEFAULT_API, shortNameOf, showApiLinks, showSourceLinks } from './src/config';
+import { DEFAULT_API, compactChrome, shortNameOf, showApiLinks, showSourceLinks } from './src/config';
 
 const escape = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
@@ -12,15 +12,30 @@ function portalHtml(api: string): Plugin {
   const url = portal.siteUrl
     ? `<link rel="canonical" href="${escape(portal.siteUrl)}" />\n    <meta property="og:url" content="${escape(portal.siteUrl)}" />`
     : '';
+  const compact = compactChrome(portal);
+  // Preload the main compact weights only when this fork uses them.
+  const fontPreload = compact
+    ? [
+        '<link rel="preload" href="/fonts/SourceSans3-Regular.woff2" as="font" type="font/woff2" crossorigin />',
+        '<link rel="preload" href="/fonts/Manrope-SemiBold.woff2" as="font" type="font/woff2" crossorigin />',
+      ].join('\n    ')
+    : '';
+  const themeColor = compact ? '#3659b8' : '#0b4fd9';
   return {
     name: 'portal-html',
-    transformIndexHtml: (html) =>
-      html
+    transformIndexHtml: (html) => {
+      let out = html
         .replaceAll('%PORTAL_TITLE%', escape(title))
         .replaceAll('%PORTAL_NAME%', escape(portal.name))
         .replaceAll('%PORTAL_DESCRIPTION%', escape(description))
         .replaceAll('%PORTAL_API%', escape(api))
-        .replaceAll('%PORTAL_URL_META%', url),
+        .replaceAll('%PORTAL_URL_META%', url)
+        .replaceAll('%PORTAL_FONT_PRELOAD%', fontPreload)
+        .replaceAll('%PORTAL_THEME_COLOR%', themeColor);
+      // So compact tokens apply on first paint (no useEffect flash).
+      if (compact) out = out.replace('<html lang="en">', '<html lang="en" data-chrome="compact">');
+      return out;
+    },
   };
 }
 

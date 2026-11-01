@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactN
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import type { BridgeGroup, DatasetInfo, Disclaimer, GroupInfo } from '../api/types';
 import { BRIDGE_GROUPS } from '../api/types';
-import { homeSearchUnderLede, shortNameOf, type DatasetKey } from '../config';
+import { compactChrome, homeSearchUnderLede, shortNameOf, type DatasetKey } from '../config';
 import { Await, Disclaimers, ReasonTags, StatusChip } from '../components/Bits';
 import { PageHead } from '../components/Chrome';
 import OfficesSection from '../components/OfficesSection';
@@ -104,7 +104,7 @@ export default function Home() {
   useTitle(`Every FY 2027 project · ${shortNameOf(config)}`);
   const datasets = overview.status === 'ready' ? overview.value.data.datasets : [];
   return (
-    <main className="page main">
+    <main id="main" className="page main">
       <Await state={scope} what="projects">
         {(s) => <Projects scope={s} datasets={datasets} />}
       </Await>
@@ -196,6 +196,7 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
   const filteredSummary = useMemo(() => summarise(filtered), [filtered]);
   const narrowed = filtered.length !== all.length;
 
+  const compact = compactChrome(config);
   const eyebrow = <>FY 2027<span className="sep">·</span>NEP and House Bill 10858<span className="sep">·</span>{name}</>;
   const title = `${plural(summary.rows, 'project')} for ${name} in the 2027 budget`;
   const lede = (
@@ -204,6 +205,10 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
     </div>
   );
   const totals = <Stats summary={summary} programName={programName} />;
+  const clearFilters = () => {
+    setParams(new URLSearchParams(), { replace: true });
+    setShown(PAGE);
+  };
 
   return (
     <>
@@ -218,10 +223,11 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
           shown={filtered.length}
           total={all.length}
           onQuery={(value) => setParam('q', value)}
+          fyLabel={compact ? 'FY2027' : undefined}
         />
       ) : (
         <>
-          <PageHead eyebrow={eyebrow} title={title}>
+          <PageHead eyebrow={eyebrow} title={title} fyLabel={compact ? 'FY2027' : undefined}>
             <Lede summary={summary} />
           </PageHead>
           {totals}
@@ -232,28 +238,37 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
 
       <section className="section" aria-labelledby="groups-h">
         <h2 id="groups-h" className="section-h">What the House bill did to them</h2>
-        <div className="groups" role="group" aria-label="Filter by status">
-          {BRIDGE_GROUPS.map((g) => {
-            const cell = summary.groups[g];
-            const info = groups[g];
-            const active = status === g;
-            return (
-              <button
-                key={g}
-                type="button"
-                className={`group-tile${active ? ' active' : ''}`}
-                disabled={!cell.rows}
-                aria-pressed={active}
-                title={info.help}
-                onClick={() => setParam('status', active ? '' : g)}
-              >
-                <span className="group-label"><span className={`status-dot g-${g}`} aria-hidden="true" />{info.label}</span>
-                {info.sub && <span className="label">{info.sub}</span>}
-                <span className="group-count num">{count(cell.rows)}</span>
-                <span className="group-php num">{groupAmount(g, cell)}</span>
-              </button>
-            );
-          })}
+        {compact && <p className="groups-filter-label" id="groups-filter-label">Filter by status</p>}
+        <div className={compact ? 'groups-row' : undefined}>
+          <div className="groups" role="group" aria-label="Filter by status" aria-labelledby={compact ? 'groups-filter-label' : undefined}>
+            {BRIDGE_GROUPS.map((g) => {
+              const cell = summary.groups[g];
+              const info = groups[g];
+              const active = status === g;
+              return (
+                <button
+                  key={g}
+                  type="button"
+                  className={`group-tile${active ? ' active' : ''}`}
+                  disabled={!cell.rows}
+                  aria-pressed={active}
+                  aria-label={cell.rows ? `Filter by status: ${info.label}` : `${info.label}, no projects`}
+                  title={info.help}
+                  onClick={() => setParam('status', active ? '' : g)}
+                >
+                  <span className="group-label"><span className={`status-dot g-${g}`} aria-hidden="true" />{info.label}</span>
+                  {info.sub && <span className="label">{info.sub}</span>}
+                  <span className="group-count num">{count(cell.rows)}</span>
+                  <span className="group-php num">{groupAmount(g, cell)}</span>
+                </button>
+              );
+            })}
+          </div>
+          {compact && narrowed && (
+            <button type="button" className="clear-filters" onClick={clearFilters}>
+              Clear filters
+            </button>
+          )}
         </div>
       </section>
 
@@ -317,10 +332,14 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
           <p className="filter-sums">
             These {count(filtered.length)}: NEP {php(filteredSummary.nep.php)} on {count(filteredSummary.nep.rows)}
             <span className="sep">·</span>House bill {php(filteredSummary.house.php)} on {count(filteredSummary.house.rows)}
-            <span className="sep">·</span>
-            <button type="button" className="link-button" onClick={() => { setParams(new URLSearchParams(), { replace: true }); setShown(PAGE); }}>
-              Clear filters
-            </button>
+            {!compact && (
+              <>
+                <span className="sep">·</span>
+                <button type="button" className="link-button" onClick={clearFilters}>
+                  Clear filters
+                </button>
+              </>
+            )}
           </p>
         )}
 
@@ -361,6 +380,7 @@ function HomeIntro({
   shown,
   total,
   onQuery,
+  fyLabel,
 }: {
   narrow: boolean;
   eyebrow: ReactNode;
@@ -371,6 +391,7 @@ function HomeIntro({
   shown: number;
   total: number;
   onQuery: (value: string) => void;
+  fyLabel?: string;
 }) {
   // Enter, or the keyboard's search key, opens the list. Typing does not scroll.
   const submit = () => {
@@ -381,7 +402,7 @@ function HomeIntro({
 
   return (
     <div className={narrow ? 'home-top home-top-narrow' : 'home-top'}>
-      <PageHead eyebrow={eyebrow} title={title} />
+      <PageHead eyebrow={eyebrow} title={title} fyLabel={fyLabel} />
       {narrow ? (
         <>
           {search}
