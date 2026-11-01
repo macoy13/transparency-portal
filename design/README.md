@@ -1,13 +1,13 @@
 # R0: UI/UX redesign proposal (design only)
 
-Static HTML/CSS mockups under `design/`. Open any `.html` file in a browser — no build step. Typography uses **system UI fallbacks** in mockups; production should self-host WOFF2 subsets (see dependencies).
+Static HTML/CSS mockups under `design/`. Open any `.html` file in a browser — no build step. Typography uses **system UI fallbacks** in mockups; **R1** will self-host **Manrope** and **Source Sans 3** as WOFF2 under `public/fonts/` (see Dependencies).
 
 ## Page map (actual app routes)
 
 | Route | App page | Mockup |
 | --- | --- | --- |
 | `/` | **Home** — FY2027 scope summary, office/district section (`#offices`), bridge-status filters, searchable project list (`#projects`) | `overview-desktop.html`, `overview-mobile.html`, `explorer.html` |
-| `/gaa` | **Enacted** — General Appropriations Act programs 2020–2026 (not FY2027 NEP/House lines) | Referenced in overview copy; no separate static page in R0 |
+| `/gaa` | **Enacted** — General Appropriations Act programs 2020–2026 (not FY2027 NEP/House lines) | `enacted.html` |
 | `/projects/:dataset/:id` | **Project detail** — per-version amounts, PDFs, match labels | Noted in `explorer.html` |
 | `/about` | **About** — scope, exclusions, methodology, data version credit | Footer “Methodology” + overview `#about-ref` |
 | `/districts` | Redirect → `/#offices` | Office section in overview |
@@ -25,22 +25,53 @@ All figures respect API rules: **integer pesos**, **missing (`—`) ≠ zero**, 
 | **House version** | Sum on rows with a House bill amount; compared with NEP, not added | Same filters |
 | **In the House version only** | Rows in bridge group `house_only`; subcopy uses House amounts on those rows | Status filter / chips; other filters narrow the set |
 | **Bridge group tiles** | Per-group row counts and version-specific amounts (`groupAmount` in app) | `status` URL param / chip selection |
-| **Office cards / table** | API office figures per DEO (NEP vs House on one ledger); `#office-table` for detail | Not filter-linked in R0 — scope-wide unless filters recompute (open question) |
+| **Office cards / table** | API office figures per DEO (NEP vs House on one ledger); `#office-table` for detail | **Same bridge/list filters as summary** (mockup demo: click **higher in House** chip) |
 | **Program breakdown** | Subline under Projects stat (`byDataset` row counts) | Program filter |
 
-Labeling: **NEP → “Proposed (NEP)”**; **House bill → “House version”**. Enacted `/gaa` uses GAA program families — separate from FY2027 project lines.
+Labeling: **NEP → “Proposed (NEP)”** on Home summary tiles; office card dl uses **NEP** / **House bill** / **Change** like `OfficesSection`. Enacted `/gaa` uses GAA program families — separate from FY2027 project lines.
 
 ## Home office layout (no bar chart)
 
-- **No office bar chart on Home.** Lead with a **responsive grid of office cards** (one per DEO in `portal.config.ts`): Lucide-style building icon, proposed (NEP) total, House version total, project record count, and **change** as signed amount + percentage in **neutral ink only** (no good/bad colour). Missing amounts: **—** with copy such as “no line in NEP”. Every figure tagged **Sample** in mockups. Grid: **1** column @ 360px, **2** @ tablet, **3** @ 1280px.
+- **No office bar chart on Home.** Lead with a **responsive grid of office cards** modeled on `OfficesSection`: tier tag, **In this portal** line count + link, NEP / House bill / Change (neutral ink), bridge breakdown chips (**House only**, **NEP only**, **same amount**, **higher in House**, **lower in House**), named-project / whole-office NEP / unconfirmed-match notes (live wording), **Its budget each year since 2020 →** (`/gaa#office-id`), legislative district block with local portrait, **honorific + name** (not “Iloilo, 1st District” under the photo), Bills + District page links. Lucide-style inline SVG (building + user badge on figure). **Sample** badges throughout.
 - **`#office-table`** below the grid: accessible comparison (office, NEP, House, records, change). Cards are the visual lead; search and explorer stay high on the page.
+- **Filter scope:** visible **Showing: …** line; cards, summary stats, and table update together (320ms fade/slide on values). Inline JS: `mockup-offices-data.js` + `mockup-filters.js`.
 - **Progress:** do not show completion or progress percentages. One line: *Progress data: not available. These are budget amounts, not spending or completion.*
 - **Colour roles (elsewhere):** blue = chrome only; teal/amber for labelled **series** where still used (e.g. Enacted); office **change** stays ink-only.
+
+## Representatives (20th Congress)
+
+Portraits are copied under `design/portraits/` from the Budget API (`representative.portrait.url` on each district card). Mockups do not fetch images at render time.
+
+Honorifics in mockups follow **congress.gov.ph** member profiles (`representative.profile_url` in the API). Those pages title every Iloilo member **District Representative** (plus **Deputy Speaker** or **Deputy majority leader** where listed). They do **not** publish “Congressman” or “Congresswoman”. The API `Representative` type has no gender or honorific field.
+
+| Legislative district | Representative | Title on congress.gov.ph profile | Source |
+| --- | --- | --- | --- |
+| Iloilo City, Lone District | Baronda, Julienne "Jam" L. | District Representative · Deputy majority leader | https://www.congress.gov.ph/house-members/view/J013 |
+| Iloilo, 1st District | Garin, Janette L. | District Representative · Deputy Speaker | https://www.congress.gov.ph/house-members/view/E032 |
+| Iloilo, 2nd District | Gorriceta, Kathryn Joyce F., MD | District Representative | https://www.congress.gov.ph/house-members/view/L042 |
+| Iloilo, 3rd District | Defensor, Lorenz R. | District Representative | https://www.congress.gov.ph/house-members/view/J119 |
+| Iloilo, 4th District | Biron, Ferjenel G., M.D. | District Representative · Deputy Speaker | https://www.congress.gov.ph/house-members/view/E018 |
+| Iloilo, 5th District | Tupas, Binky April M. | District Representative | https://www.congress.gov.ph/house-members/view/L084 |
+
+**Mark’s “3 congresswomen” check:** gender is **not** on the API or on the allowed congress.gov.ph profile text, so this R0 pass cannot confirm a count of three. Do not infer gender from given names.
+
+**DEO ↔ district mapping** (matches `portal.config.ts` and live district cards):
+
+| DEO | Serves |
+| --- | --- |
+| Iloilo City DEO | Lone District of Iloilo City |
+| Iloilo 1st DEO | 1st District |
+| Iloilo 4th DEO | 2nd District |
+| Iloilo 6th DEO | 3rd District |
+| Iloilo 2nd DEO | 4th District |
+| Iloilo 3rd DEO | 5th District |
+
+**API nuance:** `representative.seat` for Gorriceta is spelled **“Iloilo City, 2nd District”** while the district card label is **“Iloilo, 2nd District”** — seat string only; mapping via `offices[].district_ids` is consistent.
 
 ## Motion
 
 - Controls: **150–200ms** (tokens `--motion-control`).
-- **Office card values:** on load (and in production when scope/filter data actually changes), figures **fade + translateY** using **`--motion-card: 320ms`** and `animation-fill-mode: backwards` — resting state stays **fully visible** if animation does not run. **No count-up**, **no loops**. **`prefers-reduced-motion`** disables animation. Mockup does **not** replay on bridge chips (cards are not filter-linked). **Mark may revisit** timing and triggers.
+- **Office card values:** on load and on filter change, figures **fade + translateY** using **`--motion-card: 320ms`** and `animation-fill-mode: backwards` — final values in the DOM immediately, **no count-up**. **`prefers-reduced-motion`** disables animation.
 
 ## Logo
 
@@ -55,11 +86,11 @@ Placeholder window mark in mockup headers only. **`logos.html` concepts are supe
 | Package / asset | Licence | Approx. size | Why |
 | --- | --- | --- | --- |
 | *(none required)* | — | — | SVG logos and CSS charts avoid runtime deps |
-| **Lucide** (optional) | ISC | ~500KB npm; tree-shake to tens of KB | Consistent 24px UI icons (search, external, chevron) if we outgrow inline SVG |
-| **Manrope 500–700** | SIL OFL | ~30KB WOFF2 subset | Headings, nav, summary figures |
-| **Source Sans 3 400–600** | SIL OFL | ~40KB WOFF2 subset | Body, forms, tables, chart labels |
+| **Lucide** (optional) | ISC | ~500KB npm; tree-shake to tens of KB | Consistent 24px UI icons if we outgrow inline SVG |
+| **Manrope 500–700** | SIL OFL | ~30KB WOFF2 subset | Headings, nav, summary figures — **R1: `public/fonts/`** |
+| **Source Sans 3 400–600** | SIL OFL | ~40KB WOFF2 subset | Body, forms, tables — **R1: `public/fonts/`** |
 
-Mockups did not bundle WOFF2 files (network not required for review).
+Mockups use system UI stacks until R1 bundles WOFF2.
 
 ## Data refresh
 
@@ -75,7 +106,7 @@ Live reference: **`built_at`** `2026-10-26T08:46:14Z` → footer **data built Oc
 | Other (not in six offices) | 40 | 10 | 20 | 10 | — | — | (illustrative) |
 | **Portal-wide** | **400** | **340** | **40** | **20** | **360** | **380** | — |
 
-Bridge chips: unchanged (200) + increased (80) + decreased (60) = **340** with both lines; **House-only (40)** and **proposed-only (20)** separate.
+Bridge chips: unchanged (186) + increased (96) + decreased (48) = **330** with both lines across six offices; **House-only (20)** and **NEP-only (10)** separate.
 
 **Proposal:** Keep **`meta.built_at`** as the canonical freshness line in the footer; About keeps **`source_commit`** as above. Do not substitute client fetch time for `built_at`.
 
@@ -102,14 +133,16 @@ Bridge chips: unchanged (200) + increased (80) + decreased (60) = **340** with b
 
 ## Open questions (Mark)
 
-1. **City vs Province split** — disabled “after classification” chip until geography is in scope?
-2. **Office cards vs filters** — should list filters recompute office card totals, or stay scope-wide with a clear label?
-3. **Enacted mockup** — worth a dedicated `design/enacted.html` in R1?
-4. **Self-hosted fonts** — OK to add WOFF2 under `public/fonts/` in a later PR?
+1. **Congressman / Congresswoman labels** — mockups use **District Representative** from congress.gov.ph because gendered honorifics are not on the API or those profile pages. Should production copy use gendered labels from another official source?
+2. **Enacted mockup depth** — R0 shows two sample office year charts + a short program table; expand in R1?
 
 ## Files
 
 - `tokens.css`, `mockups.css`
-- `overview-desktop.html`, `overview-mobile.html`, `explorer.html`, `components.html`, `logos.html`
+- `mockup-offices-data.js`, `mockup-filters.js`, `capture-screenshots.mjs`
+- `overview-desktop.html`, `overview-mobile.html`, `explorer.html`, `components.html`, `enacted.html`, `logos.html`
+- `portraits/*.jpg` (local copies from API portrait URLs)
 - `logos/*.svg` (six)
 - `screenshots/*.png`
+
+Re-capture screenshots: `node design/capture-screenshots.mjs` (1s wait for motion; copies to `/opt/cursor/artifacts/workspace/design/screenshots/`).
