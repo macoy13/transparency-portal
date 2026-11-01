@@ -166,33 +166,47 @@ function AboutView({ scope, overview }: { scope: ScopeResult; overview: Overview
 
 /**
  * Iloilo only. The config has no field for a reading note, so the
- * district-to-DEO mapping lives here. Other portals do not show it.
+ * district-to-DEO mapping and the neighbouring-province caveat live here.
+ * Other portals do not show them.
  */
 function DeoMappingNote() {
   const { config } = usePortal();
   if (config.id !== 'iloilo') return null;
   return (
-    <section className="section" aria-labelledby="deo-h">
-      <h2 id="deo-h" className="section-h">District engineering offices and legislative districts</h2>
-      <p>
-        In Iloilo the DPWH district engineering office numbers are not the legislative district numbers.
-        This portal follows six offices, each shown whole. An office’s budget is never split across the districts it serves.
-      </p>
-      <ul className="plain-list">
-        <li>Iloilo City, lone district: Iloilo City District Engineering Office.</li>
-        <li>1st legislative district: Iloilo 1st District Engineering Office.</li>
-        <li>2nd legislative district: Iloilo 4th District Engineering Office.</li>
-        <li>3rd legislative district: Iloilo 6th District Engineering Office.</li>
-        <li>4th legislative district: Iloilo 2nd District Engineering Office.</li>
-        <li>5th legislative district: Iloilo 3rd District Engineering Office.</li>
-      </ul>
-      <p>There is no Iloilo 5th District Engineering Office.</p>
-      <p>
-        The API maps the Iloilo 4th DEO only to the 2nd District. The Iloilo 6th DEO, which now serves the 3rd District,
-        has no labelled amounts before 2025 (missing, not zero), so 2020–2024 office figures for the 3rd District cannot
-        be attributed from this data.
-      </p>
-    </section>
+    <>
+      <section className="section" aria-labelledby="neighbours-h">
+        <h2 id="neighbours-h" className="section-h">Lines that also name a neighbouring province</h2>
+        <p>
+          Many enacted-budget lines also name Capiz or Antique, mostly shared roads and the Panay River Basin.
+          Each line is shown in full. Its amount is not divided between the provinces.
+          Of each year’s enacted-budget total on this portal, that share is 28.5% in 2020, 19.2% in 2021, 28.9% in 2022, 19.8% in 2023, 14.7% in 2024, 18.4% in 2025 and 25.7% in 2026.
+        </p>
+        <p>
+          Among the enacted-budget lines, Aklan is named only in the nationwide Iloilo-Capiz-Aklan Expressway bundles. Those are removed by hand, for the reason published above, and they are not part of these shares.
+        </p>
+      </section>
+      <section className="section" aria-labelledby="deo-h">
+        <h2 id="deo-h" className="section-h">District engineering offices and legislative districts</h2>
+        <p>
+          In Iloilo the DPWH district engineering office numbers are not the legislative district numbers.
+          This portal follows six offices, each shown whole. An office’s budget is never split across the districts it serves.
+        </p>
+        <ul className="plain-list">
+          <li>Iloilo City, lone district: Iloilo City District Engineering Office.</li>
+          <li>1st legislative district: Iloilo 1st District Engineering Office.</li>
+          <li>2nd legislative district: Iloilo 4th District Engineering Office.</li>
+          <li>3rd legislative district: Iloilo 6th District Engineering Office.</li>
+          <li>4th legislative district: Iloilo 2nd District Engineering Office.</li>
+          <li>5th legislative district: Iloilo 3rd District Engineering Office.</li>
+        </ul>
+        <p>There is no Iloilo 5th District Engineering Office.</p>
+        <p>
+          The API maps the Iloilo 4th DEO only to the 2nd District. The Iloilo 6th DEO, which now serves the 3rd District,
+          has no labelled amounts before 2025 (missing, not zero), so 2020–2024 office figures for the 3rd District cannot
+          be attributed from this data.
+        </p>
+      </section>
+    </>
   );
 }
 
