@@ -182,7 +182,7 @@ function DeoMappingNote() {
           Of each year’s enacted-budget total on this portal, that share is 28.5% in 2020, 19.2% in 2021, 28.9% in 2022, 19.8% in 2023, 14.7% in 2024, 18.4% in 2025 and 25.7% in 2026.
         </p>
         <p>
-          Aklan is named only in the nationwide Iloilo-Capiz-Aklan Expressway bundles. Those are removed by hand, for the reason published above, and they are not part of these shares.
+          Among the enacted-budget lines, Aklan is named only in the nationwide Iloilo-Capiz-Aklan Expressway bundles. Those are removed by hand, for the reason published above, and they are not part of these shares.
         </p>
       </section>
       <section className="section" aria-labelledby="deo-h">
