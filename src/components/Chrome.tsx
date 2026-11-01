@@ -1,11 +1,28 @@
-import { useMemo, type ReactNode } from 'react';
+import { Fragment, useMemo, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { KIND_LABELS, shortNameOf } from '../config';
+import { KIND_LABELS, MASTHEAD_YEARS, shortNameOf, showApiLinks, showBuildStrip, showSourceLinks } from '../config';
 import { usePortal } from '../lib/portal-context';
 import { date } from '../lib/format';
 import { NATIONAL_URL, SOURCE_CODE_URL } from '../lib/links';
 
 const BETTERGOV_LOGO = '/brand/bettergov-horizontal-primary.png';
+
+/** The configured sentence, with each " · " separator hidden from assistive tech, as the kind line is. */
+function KickerText({ text }: { text: string }) {
+  const parts = text.split(' · ');
+  return parts.map((part, i) => (
+    <Fragment key={i}>
+      {i > 0 && (
+        <>
+          {' '}
+          <span aria-hidden="true">·</span>
+          <span className="sr-only">,</span>{' '}
+        </>
+      )}
+      {part}
+    </Fragment>
+  ));
+}
 
 const NAV = [
   { to: '/', hash: '', label: '2027 projects' },
@@ -16,6 +33,9 @@ const NAV = [
 
 export function Masthead() {
   const { config, client } = usePortal();
+  const kicker = config.kicker?.trim();
+  const sourceLinks = showSourceLinks(config);
+  const apiLinks = showApiLinks(config);
   const { pathname, hash } = useLocation();
   const today = useMemo(
     () => new Date().toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }),
@@ -23,7 +43,7 @@ export function Masthead() {
   );
   return (
     <>
-    {config.buildYourOwnStrip !== false && (
+    {__CHROME_SOURCE_LINKS__ && showBuildStrip(config) && (
       // Above the masthead, so it scrolls away; a plain link to the source.
       <a className="build-strip" href={SOURCE_CODE_URL} target="_blank" rel="noopener">
         <span className="build-strip-title">Create your own transparency portal</span>
@@ -40,12 +60,16 @@ export function Masthead() {
             <a href={NATIONAL_URL} target="_blank" rel="noopener">
               National picture <span aria-hidden="true">↗</span>
             </a>
-            <a href={`${client.base}/docs`} target="_blank" rel="noopener">
-              API <span aria-hidden="true">↗</span>
-            </a>
-            <a href={SOURCE_CODE_URL} target="_blank" rel="noopener">
-              Build your own <span aria-hidden="true">↗</span>
-            </a>
+            {__CHROME_API_LINKS__ && apiLinks && (
+              <a href={`${client.base}/docs`} target="_blank" rel="noopener">
+                API <span aria-hidden="true">↗</span>
+              </a>
+            )}
+            {__CHROME_SOURCE_LINKS__ && sourceLinks && (
+              <a href={SOURCE_CODE_URL} target="_blank" rel="noopener">
+                Build your own <span aria-hidden="true">↗</span>
+              </a>
+            )}
           </span>
         </div>
       </div>
@@ -53,8 +77,14 @@ export function Masthead() {
         <Link to="/" className="masthead-title">
           {config.logo && <img src={config.logo} alt="" className="masthead-logo" />}
           <span>
-            <span className="masthead-kicker">
-              {KIND_LABELS[config.kind]} <span aria-hidden="true">·</span> Budgets 2020–2027
+            <span className={kicker ? 'masthead-kicker masthead-kicker-custom' : 'masthead-kicker'}>
+              {kicker ? (
+                <KickerText text={kicker} />
+              ) : (
+                <>
+                  {KIND_LABELS[config.kind]} <span aria-hidden="true">·</span> {MASTHEAD_YEARS}
+                </>
+              )}
             </span>
             <span className="masthead-name">{config.name}</span>
           </span>
@@ -118,17 +148,35 @@ export function Footer() {
             <span className="label">Every project, nationwide</span>
             <a href={NATIONAL_URL} target="_blank" rel="noopener">budget.bettergov.ph ↗</a>
           </li>
-          <li>
-            <span className="label">Data</span>
-            <a href={`${client.base}/docs`} target="_blank" rel="noopener">Budget API and MCP ↗</a>
-          </li>
-          <li>
-            <span className="label">Open source</span>
-            <a href={SOURCE_CODE_URL} target="_blank" rel="noopener">Fork this portal for your LGU or DPWH office ↗</a>
-          </li>
+          {__CHROME_API_LINKS__ && showApiLinks(config) && (
+            <li>
+              <span className="label">Data</span>
+              <a href={`${client.base}/docs`} target="_blank" rel="noopener">Budget API and MCP ↗</a>
+            </li>
+          )}
+          {__CHROME_SOURCE_LINKS__ && showSourceLinks(config) && (
+            <li>
+              <span className="label">Open source</span>
+              <a href={SOURCE_CODE_URL} target="_blank" rel="noopener">Fork this portal for your LGU or DPWH office ↗</a>
+            </li>
+          )}
         </ul>
+        <PortalCredits />
       </div>
     </footer>
+  );
+}
+
+/** Same-site software notice, plus the API's data licence. Shown on every fork. */
+export function PortalCredits() {
+  return (
+    <p className="footer-legal">
+      <a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a>
+      {' · '}
+      Data: BetterGov.ph Budget API, licensed{' '}
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
+      {', filtered and summarised for this portal.'}
+    </p>
   );
 }
 

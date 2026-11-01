@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import portal from './portal.config';
-import { DEFAULT_API, shortNameOf } from './src/config';
+import { DEFAULT_API, shortNameOf, showApiLinks, showSourceLinks } from './src/config';
 
 const escape = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
@@ -28,6 +28,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_');
   const api = (env.VITE_API_BASE || portal.api || DEFAULT_API).replace(/\/+$/, '');
   return {
+    define: {
+      // Literals, so a build that turns these off drops the hrefs entirely.
+      __CHROME_SOURCE_LINKS__: JSON.stringify(showSourceLinks(portal)),
+      __CHROME_API_LINKS__: JSON.stringify(showApiLinks(portal)),
+    },
     plugins: [react(), portalHtml(api)],
     server: {
       host: '0.0.0.0',

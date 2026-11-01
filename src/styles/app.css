@@ -53,6 +53,13 @@
   color: var(--accent);
   margin-bottom: 6px;
 }
+/* A configured kicker is a sentence, shown as written. Wide tracking is for the short kind word. */
+.masthead-kicker-custom {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
 .masthead-name {
   display: block;
   font-family: var(--font-hero);
@@ -397,9 +404,12 @@ code { font-family: var(--font-mono); font-size: 0.9em; background: var(--paper-
 .footer { border-top: 1px solid var(--ink); background: var(--paper-2); margin-top: auto; }
 .footer-inner { padding-top: 28px; padding-bottom: 40px; }
 .footer-source { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 12px; }
-.footer-notice { font-size: 12.5px; color: var(--ink-2); max-width: 900px; margin: 0 0 20px; line-height: 1.55; }
+.footer-notice { font-size: 12.5px; color: var(--ink-2); max-width: 900px; margin: 0 0 20px; line-height: 1.55; overflow-wrap: anywhere; }
 .footer-links { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; font-size: 13.5px; }
 .footer-links li { display: flex; flex-direction: column; gap: 4px; }
+.footer-legal { font-size: 12px; color: var(--ink-3); line-height: 1.5; margin: 18px 0 0; }
+.footer-legal a { color: inherit; }
+.footer-legal a:hover { color: var(--accent); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
@@ -452,6 +462,17 @@ code { font-family: var(--font-mono); font-size: 0.9em; background: var(--paper-
   .bar-track { height: 70px; }
   .bars { gap: 3px; }
   .queries .tr > span:first-child { grid-column: 1 / -1; }
+}
+
+/* Measured 480–560px. From 521px up the sentence is one line beside the mark.
+   At 520px and below the mark sits on the next row, and the sentence stays one line. */
+@media (max-width: 520px) {
+  .masthead-main:has(.masthead-kicker-custom) {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+  .masthead-main:has(.masthead-kicker-custom) .masthead-title { flex: 1 1 100%; }
+  .masthead-main:has(.masthead-kicker-custom) .masthead-with { margin-left: auto; }
 }
 
 @media (max-width: 560px) {

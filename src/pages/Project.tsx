@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import type { Envelope, ProjectDetail, Version } from '../api/types';
-import { DATASET_KEYS, shortNameOf, type DatasetKey } from '../config';
+import { DATASET_KEYS, shortNameOf, showApiLinks, type DatasetKey } from '../config';
 import { Await, Disclaimers, External, ReasonTags, StatusChip } from '../components/Bits';
 import { phpDelta, phpFull } from '../lib/format';
 import { usePortal, type Async } from '../lib/portal-context';
@@ -175,8 +175,12 @@ function ProjectView({ env }: { env: Envelope<ProjectDetail> }) {
 
           <p className="small links">
             <External href={p.url}>This project on budget.bettergov.ph</External>
-            <br />
-            <External href={client.href(p.api_url)}>The API record (JSON)</External>
+            {__CHROME_API_LINKS__ && showApiLinks(config) && (
+              <>
+                <br />
+                <External href={client.href(p.api_url)}>The API record (JSON)</External>
+              </>
+            )}
           </p>
         </aside>
       </div>

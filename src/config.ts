@@ -21,6 +21,9 @@ export const KIND_LABELS: Record<PortalKind, string> = {
   municipality: 'Municipality',
 };
 
+/** The years that follow the kind on the default masthead line. */
+export const MASTHEAD_YEARS = 'Budgets 2020–2027';
+
 /** A place whose name, in a project's title, brings the project into the portal. */
 export interface PlaceQuery {
   /** What readers see: "Tagbilaran". */
@@ -48,6 +51,11 @@ export interface PortalConfig {
   /** Stable id, lowercase with hyphens. Sent with citizen reports: "bohol-province". */
   id: string;
   kind: PortalKind;
+  /**
+   * The line above the portal name. When omitted, the masthead shows the kind
+   * ("Province", "City", …) and "· Budgets 2020–2027".
+   */
+  kicker?: string;
   /** The LGU or office in full: "Province of Bohol". */
   name: string;
   /** Short form for headings: "Bohol". Defaults to `name`. */
@@ -61,8 +69,23 @@ export interface PortalConfig {
   /**
    * The blue "Create your own transparency portal" strip above the masthead,
    * linking to the source on GitHub. On unless set to false.
+   * Hiding the strip alone leaves the other source links. Set `chrome.sourceLinks`
+   * to false to hide the strip and those links together.
    */
   buildYourOwnStrip?: boolean;
+  /**
+   * Header and footer links that leave this portal. Each one is on unless
+   * set to false, so a fork that omits `chrome` keeps the current chrome.
+   */
+  chrome?: {
+    /**
+     * The blue strip, the header "Build your own" link, and the footer link
+     * to this portal's source on GitHub.
+     */
+    sourceLinks?: boolean;
+    /** The header "API" link, the footer API link, and a project's API-record link. */
+    apiLinks?: boolean;
+  };
   /** Budget API host. Default https://budget.bettergov.ph. VITE_API_BASE overrides it. */
   api?: string;
   scope: {
@@ -127,4 +150,19 @@ export function configProblems(config: PortalConfig): string[] {
 
 export function shortNameOf(config: PortalConfig): string {
   return config.shortName?.trim() || config.name;
+}
+
+/** GitHub links that invite a reader to build their own portal. On unless `chrome.sourceLinks` is false. */
+export function showSourceLinks(config: PortalConfig): boolean {
+  return config.chrome?.sourceLinks !== false;
+}
+
+/** The blue strip. Also off when source links are off. `buildYourOwnStrip: false` hides only the strip. */
+export function showBuildStrip(config: PortalConfig): boolean {
+  return showSourceLinks(config) && config.buildYourOwnStrip !== false;
+}
+
+/** Links to the Budget API docs and to a project's API record. On unless `chrome.apiLinks` is false. */
+export function showApiLinks(config: PortalConfig): boolean {
+  return config.chrome?.apiLinks !== false;
 }
