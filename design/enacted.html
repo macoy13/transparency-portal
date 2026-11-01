@@ -10,31 +10,30 @@
   <body>
     <div class="mockup-frame--desktop">
       <a class="skip-link" href="#main">Skip to content</a>
-      <p class="sample-banner" role="status">Sample data: figures are illustrative, not real values.</p>
+      <p class="sample-banner" role="status">Sample data · Illustrative figures only.</p>
       <header class="site-header">
-        <p class="site-header-top">Iloilo Province and Iloilo City · Independent, unofficial</p>
-        <div class="site-header-main">
+        <div class="site-header-bar">
           <a class="nav-brand" href="overview-desktop.html">
-            <img src="logos/window-color.svg" width="40" height="40" alt="" />
-            <span class="nav-brand-name">Iloilo Transparency</span>
+            <img src="logos/window-color.svg" width="36" height="36" alt="" />
+            <span class="nav-brand-text">
+              <span class="nav-brand-name">Iloilo Transparency</span>
+              <span class="nav-brand-sub">Independent · Unofficial</span>
+            </span>
           </a>
-          <a class="masthead-with" href="https://bettergov.ph/" target="_blank" rel="noopener">
-            <span class="label">Data from</span>
-            <img src="../public/brand/bettergov-horizontal-primary.png" alt="BetterGov.ph" width="128" height="28" />
-            <span class="visually-hidden">(opens in new tab)</span>
-          </a>
-        </div>
-        <nav class="subnav" aria-label="Primary">
-          <div class="subnav-inner">
+          <nav class="site-nav" aria-label="Primary">
             <a href="overview-desktop.html">Overview</a>
-            <a href="enacted.html" aria-current="page">Enacted</a>
-            <a href="explorer.html">Search &amp; list</a>
-          </div>
-        </nav>
+            <a href="enacted.html" aria-current="page">Enacted budgets</a>
+            <a href="explorer.html">Project explorer</a>
+            <a href="overview-desktop.html#offices">Offices</a>
+          </nav>
+          <select class="fy-select" aria-label="Fiscal year">
+            <option>FY2020–2026</option>
+          </select>
+        </div>
       </header>
 
       <main id="main" class="page-wrap">
-        <p class="kicker">GAA · FY 2020–2026 · Iloilo · Route <code>/gaa</code></p>
+        <p class="kicker">GAA · Route <code>/gaa</code></p>
         <h1 class="page-title">248 programs and projects in the 2020–2026 budgets name Iloilo, Ilo-ilo <span class="sample-badge">Sample</span></h1>
         <p class="lede">
           The General Appropriations Act (GAA) is the budget Congress passes and the President signs each year: the authority to
@@ -82,14 +81,8 @@
               <div class="hcard-2027">
                 <p class="hcard-group-label">2027 bill figures — not comparable to GAA bars above <span class="sample-badge">Sample</span></p>
                 <dl class="hcard-2027-figs">
-                  <div>
-                    <dt>2027 NEP (whole office)</dt>
-                    <dd class="num">₱4.1B</dd>
-                  </div>
-                  <div>
-                    <dt>2027 House (named projects only)</dt>
-                    <dd class="num">₱3.9B</dd>
-                  </div>
+                  <div><dt>2027 NEP (whole office)</dt><dd class="num">₱4.1B</dd></div>
+                  <div><dt>2027 House (named projects only)</dt><dd class="num">₱3.9B</dd></div>
                 </dl>
                 <p class="stat-note">Whole-office NEP and named-projects House are different scopes; shown separately, never on the GAA scale.</p>
               </div>
@@ -130,58 +123,11 @@
               <div class="hcard-2027">
                 <p class="hcard-group-label">2027 bill figures — not comparable to GAA bars above <span class="sample-badge">Sample</span></p>
                 <dl class="hcard-2027-figs">
-                  <div>
-                    <dt>2027 NEP (whole office)</dt>
-                    <dd class="num">₱3.2B</dd>
-                  </div>
-                  <div>
-                    <dt>2027 House (named projects only)</dt>
-                    <dd class="num">₱3.0B</dd>
-                  </div>
+                  <div><dt>2027 NEP (whole office)</dt><dd class="num">₱3.2B</dd></div>
+                  <div><dt>2027 House (named projects only)</dt><dd class="num">₱3.0B</dd></div>
                 </dl>
-                <p class="stat-note">Whole-office NEP and named-projects House are different scopes; shown separately, never on the GAA scale.</p>
               </div>
             </article>
-          </div>
-          <p class="stat-note">More offices follow the same pattern in the app; this mock shows two for layout.</p>
-        </section>
-
-        <section class="section" aria-labelledby="programs-h">
-          <h2 id="programs-h" class="section-title">Programs that name Iloilo <span class="sample-badge">Sample</span></h2>
-          <form class="search-row" role="search">
-            <div class="field field-grow">
-              <label for="gaa-q">Search programs</label>
-              <input id="gaa-q" type="search" placeholder="Program or project name…" />
-            </div>
-          </form>
-          <div class="data-table-wrap">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th scope="col">Program / project</th>
-                  <th scope="col">Department</th>
-                  <th scope="col" class="num">2024</th>
-                  <th scope="col" class="num">2025</th>
-                  <th scope="col" class="num">2026</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Construction of flood control, Iloilo River <span class="sample-badge">Sample</span></td>
-                  <td>DPWH</td>
-                  <td class="num">₱85M</td>
-                  <td class="num">₱92M</td>
-                  <td class="num">—</td>
-                </tr>
-                <tr>
-                  <td>Farm-to-market road, Barangay Sample, Iloilo <span class="sample-badge">Sample</span></td>
-                  <td>DA</td>
-                  <td class="num">₱12M</td>
-                  <td class="num">₱12M</td>
-                  <td class="num">₱15M</td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </section>
 
@@ -189,9 +135,8 @@
           <h2 id="gaa-notes-h" class="section-title">Reading these figures</h2>
           <ul class="plain-list fine-list">
             <li>Amounts are the appropriations in each year’s GAA, in pesos. The GAA publishes them in thousands.</li>
-            <li>A program is listed when its name includes Iloilo, Ilo-ilo. Names are matched, not places surveyed; a project whose name does not say where it is will not be here.</li>
-            <li>One row is one name in one agency across the years. A renamed or re-scoped project shows as a new row. A dash means no appropriation under that name that year.</li>
-            <li>A DPWH office’s yearly figure is its whole budget, as the GAA lists it under that office. An office that serves several districts is shown whole, never split.</li>
+            <li>A program is listed when its name includes Iloilo, Ilo-ilo. Names are matched, not places surveyed.</li>
+            <li>A DPWH office’s yearly figure is its whole budget, as the GAA lists it under that office — never split.</li>
             <li>The 2027 figures are the NEP and the House bill, not law. They are shown beside the enacted years, never added to them.</li>
           </ul>
         </section>
@@ -199,10 +144,21 @@
 
       <footer class="site-footer">
         <div class="footer-inner">
-          <p class="footer-source">Source: General Appropriations Acts 2020–2026 · via the BetterGov.ph Budget API</p>
-          <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
-          <p class="footer-legal"><a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a> · Data: BetterGov.ph Budget API, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0<span class="visually-hidden">(opens in new tab)</span></a>, filtered and summarised for this portal.</p>
-          <p class="footer-legal">This portal: Iloilo, run by Iloilo Transparency, an independent volunteer project · Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a> · <a href="overview-desktop.html#about-ref">About the data</a></p>
+          <div class="footer-meta">
+            <p>Source: General Appropriations Acts 2020–2026 · via the BetterGov.ph Budget API</p>
+            <p>
+              <a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a>
+              · Data licensed
+              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" aria-label="CC BY 4.0 (opens in new tab)">CC BY 4.0</a>,
+              filtered and summarised for this portal.
+            </p>
+            <p>Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+          </div>
+          <a class="footer-powered" href="https://bettergov.ph/" target="_blank" rel="noopener" aria-label="BetterGov.ph (opens in new tab)">
+            <span class="label">Powered by</span>
+            <img src="../public/brand/bettergov-horizontal-primary.png" alt="" width="128" height="28" />
+            <span class="footer-powered-tag">Open data for a more transparent Philippines.</span>
+          </a>
           <p class="footer-disclosure">Independent volunteer project — not an official government site.</p>
         </div>
       </footer>

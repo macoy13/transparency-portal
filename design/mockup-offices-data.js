@@ -68,222 +68,165 @@
     },
   };
 
+  /** Amounts in billions (numeric) for bar scale; labels for display. */
   const OFFICE_META = [
     {
       id: 'office:iloilo-city-deo',
       printed: 'Iloilo City District Engineering Office',
-      kind: 'District Engineering Office',
+      short: 'Iloilo City DEO',
       region: 'Region VI',
-      tier: 'A',
-      tierText: 'Tier A · one district',
       districtKey: 'lone',
       gaaHash: 'office:iloilo-city-deo',
-      full: {
-        nep: '₱3.6B',
-        house: '₱3.9B',
-        change: '+₱0.3B',
-        wholeNep: '₱4.1B',
-        unconfirmed: 2,
-        unconfirmedPhp: '₱12M',
-      },
       groups: { house_only: 4, nep_only: 2, unchanged: 30, increased: 16, decreased: 8 },
-      increased: { nep: '₱2.4B', house: '₱2.7B', change: '+₱0.3B' },
+      full: { nepB: 3.6, houseB: 3.9, change: '+₱0.3B', changePct: '+8.3%', wholeNep: '₱4.1B', unconfirmed: 2 },
+      increased: { nepB: 2.4, houseB: 2.7, change: '+₱0.3B', changePct: '+12.5%' },
     },
     {
       id: 'office:iloilo-1st-deo',
       printed: 'Iloilo 1st District Engineering Office',
-      kind: 'District Engineering Office',
+      short: 'Iloilo 1st DEO',
       region: 'Region VI',
-      tier: 'A',
-      tierText: 'Tier A · one district',
       districtKey: '1st',
       gaaHash: 'office:iloilo-1st-deo',
-      full: {
-        nep: '₱2.8B',
-        house: '₱3.0B',
-        change: '+₱0.2B',
-        wholeNep: '₱3.2B',
-        unconfirmed: 1,
-        unconfirmedPhp: '₱4M',
-      },
       groups: { house_only: 4, nep_only: 2, unchanged: 30, increased: 16, decreased: 8 },
-      increased: { nep: '₱1.9B', house: '₱2.1B', change: '+₱0.2B' },
+      full: { nepB: 2.8, houseB: 3.0, change: '+₱0.2B', changePct: '+7.1%', wholeNep: '₱3.2B', unconfirmed: 1 },
+      increased: { nepB: 1.9, houseB: 2.1, change: '+₱0.2B', changePct: '+10.5%' },
     },
     {
       id: 'office:iloilo-2nd-deo',
       printed: 'Iloilo 2nd District Engineering Office',
-      kind: 'District Engineering Office',
+      short: 'Iloilo 2nd DEO',
       region: 'Region VI',
-      tier: 'A',
-      tierText: 'Tier A · one district',
       districtKey: '4th',
       gaaHash: 'office:iloilo-2nd-deo',
-      full: {
-        nep: '₱2.7B',
-        house: '₱2.9B',
-        change: '+₱0.2B',
-        wholeNep: '₱3.0B',
-        unconfirmed: 0,
-        unconfirmedPhp: null,
-      },
       groups: { house_only: 3, nep_only: 2, unchanged: 31, increased: 16, decreased: 8 },
-      increased: { nep: '₱1.8B', house: '₱2.0B', change: '+₱0.2B' },
+      full: { nepB: 2.7, houseB: 2.9, change: '+₱0.2B', changePct: '+7.4%', wholeNep: '₱3.0B', unconfirmed: 0 },
+      increased: { nepB: 1.8, houseB: 2.0, change: '+₱0.2B', changePct: '+11.1%' },
     },
     {
       id: 'office:iloilo-3rd-deo',
       printed: 'Iloilo 3rd District Engineering Office',
-      kind: 'District Engineering Office',
+      short: 'Iloilo 3rd DEO',
       region: 'Region VI',
-      tier: 'A',
-      tierText: 'Tier A · one district',
       districtKey: '5th',
       gaaHash: 'office:iloilo-3rd-deo',
-      full: {
-        nep: '₱2.5B',
-        house: '₱2.6B',
-        change: '+₱0.1B',
-        wholeNep: '₱2.9B',
-        unconfirmed: 1,
-        unconfirmedPhp: '₱2M',
-      },
       groups: { house_only: 3, nep_only: 2, unchanged: 31, increased: 16, decreased: 8 },
-      increased: { nep: '₱1.6B', house: '₱1.7B', change: '+₱0.1B' },
+      full: { nepB: 2.5, houseB: 2.6, change: '+₱0.1B', changePct: '+4.0%', wholeNep: '₱2.9B', unconfirmed: 1 },
+      increased: { nepB: 1.6, houseB: 1.7, change: '+₱0.1B', changePct: '+6.3%' },
     },
     {
       id: 'office:iloilo-4th-deo',
       printed: 'Iloilo 4th District Engineering Office',
-      kind: 'District Engineering Office',
+      short: 'Iloilo 4th DEO',
       region: 'Region VI',
-      tier: 'A',
-      tierText: 'Tier A · one district',
       districtKey: '2nd',
       gaaHash: 'office:iloilo-4th-deo',
-      full: {
-        nep: '₱2.4B',
-        house: '₱2.5B',
-        change: '+₱0.1B',
-        wholeNep: '₱2.7B',
-        unconfirmed: 0,
-        unconfirmedPhp: null,
-      },
       groups: { house_only: 3, nep_only: 1, unchanged: 32, increased: 16, decreased: 8 },
-      increased: { nep: '₱1.5B', house: '₱1.6B', change: '+₱0.1B' },
+      full: { nepB: 2.4, houseB: 2.5, change: '+₱0.1B', changePct: '+4.2%', wholeNep: '₱2.7B', unconfirmed: 0 },
+      increased: { nepB: 1.5, houseB: 1.6, change: '+₱0.1B', changePct: '+6.7%' },
     },
     {
       id: 'office:iloilo-6th-deo',
       printed: 'Iloilo 6th District Engineering Office',
-      kind: 'District Engineering Office',
+      short: 'Iloilo 6th DEO',
       region: 'Region VI',
-      tier: 'A',
-      tierText: 'Tier A · one district',
       districtKey: '3rd',
       gaaHash: 'office:iloilo-6th-deo',
-      full: {
-        nep: '₱2.0B',
-        house: '₱2.1B',
-        change: '+₱0.1B',
-        wholeNep: '₱2.3B',
-        unconfirmed: 2,
-        unconfirmedPhp: '₱6M',
-      },
       groups: { house_only: 3, nep_only: 1, unchanged: 32, increased: 16, decreased: 8 },
-      increased: { nep: '₱1.2B', house: '₱1.3B', change: '+₱0.1B' },
+      full: { nepB: 2.0, houseB: 2.1, change: '+₱0.1B', changePct: '+5.0%', wholeNep: '₱2.3B', unconfirmed: 2 },
+      increased: { nepB: 1.2, houseB: 1.3, change: '+₱0.1B', changePct: '+8.3%' },
     },
   ];
 
-  function officeRow(meta, { groups, amounts, note }) {
+  function phpB(n) {
+    return '₱' + n.toFixed(1) + 'B';
+  }
+
+  function officeRow(meta, amounts, groups) {
+    const both = groups.unchanged + groups.increased + groups.decreased;
+    const lines = both + groups.house_only + groups.nep_only;
+    const maxB = Math.max(amounts.nepB, amounts.houseB);
     return {
       id: meta.id,
       printed: meta.printed,
-      kind: meta.kind,
+      short: meta.short,
       region: meta.region,
-      tier: meta.tier,
-      tierText: meta.tierText,
       gaaHash: meta.gaaHash,
-      lines: groups.house_only + groups.nep_only + groups.unchanged + groups.increased + groups.decreased,
-      nep: amounts.nep,
-      house: amounts.house,
+      lines,
+      nep: phpB(amounts.nepB),
+      house: phpB(amounts.houseB),
+      nepB: amounts.nepB,
+      houseB: amounts.houseB,
+      nepPct: (amounts.nepB / maxB) * 100,
+      housePct: (amounts.houseB / maxB) * 100,
       change: amounts.change,
+      changePct: amounts.changePct,
+      changeLabel: amounts.change + ' (' + amounts.changePct + ')',
       groups,
-      note,
+      note: {
+        nepRecords: both + groups.nep_only,
+        houseRecords: both + groups.house_only,
+        wholeNep: amounts.wholeNep ?? null,
+        unconfirmed: amounts.unconfirmed ?? 0,
+      },
       rep: REPS[meta.districtKey],
     };
   }
 
-  const fullChipCounts = { unchanged: 186, increased: 96, decreased: 48, house_only: 20, nep_only: 10 };
+  const CHIP_COUNTS = { all: 360, unchanged: 186, increased: 96, decreased: 48, house_only: 20, nep_only: 10 };
 
   const scopes = {
-    '': {
-      filterLabel: 'All project records (six offices)',
-      activeChip: '',
-      chips: fullChipCounts,
+    all: {
+      filterLabel: 'All',
+      activeChip: 'all',
+      chips: CHIP_COUNTS,
+      tableChips: { all: 6 },
       summary: {
         records: 360,
         nep: '₱16.0B',
         house: '₱17.0B',
-        note: 'Six offices · 60 per office · compared, not added',
-        nepHouseNote: 'NEP on 340 records · House on 350 records · compared, not added',
+        recordsNote: 'Six offices · 60 per office (sample)',
+        nepNote: 'NEP on 340 records (sample)',
+        houseNote: 'House on 350 records (sample)',
       },
-      scopeNote:
-        'Sample summary for the six offices (table below) — 360 records (330 with both lines, 20 House-only, 10 NEP-only); compared, not added.',
       showFullNotes: true,
-      offices: OFFICE_META.map((m) => {
-        const g = m.groups;
-        const both = g.unchanged + g.increased + g.decreased;
-        return officeRow(m, {
-          groups: { ...g },
-          amounts: { nep: m.full.nep, house: m.full.house, change: m.full.change },
-          note: {
-            nepRecords: both + g.nep_only,
-            houseRecords: both + g.house_only,
-            wholeNep: m.full.wholeNep,
-            unconfirmed: m.full.unconfirmed,
-            unconfirmedPhp: m.full.unconfirmedPhp,
-            held: 0,
-          },
-        });
-      }),
+      offices: OFFICE_META.map((m) => officeRow(m, m.full, { ...m.groups })),
     },
     increased: {
-      filterLabel: 'Increased in House',
+      filterLabel: 'Higher in House',
       activeChip: 'increased',
-      chips: { unchanged: 186, increased: 96, decreased: 48, house_only: 20, nep_only: 10 },
+      chips: CHIP_COUNTS,
+      tableChips: { all: 6 },
       summary: {
         records: 96,
         nep: '₱10.4B',
         house: '₱11.4B',
-        note: '16 higher-in-House records per office · compared, not added',
-        nepHouseNote: null,
+        recordsNote: '16 per office · Higher in House (sample)',
+        nepNote: null,
+        houseNote: null,
       },
-      scopeNote: 'Filtered sample — 96 records with higher House amounts (16 per office). Whole-office and unconfirmed notes hidden while a filter is active.',
       showFullNotes: false,
       offices: OFFICE_META.map((m) =>
-        officeRow(m, {
-          groups: { house_only: 0, nep_only: 0, unchanged: 0, increased: 16, decreased: 0 },
-          amounts: { nep: m.increased.nep, house: m.increased.house, change: m.increased.change },
-          note: {
-            nepRecords: 16,
-            houseRecords: 16,
-            wholeNep: null,
-            unconfirmed: 0,
-            unconfirmedPhp: null,
-            held: 0,
-          },
-        }),
+        officeRow(
+          m,
+          { ...m.increased, wholeNep: null, unconfirmed: 0 },
+          { house_only: 0, nep_only: 0, unchanged: 0, increased: 16, decreased: 0 },
+        ),
       ),
     },
   };
 
   global.MOCKUP_OFFICE_DATA = {
     chipLabels: {
+      all: 'All',
+      unchanged: 'Same amount',
+      increased: 'Higher in House',
+      decreased: 'Lower in House',
       house_only: 'House only',
       nep_only: 'NEP only',
-      unchanged: 'same amount',
-      increased: 'higher in House',
-      decreased: 'lower in House',
     },
-    wiredChips: ['increased'],
-    chipOrder: ['unchanged', 'increased', 'decreased', 'house_only', 'nep_only'],
+    chipOrder: ['all', 'unchanged', 'increased', 'decreased', 'house_only', 'nep_only'],
+    wiredChips: ['all', 'increased'],
     scopes,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

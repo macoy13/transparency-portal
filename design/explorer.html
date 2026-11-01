@@ -13,58 +13,58 @@
     </style>
   </head>
   <body>
-    <p class="sample-banner" role="status">Sample data: figures are illustrative, not real values.</p>
+    <p class="sample-banner" role="status">Sample data · Illustrative figures only.</p>
     <div id="root-frame" class="mockup-frame--desktop layout-explorer">
       <header class="site-header">
-        <p class="site-header-top">Iloilo Province and Iloilo City · Independent, unofficial</p>
-        <div class="site-header-main">
+        <div class="site-header-bar">
           <a class="nav-brand" href="overview-desktop.html">
-            <img src="logos/window-color.svg" width="40" height="40" alt="" />
-            <span class="nav-brand-name">Iloilo Transparency</span>
+            <img src="logos/window-color.svg" width="36" height="36" alt="" />
+            <span class="nav-brand-text">
+              <span class="nav-brand-name">Iloilo Transparency</span>
+              <span class="nav-brand-sub">Independent · Unofficial</span>
+            </span>
           </a>
-          <a class="masthead-with" href="https://bettergov.ph/" target="_blank" rel="noopener">
-            <span class="label">Data from</span>
-            <img src="../public/brand/bettergov-horizontal-primary.png" alt="BetterGov.ph" width="128" height="28" />
-          </a>
+          <nav class="site-nav" aria-label="Primary">
+            <a href="overview-desktop.html">Overview</a>
+            <a href="enacted.html">Enacted budgets</a>
+            <a href="explorer.html" aria-current="page">Project explorer</a>
+            <a href="overview-desktop.html#offices">Offices</a>
+          </nav>
+          <select class="fy-select" aria-label="Fiscal year"><option selected>FY2027</option></select>
         </div>
       </header>
 
       <main class="page-wrap">
-        <p class="terminology-note"><strong>Project records</strong> — FY2027 project rows in this portal (one row per compared project).</p>
-        <p class="kicker">Route <code>/</code> · project list &amp; filters</p>
         <h1 class="page-title" style="font-size: 2rem">Every project record (400) <span class="sample-badge">Sample</span></h1>
+        <p class="lede">Search and filter FY2027 project rows. Amounts are compared, never added.</p>
 
         <div class="layout-toggle" role="group" aria-label="Preview layout width">
           <button type="button" id="btn-desktop" aria-pressed="true">Desktop table</button>
           <button type="button" id="btn-mobile" aria-pressed="false">Mobile cards</button>
         </div>
 
-        <div class="toolbar search-row">
-          <div class="field field-grow">
+        <div class="search-toolbar" style="margin-bottom: 1rem">
+          <div class="field" style="flex: 1 1 12rem">
             <label for="q">Search</label>
             <input id="q" type="search" value="school" />
           </div>
           <div class="field">
             <label for="program">Program</label>
-            <select id="program"><option>All programs</option><option>DPWH</option></select>
+            <select id="program" class="office-select"><option>All programs</option><option>DPWH</option></select>
           </div>
           <div class="field">
             <label for="status">Status</label>
-            <select id="status"><option>Change between versions</option></select>
+            <select id="status" class="office-select"><option>Higher in House</option></select>
           </div>
           <div class="field">
             <label for="office">DPWH office</label>
-            <select id="office"><option>Any office</option></select>
-          </div>
-          <div class="field">
-            <label for="sort">Sort by</label>
-            <select id="sort"><option>House version amount</option></select>
+            <select id="office" class="office-select"><option>Any office</option></select>
           </div>
         </div>
 
         <p class="stat-note" style="margin-bottom: 1rem">
           Filtered (sample): proposed ₱240M on 12 project records · House version ₱265M on 12 ·
-          <button type="button" class="link-button">Clear filters</button>
+          <button type="button" class="clear-filters" style="margin-left: 0">Clear filters</button>
         </p>
 
         <div class="desktop-only">
@@ -156,10 +156,20 @@
 
       <footer class="site-footer">
         <div class="footer-inner">
-          <p class="footer-source">Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API · data built October 26, 2026</p>
-          <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
-          <p class="footer-legal"><a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a> · Data: BetterGov.ph Budget API, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, filtered and summarised for this portal.</p>
-          <p class="footer-legal">Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+          <div class="footer-meta">
+            <p>Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API</p>
+            <p>
+              <a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a>
+              · Data licensed
+              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" aria-label="CC BY 4.0 (opens in new tab)">CC BY 4.0</a>
+            </p>
+            <p>Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+          </div>
+          <a class="footer-powered" href="https://bettergov.ph/" target="_blank" rel="noopener" aria-label="BetterGov.ph (opens in new tab)">
+            <span class="label">Powered by</span>
+            <img src="../public/brand/bettergov-horizontal-primary.png" alt="" width="128" height="28" />
+          </a>
+          <p class="footer-disclosure">Independent volunteer project — not an official government site.</p>
         </div>
       </footer>
     </div>

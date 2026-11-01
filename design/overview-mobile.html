@@ -9,90 +9,137 @@
   </head>
   <body>
     <div class="mockup-frame--mobile">
-      <p class="sample-banner" role="status">Sample data: figures are illustrative, not real values.</p>
+      <a class="skip-link" href="#main">Skip to content</a>
+      <p class="sample-banner" role="status">Sample data · Illustrative figures only.</p>
       <header class="site-header">
-        <p class="site-header-top">Iloilo Province and Iloilo City · Independent, unofficial</p>
-        <div class="site-header-main" style="flex-direction: column; align-items: stretch">
-          <a class="nav-brand" href="overview-mobile.html">
-            <img src="logos/window-color.svg" width="32" height="32" alt="" />
-            <span class="nav-brand-name">Iloilo Transparency</span>
-          </a>
-          <a class="masthead-with" href="https://bettergov.ph/" target="_blank" rel="noopener" style="align-items: flex-start; margin-top: 0.5rem">
-            <span class="label">Data from</span>
-            <img src="../public/brand/bettergov-horizontal-primary.png" alt="BetterGov.ph" width="128" height="28" />
-          </a>
-        </div>
-        <nav class="subnav" aria-label="Primary">
-          <div class="subnav-inner">
-            <a href="overview-mobile.html" aria-current="page">Overview</a>
-            <a href="explorer.html">List</a>
-            <a href="overview-mobile.html#offices">Offices</a>
+        <div class="site-header-bar" style="flex-direction: column; align-items: stretch">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem">
+            <a class="nav-brand" href="overview-mobile.html">
+              <img src="logos/window-color.svg" width="32" height="32" alt="" />
+              <span class="nav-brand-text">
+                <span class="nav-brand-name">Iloilo Transparency</span>
+                <span class="nav-brand-sub">Independent · Unofficial</span>
+              </span>
+            </a>
+            <select class="fy-select" aria-label="Fiscal year" style="margin-left: 0">
+              <option selected>FY2027</option>
+            </select>
           </div>
-        </nav>
+          <nav class="site-nav" aria-label="Primary">
+            <a href="overview-mobile.html" aria-current="page">Overview</a>
+            <a href="enacted.html">Enacted</a>
+            <a href="explorer.html">Explorer</a>
+            <a href="#offices">Offices</a>
+          </nav>
+        </div>
       </header>
 
-      <main class="page-wrap" style="padding-top: 1.25rem">
-        <h1 class="page-title" style="font-size: 1.75rem">Understand public budgets across Iloilo.</h1>
-        <form class="search-row" role="search" aria-label="Search projects">
-          <div class="field field-grow">
-            <label for="q-m">Search</label>
-            <input id="q-m" type="search" placeholder="Barangay, road, school…" />
-          </div>
-          <button type="submit" class="button" style="width: 100%">Search</button>
-        </form>
+      <main id="main" class="page-wrap" style="padding-top: 1.25rem">
+        <h1 class="page-title" style="font-size: 1.65rem">Public budgets across Iloilo.</h1>
+        <p class="lede">Projects tied to Iloilo Province and Iloilo City in national budget documents.</p>
 
-        <section id="offices" class="section">
-          <h2 class="section-title" style="font-size: 1.125rem">6 DPWH offices</h2>
-          <p class="filter-showing" id="filter-showing" aria-live="polite">Showing: All project records (six offices) <span class="sample-badge">Sample</span></p>
+        <div class="summary-cards" aria-label="Summary figures">
+          <div class="summary-card">
+            <div>
+              <p class="stat-label">Project records <span class="sample-badge">Sample</span></p>
+              <p class="stat-value num anim-value" id="summary-records" style="font-size: 1.5rem"><span class="is-visible">360</span></p>
+              <p class="stat-note" id="summary-records-note">Six offices · 60 per office (sample)</p>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div>
+              <p class="stat-label">Proposed · NEP <span class="sample-badge">Sample</span></p>
+              <p class="stat-value num anim-value" id="summary-nep" style="font-size: 1.5rem"><span class="is-visible">₱16.0B</span></p>
+              <p class="stat-note" id="summary-nep-note">NEP on 340 records (sample)</p>
+            </div>
+          </div>
+          <div class="summary-card">
+            <div>
+              <p class="stat-label">House version <span class="sample-badge">Sample</span></p>
+              <p class="stat-value num anim-value" id="summary-house" style="font-size: 1.5rem"><span class="is-visible">₱17.0B</span></p>
+              <p class="stat-note" id="summary-house-note">House on 350 records (sample)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-toolbar">
+          <div class="search-field">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <label class="visually-hidden" for="q-m">Search</label>
+            <input id="q-m" type="search" placeholder="Search projects…" />
+          </div>
+          <select class="office-select" aria-label="Office" style="width: 100%">
+            <option>All offices</option>
+          </select>
+        </div>
+        <div class="chips-row">
+          <div class="chips" id="bridge-chips" role="group" aria-label="Filter by bridge status"></div>
+          <button type="button" class="clear-filters" id="clear-filters">Clear filters</button>
+        </div>
+        <p class="filter-showing" id="filter-showing" aria-live="polite">Showing: All <span class="sample-badge">Sample</span></p>
+
+        <section class="section" id="offices">
+          <h2 class="section-title" style="font-size: 1.125rem">Explore by engineering office</h2>
+          <p class="section-lede">A shared office’s money is never split between districts. <a href="#coverage-methodology">Coverage details →</a></p>
           <div class="office-grid" id="office-grid"></div>
-          <p class="progress-note">Progress data: not available. These are budget amounts, not spending or completion.</p>
-          <p class="stat-note office-scope-note" id="office-scope-note"><strong>Sample summary for the six offices (table below)</strong> <span class="sample-badge">Sample</span> — 360 records; NEP on 340 · House on 350.</p>
-          <p class="chart-alt"><a href="#office-table">Table view</a> · all six offices</p>
+          <p class="portraits-credit">Portraits: House of Representatives of the Philippines, public domain, via Wikimedia Commons.</p>
+        </section>
+
+        <section class="section" id="compare">
+          <h2 class="section-title" style="font-size: 1.125rem">Compare offices</h2>
+          <p class="compare-callout" style="margin-bottom: 1rem">Budget allocations, not spending or completion.</p>
+          <div class="chips" id="table-chips" role="group" aria-label="Table office filter" style="margin-bottom: 0.75rem"></div>
           <div class="data-table-wrap" id="office-table">
             <table class="data-table">
-              <caption class="stat-label" style="caption-side: top; padding: 0.5rem 0.75rem; text-align: left">Offices (sample) <span class="sample-badge">Sample</span></caption>
               <thead>
                 <tr>
                   <th scope="col">Office</th>
                   <th scope="col" class="num">NEP</th>
                   <th scope="col" class="num">House</th>
-                  <th scope="col" class="num">Records</th>
+                  <th scope="col" class="num">Rec.</th>
                   <th scope="col" class="num">Change</th>
                 </tr>
               </thead>
               <tbody></tbody>
             </table>
           </div>
-          <div class="chips" id="bridge-chips" role="group" aria-label="Filter by bridge status" style="margin-top: 1rem"></div>
         </section>
 
-        <div class="stats-grid" style="margin-top: 1.5rem">
-          <div class="stat-cell">
-            <p class="stat-label">Records <span class="sample-badge">Sample</span></p>
-            <p class="stat-value num filter-value" id="summary-records" style="font-size: 1.5rem"><span class="is-visible">360</span></p>
-            <p class="stat-note" id="summary-records-note">Six offices · 60 per office</p>
-          </div>
-          <div class="stat-cell">
-            <p class="stat-label">Proposed (NEP) <span class="sample-badge">Sample</span></p>
-            <p class="stat-value num filter-value" id="summary-nep" style="font-size: 1.5rem"><span class="is-visible">₱16.0B</span></p>
-            <p class="stat-note" id="summary-nep-note">NEP on 340 records</p>
-          </div>
-          <div class="stat-cell">
-            <p class="stat-label">House version <span class="sample-badge">Sample</span></p>
-            <p class="stat-value num filter-value" id="summary-house" style="font-size: 1.5rem"><span class="is-visible">₱17.0B</span></p>
-            <p class="stat-note" id="summary-house-note">House on 350 records</p>
-          </div>
-        </div>
-        <p class="fine portraits-credit">Portraits: House of Representatives of the Philippines, public domain, via Wikimedia Commons.</p>
-        <p class="stat-note">Portal-wide sample: 400 records · NEP on 360 · House on 380 · House version only 40.</p>
+        <section class="section">
+          <details class="accordion" id="coverage-methodology">
+            <summary>Coverage and methodology <svg class="chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="accordion-body">
+              <p>Six DEOs; never split a shared office. Neighbouring Capiz/Antique lines are shown whole.</p>
+            </div>
+          </details>
+          <details class="accordion">
+            <summary>Sources and exclusions <svg class="chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="accordion-body"><p>NEP FY 2027 and House Bill 10858 via BetterGov.ph Budget API.</p></div>
+          </details>
+          <details class="accordion">
+            <summary>Corrections and contact <svg class="chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="accordion-body">
+              <p><a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+            </div>
+          </details>
+        </section>
       </main>
 
       <footer class="site-footer">
         <div class="footer-inner">
-          <p class="footer-source">Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API · data built October 26, 2026</p>
-          <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
-          <p class="footer-legal"><a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a> · Data: BetterGov.ph Budget API, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, filtered and summarised for this portal.</p>
-          <p class="footer-legal">Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+          <div class="footer-meta">
+            <p>Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API</p>
+            <p>
+              <a href="/LICENSE.txt">MIT License</a> ·
+              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" aria-label="CC BY 4.0 (opens in new tab)">CC BY 4.0</a>
+            </p>
+            <p>Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+          </div>
+          <a class="footer-powered" href="https://bettergov.ph/" target="_blank" rel="noopener" aria-label="BetterGov.ph (opens in new tab)">
+            <span class="label">Powered by</span>
+            <img src="../public/brand/bettergov-horizontal-primary.png" alt="" width="128" height="28" />
+          </a>
+          <p class="footer-disclosure">Independent volunteer project — not an official government site.</p>
         </div>
       </footer>
     </div>

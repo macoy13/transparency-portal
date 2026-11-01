@@ -8,16 +8,24 @@
     <link rel="stylesheet" href="mockups.css" />
   </head>
   <body>
-    <p class="sample-banner" role="status">Sample data: figures are illustrative, not real values.</p>
+    <p class="sample-banner" role="status">Sample data · Illustrative figures only.</p>
     <div class="mockup-frame--desktop components-page">
       <header class="site-header">
-        <p class="site-header-top">Design system sheet · not a production route</p>
-        <div class="site-header-main">
-          <span class="nav-brand-name">Iloilo Transparency · R0 components</span>
-          <a class="masthead-with" href="https://bettergov.ph/" target="_blank" rel="noopener">
-            <span class="label">Data from</span>
-            <img src="../public/brand/bettergov-horizontal-primary.png" alt="BetterGov.ph" width="128" height="28" />
+        <div class="site-header-bar">
+          <a class="nav-brand" href="overview-desktop.html">
+            <img src="logos/window-color.svg" width="36" height="36" alt="" />
+            <span class="nav-brand-text">
+              <span class="nav-brand-name">Iloilo Transparency</span>
+              <span class="nav-brand-sub">R0 components · Independent · Unofficial</span>
+            </span>
           </a>
+          <nav class="site-nav" aria-label="Primary">
+            <a href="overview-desktop.html">Overview</a>
+            <a href="enacted.html">Enacted budgets</a>
+            <a href="explorer.html">Project explorer</a>
+            <a href="components.html" aria-current="page">Components</a>
+          </nav>
+          <select class="fy-select" aria-label="Fiscal year"><option selected>FY2027</option></select>
         </div>
       </header>
 
@@ -35,9 +43,8 @@
           <h2>Buttons &amp; links</h2>
           <p style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center">
             <button type="button" class="button">Primary action</button>
-            <button type="button" class="button button-quiet">Quiet button</button>
             <a href="components.html">Text link</a>
-            <button type="button" class="link-button">Link button</button>
+            <button type="button" class="clear-filters" style="margin: 0">Clear filters</button>
           </p>
         </section>
 
@@ -49,38 +56,39 @@
         <section class="component-row">
           <h2>Filter chips</h2>
           <div class="chips">
-            <button type="button" class="chip" aria-pressed="true">Increased</button>
-            <button type="button" class="chip" aria-pressed="false">Decreased</button>
-            <button type="button" class="chip" disabled>Empty group</button>
+            <button type="button" class="chip" aria-pressed="true">All (360)</button>
+            <button type="button" class="chip" aria-pressed="false">Higher in House (96)</button>
+            <button type="button" class="chip" disabled>Same amount (186) <span class="chip-demo-note">(demo: not wired)</span></button>
           </div>
         </section>
 
         <section class="component-row">
           <h2>Search &amp; select</h2>
-          <div class="search-row">
-            <div class="field field-grow">
-              <label for="c-search">Search</label>
+          <div class="search-toolbar">
+            <div class="search-field">
+              <label class="visually-hidden" for="c-search">Search</label>
               <input id="c-search" type="search" placeholder="Barangay, road…" />
             </div>
-            <div class="field">
-              <label for="c-select">Program</label>
-              <select id="c-select"><option>All programs</option></select>
-            </div>
+            <select class="office-select" aria-label="Program"><option>All programs</option></select>
           </div>
         </section>
 
         <section class="component-row">
-          <h2>Summary figure (portal-wide) <span class="sample-badge">Sample</span></h2>
-          <div class="stats-grid" style="max-width: 28rem">
-            <div class="stat-cell">
-              <p class="stat-label">Project records</p>
-              <p class="stat-value num">400</p>
-              <p class="stat-note">340 both · 40 House-only · 20 proposed-only</p>
+          <h2>Summary figure cards <span class="sample-badge">Sample</span></h2>
+          <div class="summary-cards" style="max-width: 48rem">
+            <div class="summary-card">
+              <div>
+                <p class="stat-label">Project records</p>
+                <p class="stat-value num">360</p>
+                <p class="stat-note">Six offices · 60 per office (sample)</p>
+              </div>
             </div>
-            <div class="stat-cell">
-              <p class="stat-label">NEP / House reach</p>
-              <p class="stat-value num" style="font-size: 1.25rem">360 / 380</p>
-              <p class="stat-note">Records with a line in each version</p>
+            <div class="summary-card">
+              <div>
+                <p class="stat-label">Proposed · NEP</p>
+                <p class="stat-value num">₱16.0B</p>
+                <p class="stat-note">NEP on 340 records (sample)</p>
+              </div>
             </div>
           </div>
         </section>
@@ -101,21 +109,25 @@
         </section>
 
         <section class="component-row">
-          <h2>Office card (Home) <span class="sample-badge">Sample</span></h2>
+          <h2>Office card (Mark layout) <span class="sample-badge">Sample</span></h2>
           <article class="office-card" style="max-width: 22rem">
-            <div class="office-card-head">
-              <svg class="office-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
-              <h3 class="office-card-title">Iloilo 1st District Engineering Office</h3>
+            <header class="ocard-top">
+              <div class="ocard-title-row">
+                <svg class="office-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+                <div>
+                  <p class="ocard-eyebrow">Region VI</p>
+                  <h3 class="office-card-title">Iloilo 1st District Engineering Office</h3>
+                </div>
+              </div>
+              <span class="records-badge">60 records</span>
+            </header>
+            <div class="ocard-amounts">
+              <div><p class="stat-label">Proposed · NEP</p><p class="ocard-fig num">₱2.8B</p></div>
+              <div><p class="stat-label">House version</p><p class="ocard-fig num">₱3.0B</p></div>
             </div>
-            <dl class="office-card-figures">
-              <div><dt>Proposed (NEP) <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">₱2.8B</span></dd></div>
-              <div><dt>House version <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">₱3.0B</span></dd></div>
-              <div><dt>Project records <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">60</span></dd></div>
-              <div><dt>Change <span class="sample-badge">Sample</span></dt><dd class="num office-change office-card-value"><span class="is-visible">+₱0.2B (+7.1%)</span></dd></div>
-            </dl>
-            <p class="bar-compare-note">Compared, not added.</p>
+            <p class="change-pill">+₱0.2B (+7.1%)</p>
+            <a class="button button-card" href="explorer.html">View projects →</a>
           </article>
-          <p class="progress-note" style="margin-top: 1rem">Progress data: not available. These are budget amounts, not spending or completion.</p>
         </section>
 
         <section class="component-row">
@@ -168,10 +180,16 @@
       </main>
       <footer class="site-footer">
         <div class="footer-inner">
-          <p class="footer-source">Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API · data built October 26, 2026</p>
-          <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
-          <p class="footer-legal"><a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a> · Data: BetterGov.ph Budget API, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, filtered and summarised for this portal.</p>
-          <p class="footer-legal">Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+          <div class="footer-meta">
+            <p>Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API</p>
+            <p>
+              <a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a>
+              · Data licensed
+              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" aria-label="CC BY 4.0 (opens in new tab)">CC BY 4.0</a>
+            </p>
+            <p>Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+          </div>
+          <p class="footer-disclosure">Independent volunteer project — not an official government site.</p>
         </div>
       </footer>
     </div>
