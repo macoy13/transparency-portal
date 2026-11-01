@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import type { BridgeGroup, DatasetInfo, Disclaimer, GroupInfo } from '../api/types';
 import { BRIDGE_GROUPS } from '../api/types';
@@ -32,7 +32,7 @@ function scrollToProjects() {
 }
 
 /** The one `q` field. `controls` points the hero search at the project list. */
-function QueryField({ q, onChange, controls }: { q: string; onChange: (value: string) => void; controls?: string }) {
+function QueryField({ q, onChange, controls, submitHint }: { q: string; onChange: (value: string) => void; controls?: string; submitHint?: boolean }) {
   return (
     <label className="field field-grow">
       <span className="label">Search</span>
@@ -41,6 +41,7 @@ function QueryField({ q, onChange, controls }: { q: string; onChange: (value: st
         value={q}
         placeholder="Barangay, road, school, office…"
         aria-controls={controls}
+        enterKeyHint={submitHint ? 'search' : undefined}
         onChange={(e) => onChange(e.target.value)}
       />
     </label>
@@ -164,7 +165,17 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
   return (
     <>
       {leadSearch ? (
-        <HomeIntro narrow={narrow} eyebrow={eyebrow} title={title} lede={lede} totals={totals} q={q} onQuery={(value) => setParam('q', value)} />
+        <HomeIntro
+          narrow={narrow}
+          eyebrow={eyebrow}
+          title={title}
+          lede={lede}
+          totals={totals}
+          q={q}
+          shown={filtered.length}
+          total={all.length}
+          onQuery={(value) => setParam('q', value)}
+        />
       ) : (
         <>
           <PageHead eyebrow={eyebrow} title={title}>
@@ -304,6 +315,8 @@ function HomeIntro({
   lede,
   totals,
   q,
+  shown,
+  total,
   onQuery,
 }: {
   narrow: boolean;
@@ -312,26 +325,16 @@ function HomeIntro({
   lede: ReactNode;
   totals: ReactNode;
   q: string;
+  shown: number;
+  total: number;
   onQuery: (value: string) => void;
 }) {
-  const jumpTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => () => {
-    if (jumpTimer.current) clearTimeout(jumpTimer.current);
-  }, []);
-
-  const settle = (value: string) => {
-    if (jumpTimer.current) clearTimeout(jumpTimer.current);
-    // A pause in typing opens the list. Clearing the field leaves the page put.
-    if (!value.trim()) return;
-    jumpTimer.current = setTimeout(scrollToProjects, 350);
-  };
+  // Enter, or the keyboard's search key, opens the list. Typing does not scroll.
   const submit = () => {
-    if (jumpTimer.current) clearTimeout(jumpTimer.current);
     scrollToProjects();
-    // Leave the field, or the next key scrolls it back and hides the list.
     document.getElementById('list-h')?.focus({ preventScroll: true });
   };
-  const search = <LeadSearch q={q} onQuery={onQuery} onSettle={settle} onSubmit={submit} />;
+  const search = <LeadSearch q={q} shown={shown} total={total} onQuery={onQuery} onSubmit={submit} />;
 
   return (
     <div className={narrow ? 'home-top home-top-narrow' : 'home-top'}>
@@ -355,13 +358,15 @@ function HomeIntro({
 
 function LeadSearch({
   q,
+  shown,
+  total,
   onQuery,
-  onSettle,
   onSubmit,
 }: {
   q: string;
+  shown: number;
+  total: number;
   onQuery: (value: string) => void;
-  onSettle: (value: string) => void;
   onSubmit: () => void;
 }) {
   return (
@@ -373,14 +378,10 @@ function LeadSearch({
         onSubmit();
       }}
     >
-      <QueryField
-        q={q}
-        controls="projects"
-        onChange={(value) => {
-          onQuery(value);
-          onSettle(value);
-        }}
-      />
+      <QueryField q={q} controls="projects" submitHint onChange={onQuery} />
+      <p className="home-search-count" aria-live="polite" aria-atomic="true">
+        {count(shown)} of {plural(total, 'project')}
+      </p>
     </form>
   );
 }

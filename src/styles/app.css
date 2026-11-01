@@ -112,6 +112,7 @@
 .home-search { margin: 0 0 28px; min-width: 0; max-width: 100%; }
 .home-search .field { width: 100%; max-width: 100%; min-width: 0; }
 .home-search input { width: 100%; max-width: 100%; min-width: 0; }
+.home-search-count { margin: 8px 0 0; font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); }
 .home-top-narrow .home-search { margin-top: 16px; margin-bottom: 16px; }
 .home-top-narrow .stats { margin-bottom: 16px; }
 .home-top-narrow .lede { margin-top: 0; margin-bottom: 28px; }
