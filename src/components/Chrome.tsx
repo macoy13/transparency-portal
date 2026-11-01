@@ -175,6 +175,7 @@ export function PortalCredits() {
       {' · '}
       Data: BetterGov.ph Budget API, licensed{' '}
       <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
+      {', filtered and summarised for this portal.'}
     </p>
   );
 }

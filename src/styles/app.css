@@ -409,6 +409,7 @@ code { font-family: var(--font-mono); font-size: 0.9em; background: var(--paper-
 .footer-links li { display: flex; flex-direction: column; gap: 4px; }
 .footer-legal { font-size: 12px; color: var(--ink-3); line-height: 1.5; margin: 18px 0 0; }
 .footer-legal a { color: inherit; }
+.footer-legal a:hover { color: var(--accent); }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
