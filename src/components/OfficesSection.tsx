@@ -548,7 +548,7 @@ function CompactOfficeCard({
           </div>
         </div>
         <span className="records-badge anim-value">
-          <AnimValue text={`${count(lines)} records`} />
+          <AnimValue text={plural(lines, 'record')} />
         </span>
       </header>
 
