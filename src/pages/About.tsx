@@ -109,6 +109,8 @@ function AboutView({ scope, overview }: { scope: ScopeResult; overview: Overview
         )}
       </section>
 
+      <DeoMappingNote />
+
       <section className="section two-col" aria-labelledby="r-h">
         <div>
           <h2 id="r-h" className="section-h">How to read the figures</h2>
@@ -159,6 +161,38 @@ function AboutView({ scope, overview }: { scope: ScopeResult; overview: Overview
         </p>
       </section>
     </>
+  );
+}
+
+/**
+ * Iloilo only. The config has no field for a reading note, so the
+ * district-to-DEO mapping lives here. Other portals do not show it.
+ */
+function DeoMappingNote() {
+  const { config } = usePortal();
+  if (config.id !== 'iloilo') return null;
+  return (
+    <section className="section" aria-labelledby="deo-h">
+      <h2 id="deo-h" className="section-h">District engineering offices and legislative districts</h2>
+      <p>
+        In Iloilo the DPWH district engineering office numbers are not the legislative district numbers.
+        This portal follows six offices, each shown whole. An office’s budget is never split across the districts it serves.
+      </p>
+      <ul className="plain-list">
+        <li>Iloilo City, lone district: Iloilo City District Engineering Office.</li>
+        <li>1st legislative district: Iloilo 1st District Engineering Office.</li>
+        <li>2nd legislative district: Iloilo 4th District Engineering Office.</li>
+        <li>3rd legislative district: Iloilo 6th District Engineering Office.</li>
+        <li>4th legislative district: Iloilo 2nd District Engineering Office.</li>
+        <li>5th legislative district: Iloilo 3rd District Engineering Office.</li>
+      </ul>
+      <p>There is no Iloilo 5th District Engineering Office.</p>
+      <p>
+        The API maps the Iloilo 4th DEO only to the 2nd District. The Iloilo 6th DEO, which now serves the 3rd District,
+        has no labelled amounts before 2025 (missing, not zero), so 2020–2024 office figures for the 3rd District cannot
+        be attributed from this data.
+      </p>
+    </section>
   );
 }
 
