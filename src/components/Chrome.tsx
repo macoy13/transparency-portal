@@ -15,7 +15,8 @@ function KickerText({ text }: { text: string }) {
       {i > 0 && (
         <>
           {' '}
-          <span aria-hidden="true">·</span>{' '}
+          <span aria-hidden="true">·</span>
+          <span className="sr-only">,</span>{' '}
         </>
       )}
       {part}
@@ -160,8 +161,21 @@ export function Footer() {
             </li>
           )}
         </ul>
+        <PortalCredits />
       </div>
     </footer>
+  );
+}
+
+/** Same-site software notice, plus the API's data licence. Shown on every fork. */
+export function PortalCredits() {
+  return (
+    <p className="footer-legal">
+      <a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a>
+      {' · '}
+      Data: BetterGov.ph Budget API, licensed{' '}
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>
+    </p>
   );
 }
 

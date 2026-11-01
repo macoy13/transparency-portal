@@ -407,6 +407,8 @@ code { font-family: var(--font-mono); font-size: 0.9em; background: var(--paper-
 .footer-notice { font-size: 12.5px; color: var(--ink-2); max-width: 900px; margin: 0 0 20px; line-height: 1.55; overflow-wrap: anywhere; }
 .footer-links { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; font-size: 13.5px; }
 .footer-links li { display: flex; flex-direction: column; gap: 4px; }
+.footer-legal { font-size: 12px; color: var(--ink-3); line-height: 1.5; margin: 18px 0 0; }
+.footer-legal a { color: inherit; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
@@ -461,9 +463,9 @@ code { font-family: var(--font-mono); font-size: 0.9em; background: var(--paper-
   .queries .tr > span:first-child { grid-column: 1 / -1; }
 }
 
-/* The Iloilo sentence stays on one line beside the mark from 492px up.
-   Below that it wraps, so the mark moves to the next row. */
-@media (max-width: 490px) {
+/* Measured 480–560px. From 521px up the sentence is one line beside the mark.
+   At 520px and below the mark sits on the next row, and the sentence stays one line. */
+@media (max-width: 520px) {
   .masthead-main:has(.masthead-kicker-custom) {
     flex-wrap: wrap;
     row-gap: 10px;

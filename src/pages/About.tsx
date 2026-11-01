@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import type { Disclaimer, Overview } from '../api/types';
 import { shortNameOf, showApiLinks, showSourceLinks } from '../config';
 import { Await, Disclaimers, External } from '../components/Bits';
-import { PageHead } from '../components/Chrome';
+import { PageHead, PortalCredits } from '../components/Chrome';
 import { count, date, plural } from '../lib/format';
 import { SOURCE_CODE_URL } from '../lib/links';
 import { usePortal } from '../lib/portal-context';
@@ -177,20 +177,20 @@ function AboutView({ scope, overview }: { scope: ScopeResult; overview: Overview
           Data version: comparison <ComparisonCredit repo={meta.source_repo} commit={meta.source_commit} />,
           built {date(meta.built_at)}. Every project nationwide: <External href={overview.url}>budget.bettergov.ph</External>.
         </p>
+        <PortalCredits />
       </section>
 
-      <section className="section build-own" aria-labelledby="b-h">
-        <h2 id="b-h" className="section-h">Run a portal like this for your LGU or DPWH office</h2>
-        <p>
-          This portal is open source. Fork it, run <code>npm run setup</code> to pick your province, city, municipality or
-          district engineering office, and deploy it to Cloudflare, Vercel or Netlify. It needs no database: the data comes
-          from the same API.{' '}
-          {__CHROME_SOURCE_LINKS__ && showSourceLinks(config) && (
-            <><External href={SOURCE_CODE_URL}>Source code</External> · </>
-          )}
-          <Link to="/">Back to the projects</Link>
-        </p>
-      </section>
+      {__CHROME_SOURCE_LINKS__ && showSourceLinks(config) && (
+        <section className="section build-own" aria-labelledby="b-h">
+          <h2 id="b-h" className="section-h">Run a portal like this for your LGU or DPWH office</h2>
+          <p>
+            This portal is open source. Fork it, run <code>npm run setup</code> to pick your province, city, municipality or
+            district engineering office, and deploy it to Cloudflare, Vercel or Netlify. It needs no database: the data comes
+            from the same API.{' '}
+            <External href={SOURCE_CODE_URL}>Source code</External> · <Link to="/">Back to the projects</Link>
+          </p>
+        </section>
+      )}
     </>
   );
 }
