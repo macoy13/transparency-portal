@@ -17,6 +17,7 @@ import { createClient } from '../src/api/client.ts';
 import { configProblems, DEFAULT_API } from '../src/config.ts';
 import { resolveScope, summarise } from '../src/lib/scope.ts';
 import { departmentShort, gaaYearTotals, resolveGaa } from '../src/lib/gaa.ts';
+import { ILOILO_NEIGHBOUR_SHARES, ILOILO_PORTAL_ID, formatIloiloNeighbourShares, neighbourShareProblems, neighbourYearShares } from '../src/lib/iloilo-neighbours.ts';
 import { GAA_YEARS, type GaaEnvelope } from '../src/api/types.ts';
 import { count, php, plural } from '../src/lib/format.ts';
 
@@ -93,6 +94,21 @@ async function main() {
     }
     for (const t of gaaYearTotals(gaa.rows)) console.log(`  ${t.year}: ${php(t.amount)} on ${count(t.programs)} programs`);
 
+    // Iloilo only. The About page publishes each year's share of that total
+    // that also names Capiz, Antique or Aklan. Recompute it from these rows
+    // so the sentence cannot drift. With no kept rows the shares cannot be
+    // checked, so say so. Other portals skip this.
+    if (config.id === ILOILO_PORTAL_ID) {
+      if (gaa.rows.length === 0) {
+        problems.push('neighbouring-province shares are published for Iloilo, but the enacted-budget search kept no rows, so they cannot be checked.');
+      } else {
+        const shares = neighbourYearShares(gaa.rows);
+        const shown = shares.map((s) => ({ year: s.year, percent: s.percent ?? '—' }));
+        console.log(`  neighbouring-province shares: ${formatIloiloNeighbourShares(shown)}`);
+        for (const p of neighbourShareProblems(shares, ILOILO_NEIGHBOUR_SHARES)) problems.push(p);
+      }
+    }
+
     // Reconcile: for every search and year, the rows loaded add up to the API's own total for that search.
     const withExcluded = [...gaa.rows, ...gaa.excluded.flatMap((x) => (x.row ? [x.row] : []))];
     let checked = 0;
@@ -110,6 +126,9 @@ async function main() {
     for (const { exclusion, row } of gaa.excluded) {
       if (!row) problems.push(`exclusion ${exclusion.key} matches no 2020–2026 program; remove it.`);
     }
+  } else if (config.id === ILOILO_PORTAL_ID) {
+    // The About page still prints the shares when the config names no place.
+    problems.push('neighbouring-province shares are published for Iloilo, but the config names no place, so they cannot be checked.');
   }
 
   for (const w of warnings) console.log(`\nwarning: ${w}`);
