@@ -31,7 +31,7 @@ export function CompactSummaryCards({
   const recordsNote = filtered
     ? `${count(summary.rows)} shown of ${plural(totalRows, 'record')} · ${count(shownOffices)} of ${plural(totalOffices, 'office')}`
     : totalOffices
-      ? `${plural(totalOffices, 'office')} · ${plural(summary.rows, 'record')} in this portal`
+      ? `${plural(totalOffices, 'office')} · ${plural(summary.rows, 'record')}`
       : plural(summary.rows, 'record');
 
   const nepValue = summary.nep.rows ? php(summary.nep.php) : '—';

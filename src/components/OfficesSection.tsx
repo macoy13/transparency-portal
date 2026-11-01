@@ -18,6 +18,7 @@ import type { BridgeGroup, DistrictCard, DistrictOffice, Envelope } from '../api
 import { BRIDGE_GROUPS } from '../api/types';
 import { compactChrome } from '../config';
 import { count, php, phpDelta, plural } from '../lib/format';
+import { isHeldOutOfOffice } from '../lib/office-figures';
 import { usePortal } from '../lib/portal-context';
 import type { QueryReport, ScopedProject } from '../lib/scope';
 import { Await, External } from './Bits';
@@ -305,12 +306,6 @@ interface CardFigures {
   changeLabel: string;
 }
 
-/** Held out of office figures: flag or listed on the office's office_change.lines. */
-function isHeldOutOfOffice(p: ScopedProject, heldIds: Set<string>): boolean {
-  if (p.flags?.includes('office_difference')) return true;
-  return heldIds.has(p.id);
-}
-
 function heldOutIdsFor(offices: OfficeView[]): Set<string> {
   const ids = new Set<string>();
   for (const o of offices) {
@@ -383,9 +378,10 @@ function changeLabels(amts: OfficeAmounts): {
     const signed = `${pct > 0 ? '+' : pct < 0 ? '−' : ''}${Math.abs(pct).toFixed(1)}%`;
     changePctLabel = `${signed} on ${plural(bothRows, 'line')} in both`;
   }
+  const totalsNote = 'House vs NEP totals · different line sets';
   const changeLabel = changePctLabel
-    ? `${changePhpLabel} · House vs NEP totals · ${changePctLabel}`
-    : `${changePhpLabel} · House vs NEP totals`;
+    ? `${changePhpLabel} · ${totalsNote} · ${changePctLabel}`
+    : `${changePhpLabel} · ${totalsNote}`;
   return { changePhp, changePhpLabel, changePctLabel, changeLabel };
 }
 
@@ -409,9 +405,13 @@ function CompactOffices({
 
   // Cards always sum the same source: portal projects minus held-out lines.
   const sourceRows = compact.filtered;
+  const scopeSet = useMemo(() => new Set(config.scope.offices ?? []), [config.scope.offices]);
+
   const cardRows: CardFigures[] = useMemo(() => {
     return offices
       .map((view): CardFigures | null => {
+        // Only configured portal offices render cards (summary “k of N” matches).
+        if (scopeSet.size && !scopeSet.has(view.printed)) return null;
         const amounts = officeAmountsFromProjects(sourceRows, view.printed, heldIds);
         // Hide offices with nothing left after filters + held-out exclusion.
         if (!amounts.lines) return null;
@@ -419,7 +419,7 @@ function CompactOffices({
         return { view, amounts, changePhp, changePhpLabel, changePctLabel, changeLabel };
       })
       .filter((r): r is CardFigures => r != null);
-  }, [offices, sourceRows, heldIds]);
+  }, [offices, sourceRows, heldIds, scopeSet]);
 
   const scaleMax = useMemo(() => {
     let max = 0;
@@ -435,6 +435,7 @@ function CompactOffices({
     const counts: Record<string, number> = { all: 0 };
     for (const g of BRIDGE_GROUPS) counts[g] = 0;
     for (const o of offices) {
+      if (scopeSet.size && !scopeSet.has(o.printed)) continue;
       const kept = compact.scoped.filter(
         (p) => p.office === o.printed && !isHeldOutOfOffice(p, heldIds),
       );
@@ -449,7 +450,16 @@ function CompactOffices({
       }
     }
     return counts;
-  }, [offices, compact.scoped, heldIds]);
+  }, [offices, compact.scoped, heldIds, scopeSet]);
+
+  const heldOutOnlyEmpty =
+    cardRows.length === 0 &&
+    compact.filtered.some(
+      (p) =>
+        !!p.office &&
+        (!scopeSet.size || scopeSet.has(p.office)) &&
+        isHeldOutOfOffice(p, heldIds),
+    );
 
   const animKey = `${compact.status}|${compact.office}|${compact.filtered.length}|${scaleMax}`;
 
@@ -477,7 +487,12 @@ function CompactOffices({
         ))}
       </div>
       {cardRows.length === 0 && (
-        <p className="state">No office matches these filters.</p>
+        <p className="state">
+          No office matches these filters.
+          {heldOutOnlyEmpty && (
+            <> Matching lines are held out from office totals; see the notes.</>
+          )}
+        </p>
       )}
       <p className="portraits-credit">Portraits: {PORTRAIT_CREDIT}.</p>
 
@@ -566,7 +581,12 @@ function CompactOffices({
           </table>
         </div>
         {cardRows.length === 0 && (
-          <p className="state">No offices to compare for this filter.</p>
+          <p className="state">
+            No offices to compare for this filter.
+            {heldOutOnlyEmpty && (
+              <> Matching lines are held out from office totals; see the notes.</>
+            )}
+          </p>
         )}
       </section>
     </>
@@ -649,7 +669,10 @@ function CompactOfficeCard({
               <AnimValue text={changePhpLabel} />
             </span>
             {changePhpLabel !== '—' && (
-              <span className="change-meta">House vs NEP totals</span>
+              <span className="change-meta">
+                <span className="change-meta-full">House vs NEP totals · different line sets</span>
+                <span className="change-meta-short">Different line sets</span>
+              </span>
             )}
             {changePctLabel && <span className="change-pct">{changePctLabel}</span>}
           </p>
@@ -729,7 +752,11 @@ function CompactOfficeCard({
             {f ? <> API office totals list {count(f.nep_records)} in the NEP and {count(f.hgab3_records)} in the House bill.</> : null}
             {wholeNep != null && <> The whole office in the NEP: {php(wholeNep)}.</>}
             {unconfirmed > 0 && (
-              <> Includes {plural(unconfirmed, 'unconfirmed match', 'unconfirmed matches')} ({php(f?.annotations?.unconfirmed_php)}).</>
+              <>
+                {' '}
+                Office-wide: includes {plural(unconfirmed, 'unconfirmed match', 'unconfirmed matches')} (
+                {php(f?.annotations?.unconfirmed_php)}).
+              </>
             )}
             {held > 0 && (
               <> {plural(held, 'line')} whose two versions name different offices {held === 1 ? 'is' : 'are'} not in these figures.</>

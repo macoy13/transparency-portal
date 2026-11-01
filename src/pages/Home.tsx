@@ -14,6 +14,7 @@ import OfficesSection from '../components/OfficesSection';
 import { projectsCsv, downloadText } from '../lib/csv';
 import { compactChipLabel } from '../lib/compact-chips';
 import { count, php, phpDelta, plural } from '../lib/format';
+import { countVisibleCompactOffices, heldOutLineIdsFromDistricts } from '../lib/office-figures';
 import { usePortal } from '../lib/portal-context';
 import { summarise, type ScopedProject, type ScopeResult, type Summary } from '../lib/scope';
 import { useTitle } from '../lib/use-title';
@@ -353,15 +354,20 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
     </section>
   );
 
+  const heldIds = useMemo(
+    () => (districts.status === 'ready' ? heldOutLineIdsFromDistricts(districts.value) : new Set<string>()),
+    [districts],
+  );
+  const scopeOfficeList = useMemo(() => config.scope.offices ?? [], [config.scope.offices]);
+  const visibleOfficeCount = useMemo(
+    () => countVisibleCompactOffices(scopeOfficeList, filtered, heldIds),
+    [scopeOfficeList, filtered, heldIds],
+  );
+
   if (compact) {
     const showingLabel = status ? compactChipLabel(status, groups[status]?.label) : compactChipLabel('all');
     const displaySummary = narrowed ? filteredSummary : summary;
-    const officeCount = config.scope.offices?.length ?? offices.length;
-    const shownOffices = new Set(
-      filtered
-        .filter((p) => p.office && !p.flags?.includes('office_difference'))
-        .map((p) => p.office as string),
-    ).size;
+    const officeCount = scopeOfficeList.length || offices.length;
     const compactLede =
       config.home?.compactLede?.trim() ||
       `Projects tied to ${name} in national budget documents — by office, program, and name.`;
@@ -379,7 +385,7 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
           summary={displaySummary}
           totalRows={summary.rows}
           totalOffices={officeCount}
-          shownOffices={shownOffices}
+          shownOffices={visibleOfficeCount}
           filtered={narrowed}
         />
 

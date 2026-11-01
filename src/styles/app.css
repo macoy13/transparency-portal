@@ -1009,6 +1009,11 @@ html[data-chrome="compact"] .change-pct {
   font-weight: 600;
   color: var(--ink-3);
 }
+html[data-chrome="compact"] .change-meta-short { display: none; }
+@media (max-width: 720px) {
+  html[data-chrome="compact"] .change-meta-full { display: none; }
+  html[data-chrome="compact"] .change-meta-short { display: inline; }
+}
 html[data-chrome="compact"] .mini-bar-row {
   display: grid;
   grid-template-columns: 3.25rem minmax(0, 1fr) 3.5rem;
