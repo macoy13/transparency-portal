@@ -1049,12 +1049,12 @@ table.data-table {
 
 .office-card-value > span {
   display: inline-block;
-  opacity: 0;
-  transform: translateY(10px);
+  opacity: 1;
+  transform: none;
 }
 
 .office-card-value > span.is-visible {
-  animation: office-value-in var(--motion-card) ease forwards;
+  animation: office-value-in var(--motion-card) ease backwards;
 }
 
 .office-card-figures > div:nth-child(1) .office-card-value > span.is-visible { animation-delay: 0ms; }
@@ -1063,6 +1063,11 @@ table.data-table {
 .office-card-figures > div:nth-child(4) .office-card-value > span.is-visible { animation-delay: 120ms; }
 
 @keyframes office-value-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
   to {
     opacity: 1;
     transform: translateY(0);

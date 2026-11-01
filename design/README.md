@@ -40,7 +40,7 @@ Labeling: **NEP → “Proposed (NEP)”**; **House bill → “House version”
 ## Motion
 
 - Controls: **150–200ms** (tokens `--motion-control`).
-- **Office card values:** on load and when filters change, figures **fade + translateY** (**200–400ms**, `--motion-card` ~320ms). Final numbers are in the DOM immediately — **no count-up**, **no loops**. **`prefers-reduced-motion`** disables animation. Mockup: `overview-desktop.html` replays on bridge chip click. **Mark may revisit** timing and trigger points.
+- **Office card values:** on load (and in production when scope/filter data actually changes), figures **fade + translateY** using **`--motion-card: 320ms`** and `animation-fill-mode: backwards` — resting state stays **fully visible** if animation does not run. **No count-up**, **no loops**. **`prefers-reduced-motion`** disables animation. Mockup does **not** replay on bridge chips (cards are not filter-linked). **Mark may revisit** timing and triggers.
 
 ## Logo
 
@@ -67,7 +67,7 @@ HGAB **`meta`** (`built_at`, `source_repo`, `source_commit`, `notice`) is on **p
 
 Live reference: **`built_at`** `2026-10-26T08:46:14Z` → footer **data built October 26, 2026** (`date()` in `Asia/Manila`); About **Data version: comparison csiiiv, DPWH-NEP-HB-2027-ANALYSIS, a0caa77, built October 26, 2026.**
 
-**Sample totals (mockups):** 400 project records; bridge chips 200 + 80 + 60 + 40 + 20 = 400; **40** House-version-only → **360** with a proposed (NEP) line; **20** proposed-only → **380** with a House version line.
+**Sample totals (mockups):** **Six offices** — **360** project records (60 × 6), **₱16.0B** proposed (NEP), **₱17.0B** House version; summary row matches card sums. Portal-wide bridge chips: **400** records; **40** House-version-only · **20** proposed-only (not added into office card totals).
 
 **Proposal:** Keep **`meta.built_at`** as the canonical freshness line in the footer; About keeps **`source_commit`** as above. Do not substitute client fetch time for `built_at`.
 
