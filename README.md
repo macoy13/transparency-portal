@@ -36,7 +36,8 @@ writes `portal.config.ts`. That file is the only one a fork needs to change.
 
 GitHub Actions runs `npm run lint`, `npm run build` and `npm run check` (every query
 reconciled against the live BetterGov API) on pull requests, pushes to `main`, daily at
-03:17 Asia/Manila (19:17 UTC), and when started by hand.
+03:17 Asia/Manila (19:17 UTC), and when started by hand. Scheduled runs can be delayed,
+and GitHub auto-disables schedules after 60 days without repo activity.
 
 ## What the portal shows
 

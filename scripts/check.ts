@@ -25,21 +25,50 @@ const verbose = argv.includes('--verbose');
 // --config=examples/deo.config.ts checks another file; default portal.config.ts.
 const configPath = resolve(cwd(), argv.find((a) => a.startsWith('--config='))?.slice('--config='.length) ?? 'portal.config.ts');
 
-// Node's fetch waits up to five minutes for response headers. A host that
-// accepts the TCP connection and then stays silent would hang CI. Bound each
-// request. "fetch failed" on its own does not say whether the host refused
-// the connection, did not resolve, or timed out, so the catch below prints
-// the cause too.
+// Node's fetch waits up to five minutes for response headers, and a body read
+// can stall after the headers have arrived. Bound each request. "fetch failed"
+// and "The operation was aborted due to timeout" do not name the URL, so both
+// paths below do. Messages stay the request URL and the cause: no headers.
 const REQUEST_MS = 30_000;
 const fetchImpl = globalThis.fetch.bind(globalThis);
+
+function requestUrl(input: RequestInfo | URL): string {
+  if (typeof input === 'string' || input instanceof URL) return String(input);
+  return input.url;
+}
+
+/** Our deadline aborted the request. Another signal's abort is left alone. */
+function timedOut(err: unknown, deadline: AbortSignal): boolean {
+  if (!deadline.aborted || !(err instanceof Error)) return false;
+  return err.name === 'TimeoutError' || err.name === 'AbortError';
+}
+
+// Headers already arrived; res.json() rejects with a bare TimeoutError.
+function guardJson(res: Response, url: string, deadline: AbortSignal): Response {
+  const read = res.json.bind(res);
+  Object.defineProperty(res, 'json', {
+    configurable: true,
+    writable: true,
+    value: async () => {
+      try {
+        return await read();
+      } catch (err) {
+        if (!timedOut(err, deadline)) throw err;
+        throw new Error(`timed out after ${REQUEST_MS / 1000}s reading ${url}`, { cause: err });
+      }
+    },
+  });
+  return res;
+}
+
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const deadline = AbortSignal.timeout(REQUEST_MS);
   const signal = init?.signal ? AbortSignal.any([init.signal, deadline]) : deadline;
+  const url = requestUrl(input);
   try {
-    return await fetchImpl(input, { ...init, signal });
+    return guardJson(await fetchImpl(input, { ...init, signal }), url, deadline);
   } catch (err) {
-    if (!deadline.aborted) throw err;
-    const url = typeof input === 'string' || input instanceof URL ? String(input) : input.url;
+    if (!timedOut(err, deadline)) throw err;
     throw new Error(`no response within ${REQUEST_MS / 1000}s from ${url}`, { cause: err });
   }
 }) as typeof globalThis.fetch;
