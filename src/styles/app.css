@@ -404,7 +404,7 @@ code { font-family: var(--font-mono); font-size: 0.9em; background: var(--paper-
 .footer { border-top: 1px solid var(--ink); background: var(--paper-2); margin-top: auto; }
 .footer-inner { padding-top: 28px; padding-bottom: 40px; }
 .footer-source { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 12px; }
-.footer-notice { font-size: 12.5px; color: var(--ink-2); max-width: 900px; margin: 0 0 20px; line-height: 1.55; }
+.footer-notice { font-size: 12.5px; color: var(--ink-2); max-width: 900px; margin: 0 0 20px; line-height: 1.55; overflow-wrap: anywhere; }
 .footer-links { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; font-size: 13.5px; }
 .footer-links li { display: flex; flex-direction: column; gap: 4px; }
 

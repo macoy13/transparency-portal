@@ -42,7 +42,7 @@ export function Masthead() {
   );
   return (
     <>
-    {showBuildStrip(config) && (
+    {__CHROME_SOURCE_LINKS__ && showBuildStrip(config) && (
       // Above the masthead, so it scrolls away; a plain link to the source.
       <a className="build-strip" href={SOURCE_CODE_URL} target="_blank" rel="noopener">
         <span className="build-strip-title">Create your own transparency portal</span>
@@ -59,12 +59,12 @@ export function Masthead() {
             <a href={NATIONAL_URL} target="_blank" rel="noopener">
               National picture <span aria-hidden="true">↗</span>
             </a>
-            {apiLinks && (
+            {__CHROME_API_LINKS__ && apiLinks && (
               <a href={`${client.base}/docs`} target="_blank" rel="noopener">
                 API <span aria-hidden="true">↗</span>
               </a>
             )}
-            {sourceLinks && (
+            {__CHROME_SOURCE_LINKS__ && sourceLinks && (
               <a href={SOURCE_CODE_URL} target="_blank" rel="noopener">
                 Build your own <span aria-hidden="true">↗</span>
               </a>
@@ -147,13 +147,13 @@ export function Footer() {
             <span className="label">Every project, nationwide</span>
             <a href={NATIONAL_URL} target="_blank" rel="noopener">budget.bettergov.ph ↗</a>
           </li>
-          {showApiLinks(config) && (
+          {__CHROME_API_LINKS__ && showApiLinks(config) && (
             <li>
               <span className="label">Data</span>
               <a href={`${client.base}/docs`} target="_blank" rel="noopener">Budget API and MCP ↗</a>
             </li>
           )}
-          {showSourceLinks(config) && (
+          {__CHROME_SOURCE_LINKS__ && showSourceLinks(config) && (
             <li>
               <span className="label">Open source</span>
               <a href={SOURCE_CODE_URL} target="_blank" rel="noopener">Fork this portal for your LGU or DPWH office ↗</a>

@@ -175,7 +175,7 @@ function ProjectView({ env }: { env: Envelope<ProjectDetail> }) {
 
           <p className="small links">
             <External href={p.url}>This project on budget.bettergov.ph</External>
-            {showApiLinks(config) && (
+            {__CHROME_API_LINKS__ && showApiLinks(config) && (
               <>
                 <br />
                 <External href={client.href(p.api_url)}>The API record (JSON)</External>

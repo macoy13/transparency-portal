@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Disclaimer, Overview } from '../api/types';
-import { shortNameOf } from '../config';
+import { shortNameOf, showApiLinks, showSourceLinks } from '../config';
 import { Await, Disclaimers, External } from '../components/Bits';
 import { PageHead } from '../components/Chrome';
 import { count, date, plural } from '../lib/format';
@@ -12,6 +12,32 @@ import { departmentShort, loadGaa, type GaaResult } from '../lib/gaa';
 import { ILOILO_NEIGHBOUR_SHARES, ILOILO_PORTAL_ID, formatIloiloNeighbourShares } from '../lib/iloilo-neighbours';
 import type { Async } from '../lib/portal-context';
 import { useTitle } from '../lib/use-title';
+
+/** "Check it" stays readable. The API href is only there when this fork still links out to the API. */
+function ApiCheck({ href }: { href: string }) {
+  const { config } = usePortal();
+  if (!(__CHROME_API_LINKS__ && showApiLinks(config))) return <>API</>;
+  return <External href={href}>API</External>;
+}
+
+/** Author and analysis name from a source repo URL, plus the short commit, with no link. */
+function comparisonPlain(repo: string, commit: string): string {
+  const sha = commit.slice(0, 7);
+  const path = repo.replace(/^https?:\/\/[^/]+\/?/, '').replace(/\.git$/, '').replace(/\/+$/, '');
+  const [author, name] = path.split('/');
+  if (author && name) return `${author}, ${name}, ${sha}`;
+  return `${repo}, ${sha}`;
+}
+
+function ComparisonCredit({ repo, commit }: { repo: string; commit: string }) {
+  const { config } = usePortal();
+  if (!(__CHROME_SOURCE_LINKS__ && showSourceLinks(config))) return <>{comparisonPlain(repo, commit)}</>;
+  return (
+    <a href={`${repo}/tree/${commit}`} target="_blank" rel="noopener">
+      {commit.slice(0, 7)}
+    </a>
+  );
+}
 
 /** The API's `rules`, in words for readers rather than developers. */
 const READING_RULES = [
@@ -78,7 +104,7 @@ function AboutView({ scope, overview }: { scope: ScopeResult; overview: Overview
               <span role="cell">{label(q.dataset)}</span>
               <span role="cell" className="r num">{count(q.total)}</span>
               <span role="cell" className="r num">{count(q.kept)}</span>
-              <span role="cell" className="r"><External href={q.api}>API</External></span>
+              <span role="cell" className="r"><ApiCheck href={q.api} /></span>
             </div>
           ))}
         </div>
@@ -148,7 +174,7 @@ function AboutView({ scope, overview }: { scope: ScopeResult; overview: Overview
         <h2 id="n-h" className="section-h">Notices</h2>
         <Disclaimers items={[...disclaimers.values()]} />
         <p className="fine">
-          Data version: comparison <a href={`${meta.source_repo}/tree/${meta.source_commit}`} target="_blank" rel="noopener">{meta.source_commit.slice(0, 7)}</a>,
+          Data version: comparison <ComparisonCredit repo={meta.source_repo} commit={meta.source_commit} />,
           built {date(meta.built_at)}. Every project nationwide: <External href={overview.url}>budget.bettergov.ph</External>.
         </p>
       </section>
@@ -158,7 +184,11 @@ function AboutView({ scope, overview }: { scope: ScopeResult; overview: Overview
         <p>
           This portal is open source. Fork it, run <code>npm run setup</code> to pick your province, city, municipality or
           district engineering office, and deploy it to Cloudflare, Vercel or Netlify. It needs no database: the data comes
-          from the same API. <External href={SOURCE_CODE_URL}>Source code</External> · <Link to="/">Back to the projects</Link>
+          from the same API.{' '}
+          {__CHROME_SOURCE_LINKS__ && showSourceLinks(config) && (
+            <><External href={SOURCE_CODE_URL}>Source code</External> · </>
+          )}
+          <Link to="/">Back to the projects</Link>
         </p>
       </section>
     </>
@@ -254,7 +284,7 @@ function GaaQuestions() {
                 <span role="cell">{departmentShort(q.department)}</span>
                 <span role="cell" className="r num">{count(q.matched)}</span>
                 <span role="cell" className="r num">{count(q.fetched)}</span>
-                <span role="cell" className="r"><External href={q.api}>API</External></span>
+                <span role="cell" className="r"><ApiCheck href={q.api} /></span>
               </div>
             ))}
           </div>
