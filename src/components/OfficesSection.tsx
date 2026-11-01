@@ -55,8 +55,13 @@ interface OfficeView {
 }
 
 export interface CompactOfficesProps {
-  /** Projects after Home's search/status/office filters. */
+  /** Projects after Home's search/status/office filters (cards + table rows). */
   filtered: ScopedProject[];
+  /**
+   * Projects after search + office filters only (no status). Table status chips
+   * count offices from this set so chips stay switchable while a status is on.
+   */
+  scoped: ScopedProject[];
   /** All portal projects (for unfiltered whole-office card figures). */
   all: ScopedProject[];
   /** Active bridge status, or '' for All. */
@@ -276,22 +281,61 @@ function District({ row }: { row: DistrictRow }) {
 // Compact (R0) office grid + compare table
 // ---------------------------------------------------------------------------
 
-interface CardFigures {
-  view: OfficeView;
+interface OfficeAmounts {
+  /** Projects kept after dropping held-out / office_difference lines. */
   lines: number;
   nep: number | null;
   house: number | null;
-  change: number | null;
-  changeLabel: string;
-  showFullNotes: boolean;
+  nepRows: number;
+  houseRows: number;
+  /** Lines that carry both a NEP and a House amount (for the paired %). */
+  bothRows: number;
+  bothNep: number;
+  bothHouse: number;
 }
 
-function officeAmountsFromProjects(projects: ScopedProject[], printed: string): { lines: number; nep: number | null; house: number | null } {
-  const rows = projects.filter((p) => p.office === printed);
+interface CardFigures {
+  view: OfficeView;
+  amounts: OfficeAmounts;
+  /** ₱ difference of the two totals (House − NEP), never a mixed-set %. */
+  changePhp: number | null;
+  changePhpLabel: string;
+  /** Paired-line % label, or null when there are no both-value lines. */
+  changePctLabel: string | null;
+  changeLabel: string;
+}
+
+/** Held out of office figures: flag or listed on the office's office_change.lines. */
+function isHeldOutOfOffice(p: ScopedProject, heldIds: Set<string>): boolean {
+  if (p.flags?.includes('office_difference')) return true;
+  return heldIds.has(p.id);
+}
+
+function heldOutIdsFor(offices: OfficeView[]): Set<string> {
+  const ids = new Set<string>();
+  for (const o of offices) {
+    for (const line of o.office.fy2027?.office_change?.lines ?? []) ids.add(line.id);
+  }
+  return ids;
+}
+
+/**
+ * One source for office card/table figures: portal projects for this printed
+ * office, minus held-out office_difference lines (same cut the API makes).
+ */
+function officeAmountsFromProjects(
+  projects: ScopedProject[],
+  printed: string,
+  heldIds: Set<string>,
+): OfficeAmounts {
+  const rows = projects.filter((p) => p.office === printed && !isHeldOutOfOffice(p, heldIds));
   let nepSum = 0;
   let houseSum = 0;
   let nepRows = 0;
   let houseRows = 0;
+  let bothRows = 0;
+  let bothNep = 0;
+  let bothHouse = 0;
   for (const p of rows) {
     if (p.nep_php != null) {
       nepSum += p.nep_php;
@@ -301,21 +345,48 @@ function officeAmountsFromProjects(projects: ScopedProject[], printed: string): 
       houseSum += p.house_php;
       houseRows++;
     }
+    if (p.nep_php != null && p.house_php != null) {
+      bothRows++;
+      bothNep += p.nep_php;
+      bothHouse += p.house_php;
+    }
   }
   return {
     lines: rows.length,
     nep: nepRows ? nepSum : null,
     house: houseRows ? houseSum : null,
+    nepRows,
+    houseRows,
+    bothRows,
+    bothNep,
+    bothHouse,
   };
 }
 
-function changeWithPct(nep: number | null, house: number | null): { change: number | null; label: string } {
-  if (nep == null || house == null) return { change: null, label: '—' };
-  const change = house - nep;
-  if (change === 0) return { change: 0, label: 'no change' };
-  const pct = nep === 0 ? null : (change / nep) * 100;
-  const pctPart = pct == null ? '' : ` (${pct > 0 ? '+' : ''}${pct.toFixed(1)}%)`;
-  return { change, label: `${phpDelta(change)}${pctPart}` };
+/** ₱ of totals + optional % on lines that have both values. */
+function changeLabels(amts: OfficeAmounts): {
+  changePhp: number | null;
+  changePhpLabel: string;
+  changePctLabel: string | null;
+  /** Flat string for the table cell / animation. */
+  changeLabel: string;
+} {
+  const { nep, house, bothRows, bothNep, bothHouse } = amts;
+  if (nep == null || house == null) {
+    return { changePhp: null, changePhpLabel: '—', changePctLabel: null, changeLabel: '—' };
+  }
+  const changePhp = house - nep;
+  const changePhpLabel = changePhp === 0 ? 'no change' : phpDelta(changePhp);
+  let changePctLabel: string | null = null;
+  if (bothRows > 0 && bothNep !== 0) {
+    const pct = ((bothHouse - bothNep) / bothNep) * 100;
+    const signed = `${pct > 0 ? '+' : pct < 0 ? '−' : ''}${Math.abs(pct).toFixed(1)}%`;
+    changePctLabel = `${signed} on ${plural(bothRows, 'line')} in both`;
+  }
+  const changeLabel = changePctLabel
+    ? `${changePhpLabel} · House vs NEP totals · ${changePctLabel}`
+    : `${changePhpLabel} · House vs NEP totals`;
+  return { changePhp, changePhpLabel, changePctLabel, changeLabel };
 }
 
 function CompactOffices({
@@ -329,74 +400,56 @@ function CompactOffices({
   projects: ScopedProject[];
   compact: CompactOfficesProps;
 }) {
+  const { config } = usePortal();
   const cards = useMemo(() => list.map((e) => e.data), [list]);
   const { offices } = useMemo(() => buildOffices(cards, queries, projects), [cards, queries, projects]);
   const note = list[0]?.meta.representatives_note as string | undefined;
-  const narrowed = compact.filtered.length !== compact.all.length || !!compact.status || !!compact.office;
+  const heldIds = useMemo(() => heldOutIdsFor(offices), [offices]);
+  const regionFallback = config.home?.compactRegionEyebrow?.trim() || null;
 
+  // Cards always sum the same source: portal projects minus held-out lines.
+  const sourceRows = compact.filtered;
   const cardRows: CardFigures[] = useMemo(() => {
     return offices
       .map((view): CardFigures | null => {
-        if (narrowed) {
-          const amts = officeAmountsFromProjects(compact.filtered, view.printed);
-          if (!amts.lines) return null;
-          const { change, label } = changeWithPct(amts.nep, amts.house);
-          return {
-            view,
-            lines: amts.lines,
-            nep: amts.nep,
-            house: amts.house,
-            change,
-            changeLabel: label,
-            showFullNotes: false,
-          };
-        }
-        const f = view.office.fy2027;
-        const nep = f?.nep_php ?? null;
-        const house = f?.hgab3_php ?? null;
-        const { change, label } = changeWithPct(nep, house);
-        return {
-          view,
-          lines: view.lines,
-          nep,
-          house,
-          change,
-          changeLabel: label,
-          showFullNotes: true,
-        };
+        const amounts = officeAmountsFromProjects(sourceRows, view.printed, heldIds);
+        // Hide offices with nothing left after filters + held-out exclusion.
+        if (!amounts.lines) return null;
+        const { changePhp, changePhpLabel, changePctLabel, changeLabel } = changeLabels(amounts);
+        return { view, amounts, changePhp, changePhpLabel, changePctLabel, changeLabel };
       })
       .filter((r): r is CardFigures => r != null);
-  }, [offices, compact.filtered, narrowed]);
+  }, [offices, sourceRows, heldIds]);
 
   const scaleMax = useMemo(() => {
     let max = 0;
     for (const r of cardRows) {
-      if (r.nep != null && r.nep > max) max = r.nep;
-      if (r.house != null && r.house > max) max = r.house;
+      if (r.amounts.nep != null && r.amounts.nep > max) max = r.amounts.nep;
+      if (r.amounts.house != null && r.amounts.house > max) max = r.amounts.house;
     }
     return max > 0 ? max : 1;
   }, [cardRows]);
 
-  // Compare-table chips: count offices that have at least one project in each group (from all).
+  // Table chips: offices with ≥1 kept line in the search/office scope (no status).
   const tableChipCounts = useMemo(() => {
-    const counts: Record<string, number> = { all: offices.length };
-    for (const g of BRIDGE_GROUPS) {
-      counts[g] = offices.filter((o) => {
-        const cell = o.office.fy2027?.bridge.groups[g];
-        return cell && cell.rows > 0;
-      }).length;
-    }
-    // When a status is active, recompute from filtered projects.
-    if (compact.status) {
-      for (const g of BRIDGE_GROUPS) {
-        counts[g] = offices.filter((o) =>
-          compact.filtered.some((p) => p.office === o.printed && p.bridge_group === g),
-        ).length;
+    const counts: Record<string, number> = { all: 0 };
+    for (const g of BRIDGE_GROUPS) counts[g] = 0;
+    for (const o of offices) {
+      const kept = compact.scoped.filter(
+        (p) => p.office === o.printed && !isHeldOutOfOffice(p, heldIds),
+      );
+      if (!kept.length) continue;
+      counts.all++;
+      const seen = new Set<BridgeGroup>();
+      for (const p of kept) {
+        if (!seen.has(p.bridge_group)) {
+          seen.add(p.bridge_group);
+          counts[p.bridge_group] = (counts[p.bridge_group] ?? 0) + 1;
+        }
       }
-      counts.all = cardRows.length;
     }
     return counts;
-  }, [offices, compact.status, compact.filtered, cardRows.length]);
+  }, [offices, compact.scoped, heldIds]);
 
   const animKey = `${compact.status}|${compact.office}|${compact.filtered.length}|${scaleMax}`;
 
@@ -414,10 +467,18 @@ function CompactOffices({
 
       <div className="office-grid" key={animKey}>
         {cardRows.map((row) => (
-          <CompactOfficeCard key={row.view.office.id} row={row} scaleMax={scaleMax} status={compact.status} />
+          <CompactOfficeCard
+            key={row.view.office.id}
+            row={row}
+            scaleMax={scaleMax}
+            status={compact.status}
+            regionFallback={regionFallback}
+          />
         ))}
       </div>
-      {cardRows.length === 0 && <p className="state">No office matches these filters.</p>}
+      {cardRows.length === 0 && (
+        <p className="state">No office matches these filters.</p>
+      )}
       <p className="portraits-credit">Portraits: {PORTRAIT_CREDIT}.</p>
 
       <section className="section compare-section" id="compare" aria-labelledby="compare-h">
@@ -432,24 +493,26 @@ function CompactOffices({
           </div>
           <p className="compare-callout">Budget allocations, not spending or completion.</p>
         </div>
-        <div className="chips" role="group" aria-label="Table office filter">
+        <div className="chips" role="group" aria-label="Filter offices by status">
           <button
             type="button"
             className="chip"
             aria-pressed={!compact.status}
+            aria-label={`${compact.chipLabel('all')}, ${plural(tableChipCounts.all, 'office')}`}
             onClick={() => compact.onStatus('')}
           >
             {compact.chipLabel('all')} <span className="num">({count(tableChipCounts.all)})</span>
           </button>
           {BRIDGE_GROUPS.map((g) => {
             const n = tableChipCounts[g] ?? 0;
+            // Keep chips clickable while a status is active so you can switch directly.
             return (
               <button
                 key={g}
                 type="button"
                 className="chip"
                 aria-pressed={compact.status === g}
-                disabled={!n && compact.status !== g}
+                aria-label={`${compact.chipLabel(g)}, ${plural(n, 'office')}`}
                 onClick={() => compact.onStatus(compact.status === g ? '' : g)}
               >
                 {compact.chipLabel(g)} <span className="num">({count(n)})</span>
@@ -459,6 +522,9 @@ function CompactOffices({
         </div>
         <div className="data-table-wrap">
           <table className="data-table">
+            <caption className="sr-only">
+              NEP and House amounts by DPWH office, compared not added
+            </caption>
             <thead>
               <tr>
                 <th scope="col">Office</th>
@@ -481,13 +547,15 @@ function CompactOffices({
                 <tr key={row.view.office.id}>
                   <th scope="row">{row.view.printed}</th>
                   <td className="num anim-value">
-                    <AnimValue text={php(row.nep)} />
+                    <AnimValue text={php(row.amounts.nep)} />
                   </td>
                   <td className="num anim-value">
-                    <AnimValue text={php(row.house)} />
+                    <AnimValue text={php(row.amounts.house)} />
                   </td>
                   <td className="num anim-value">
-                    <AnimValue text={count(row.lines)} />
+                    <AnimValue
+                      text={`NEP ${count(row.amounts.nepRows)} · House ${count(row.amounts.houseRows)}`}
+                    />
                   </td>
                   <td className="num change-cell anim-value">
                     <AnimValue text={row.changeLabel} />
@@ -497,6 +565,9 @@ function CompactOffices({
             </tbody>
           </table>
         </div>
+        {cardRows.length === 0 && (
+          <p className="state">No offices to compare for this filter.</p>
+        )}
       </section>
     </>
   );
@@ -515,18 +586,22 @@ function CompactOfficeCard({
   row,
   scaleMax,
   status,
+  regionFallback,
 }: {
   row: CardFigures;
   scaleMax: number;
   status: BridgeGroup | '';
+  regionFallback: string | null;
 }) {
-  const { view, lines, nep, house, changeLabel, showFullNotes } = row;
+  const { view, amounts, changePhpLabel, changePctLabel, changeLabel } = row;
+  const { nep, house, nepRows, houseRows } = amounts;
   const { office, printed, districts } = view;
   const f = office.fy2027;
   const wholeNep = office.years?.find((y) => y.fy === 2027 && y.stage === 'nep')?.php ?? null;
   const unconfirmed = f?.annotations?.unconfirmed_rows ?? 0;
   const held = f?.office_change?.rows ?? 0;
-  const region = office.region ?? 'Region VI';
+  const region = office.region ?? regionFallback;
+  // Primary legislative district for the rep block — first id the API lists for this office.
   const primary = districts[0] ?? null;
   const rep = primary?.card?.representative ?? null;
   const localPortrait = primary ? LOCAL_PORTRAITS[primary.id] : undefined;
@@ -536,6 +611,7 @@ function CompactOfficeCard({
   const nepPct = nep != null ? (nep / scaleMax) * 100 : 0;
   const housePct = house != null ? (house / scaleMax) * 100 : 0;
   const detailsId = useId();
+  const badge = `NEP on ${count(nepRows)} · House on ${count(houseRows)}`;
 
   return (
     <article className="office-card">
@@ -543,12 +619,12 @@ function CompactOfficeCard({
         <div className="ocard-title-row">
           <OfficeIcon />
           <div>
-            <p className="ocard-eyebrow">{region}</p>
+            {region && <p className="ocard-eyebrow">{region}</p>}
             <h3 className="office-card-title">{printed}</h3>
           </div>
         </div>
         <span className="records-badge anim-value">
-          <AnimValue text={plural(lines, 'record')} />
+          <AnimValue text={badge} />
         </span>
       </header>
 
@@ -567,9 +643,17 @@ function CompactOfficeCard({
             </p>
           </div>
         </div>
-        <p className="change-pill anim-value">
-          <AnimValue text={changeLabel} />
-        </p>
+        <div className="change-pill-wrap anim-value" title={changeLabel}>
+          <p className="change-pill">
+            <span className="change-php">
+              <AnimValue text={changePhpLabel} />
+            </span>
+            {changePhpLabel !== '—' && (
+              <span className="change-meta">House vs NEP totals</span>
+            )}
+            {changePctLabel && <span className="change-pct">{changePctLabel}</span>}
+          </p>
+        </div>
       </div>
 
       <div
@@ -640,33 +724,24 @@ function CompactOfficeCard({
           Coverage and source details <span className="chevron" aria-hidden="true">▾</span>
         </summary>
         <div className="ocard-details-body">
-          {showFullNotes ? (
-            <>
-              <p>
-                Named projects
-                {f ? <>: {count(f.nep_records)} in the NEP, {count(f.hgab3_records)} in the House bill</> : null}.
-                {wholeNep != null && <> The whole office in the NEP: {php(wholeNep)}.</>}
-                {unconfirmed > 0 && (
-                  <> Includes {plural(unconfirmed, 'unconfirmed match', 'unconfirmed matches')} ({php(f?.annotations?.unconfirmed_php)}).</>
-                )}
-                {held > 0 && (
-                  <> {plural(held, 'line')} whose two versions name different offices {held === 1 ? 'is' : 'are'} not in these figures.</>
-                )}
-              </p>
-              <p>
-                <span className={`tag tier tier-${office.tier}`}>{office.tier_text}</span>
-                {office.tier === 'B' && <> Shared office — money is never split across the districts it serves.</>}
-              </p>
-              <p>
-                <Link to={`/gaa#${office.id}`}>{printed} budget each year since 2020 →</Link>
-              </p>
-            </>
-          ) : (
-            <p>
-              Showing filtered named projects only ({plural(lines, 'record')}). Whole-office and unconfirmed notes are hidden
-              while a filter is active.
-            </p>
-          )}
+          <p>
+            Named projects in these figures: NEP on {count(nepRows)}, House on {count(houseRows)}.
+            {f ? <> API office totals list {count(f.nep_records)} in the NEP and {count(f.hgab3_records)} in the House bill.</> : null}
+            {wholeNep != null && <> The whole office in the NEP: {php(wholeNep)}.</>}
+            {unconfirmed > 0 && (
+              <> Includes {plural(unconfirmed, 'unconfirmed match', 'unconfirmed matches')} ({php(f?.annotations?.unconfirmed_php)}).</>
+            )}
+            {held > 0 && (
+              <> {plural(held, 'line')} whose two versions name different offices {held === 1 ? 'is' : 'are'} not in these figures.</>
+            )}
+          </p>
+          <p>
+            <span className={`tag tier tier-${office.tier}`}>{office.tier_text}</span>
+            {office.tier === 'B' && <> Shared office — money is never split across the districts it serves.</>}
+          </p>
+          <p>
+            <Link to={`/gaa#${office.id}`}>{printed} budget each year since 2020 →</Link>
+          </p>
         </div>
       </details>
 

@@ -123,6 +123,16 @@ export interface PortalConfig {
      * Off unless set to true.
      */
     searchUnderLede?: boolean;
+    /**
+     * Compact Overview lede under the H1. Only read when `chrome.compact` is
+     * on; omit to keep the default dynamic lede wording.
+     */
+    compactLede?: string;
+    /**
+     * Compact office-card region eyebrow when the API gives no region.
+     * Only read when `chrome.compact` is on.
+     */
+    compactRegionEyebrow?: string;
   };
   /** Budget API host. Default https://budget.bettergov.ph. VITE_API_BASE overrides it. */
   api?: string;

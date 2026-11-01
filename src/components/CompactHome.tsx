@@ -14,43 +14,59 @@ import { shortNameOf } from '../config';
 
 export function CompactSummaryCards({
   summary,
-  officeCount,
+  totalRows,
+  totalOffices,
+  shownOffices,
+  filtered,
 }: {
   summary: Summary;
-  officeCount: number;
+  /** Portal-wide project count (denominator when filtered). */
+  totalRows: number;
+  /** Configured / portal office count. */
+  totalOffices: number;
+  /** Offices represented in the current summary rows. */
+  shownOffices: number;
+  filtered: boolean;
 }) {
+  const recordsNote = filtered
+    ? `${count(summary.rows)} shown of ${plural(totalRows, 'record')} · ${count(shownOffices)} of ${plural(totalOffices, 'office')}`
+    : totalOffices
+      ? `${plural(totalOffices, 'office')} · ${plural(summary.rows, 'record')} in this portal`
+      : plural(summary.rows, 'record');
+
+  const nepValue = summary.nep.rows ? php(summary.nep.php) : '—';
+  const houseValue = summary.house.rows ? php(summary.house.php) : '—';
+  const nepNote = summary.nep.rows
+    ? `NEP on ${plural(summary.nep.rows, 'record')} · compared, not added`
+    : '—';
+  const houseNote = summary.house.rows
+    ? `House on ${plural(summary.house.rows, 'record')} · compared with the NEP, not added`
+    : '—';
+
   return (
     <div className="summary-cards" aria-label="Summary figures">
       <div className="summary-card">
         <DocIcon />
         <div>
           <p className="stat-label">Project records</p>
-          <p className="stat-value num">{count(summary.rows)}</p>
-          <p className="stat-note">
-            {officeCount
-              ? `${plural(officeCount, 'office')} · ${plural(summary.rows, 'record')} in this portal`
-              : plural(summary.rows, 'record')}
-          </p>
+          <p className="stat-value num">{summary.rows ? count(summary.rows) : '—'}</p>
+          <p className="stat-note">{recordsNote}</p>
         </div>
       </div>
       <div className="summary-card">
         <CoinIcon />
         <div>
           <p className="stat-label">Proposed · NEP</p>
-          <p className="stat-value num">{php(summary.nep.php)}</p>
-          <p className="stat-note">
-            NEP on {plural(summary.nep.rows, 'record')} · compared, not added
-          </p>
+          <p className="stat-value num">{nepValue}</p>
+          <p className="stat-note">{nepNote}</p>
         </div>
       </div>
       <div className="summary-card">
         <CapitolIcon />
         <div>
           <p className="stat-label">House version</p>
-          <p className="stat-value num">{php(summary.house.php)}</p>
-          <p className="stat-note">
-            House on {plural(summary.house.rows, 'record')} · compared with the NEP, not added
-          </p>
+          <p className="stat-value num">{houseValue}</p>
+          <p className="stat-note">{houseNote}</p>
         </div>
       </div>
     </div>
@@ -64,13 +80,16 @@ export function CompactStatusChips({
   onClear,
   narrowed,
   showingLabel,
+  showingCount,
 }: {
+  /** Counts for the current search/office scope (status chips stay switchable). */
   summary: Summary;
   status: BridgeGroup | '';
   onStatus: (g: BridgeGroup | '') => void;
   onClear: () => void;
   narrowed: boolean;
   showingLabel: string;
+  showingCount: number;
 }) {
   return (
     <>
@@ -93,14 +112,15 @@ export function CompactStatusChips({
             const cell = summary.groups[g];
             const empty = !cell.rows;
             // Hide empty scope_review so other forks / datasets stay quiet.
-            if (g === 'scope_review' && empty) return null;
+            if (g === 'scope_review' && empty && status !== g) return null;
             return (
               <button
                 key={g}
                 type="button"
                 className="chip"
                 aria-pressed={status === g}
-                disabled={empty}
+                // Keep non-empty chips clickable while another status is active.
+                disabled={empty && status !== g}
                 onClick={() => onStatus(status === g ? '' : g)}
               >
                 {compactChipLabel(g)} <span className="num">({count(cell.rows)})</span>
@@ -116,7 +136,7 @@ export function CompactStatusChips({
         )}
       </div>
       <p className="filter-showing" aria-live="polite">
-        Showing: {showingLabel}
+        Showing: {showingLabel} ({count(showingCount)})
       </p>
     </>
   );

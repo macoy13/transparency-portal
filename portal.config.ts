@@ -47,7 +47,13 @@ export default defineConfig({
     },
   },
   // The project search sits under the lede, so the first screen offers a place to look up.
-  home: { searchUnderLede: true },
+  // Compact Overview copy (R0): lede + Region VI fallback when an office has no region.
+  home: {
+    searchUnderLede: true,
+    compactLede:
+      'Projects tied to Iloilo Province and Iloilo City in national budget documents — by office, program, and name.',
+    compactRegionEyebrow: 'Region VI',
+  },
   name: 'Iloilo Transparency',
   shortName: 'Iloilo',
   operator: { name: 'Iloilo Transparency, an independent volunteer project' },

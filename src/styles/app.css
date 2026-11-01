@@ -598,11 +598,15 @@ html[data-chrome="compact"] .fy-badge {
   align-items: center;
   flex-shrink: 0;
 }
-/* R0: FY sits under the H1 on narrow viewports */
+/* R0: FY sits under the H1 on narrow viewports — no flex grow gap above the badge */
 @media (max-width: 720px) {
   html[data-chrome="compact"] .page-head-row {
     flex-direction: column;
     align-items: flex-start;
+  }
+  html[data-chrome="compact"] .page-head-row h1 {
+    flex: none;
+    flex-basis: auto;
   }
 }
 
@@ -953,7 +957,10 @@ html[data-chrome="compact"] .records-badge {
   border: 1px solid var(--rule);
   border-radius: 999px;
   padding: 0.2rem 0.55rem;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: right;
+  max-width: 11rem;
+  line-height: 1.25;
 }
 html[data-chrome="compact"] .ocard-amounts-row {
   display: flex;
@@ -974,17 +981,33 @@ html[data-chrome="compact"] .ocard-fig {
   margin: 0;
   color: #192d50;
 }
+html[data-chrome="compact"] .change-pill-wrap {
+  margin: 0 0 0.15rem auto;
+  max-width: 100%;
+  text-align: right;
+}
 html[data-chrome="compact"] .change-pill {
   display: inline-flex;
-  align-self: flex-end;
-  margin: 0 0 0.15rem auto;
-  font-size: 0.8125rem;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--accent);
   background: var(--accent-soft);
-  border-radius: 999px;
-  padding: 0.25rem 0.65rem;
-  white-space: nowrap;
+  border-radius: var(--radius);
+  padding: 0.35rem 0.65rem;
+  white-space: normal;
+  text-align: right;
+  line-height: 1.35;
+  max-width: 14rem;
+}
+html[data-chrome="compact"] .change-php { font-size: 0.875rem; }
+html[data-chrome="compact"] .change-meta,
+html[data-chrome="compact"] .change-pct {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ink-3);
 }
 html[data-chrome="compact"] .mini-bar-row {
   display: grid;

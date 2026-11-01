@@ -184,11 +184,11 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
     return [...seen.entries()];
   }, [all]);
 
-  const filtered = useMemo(() => {
+  /** Search + office (+ program/why) without status — drives chip counts. */
+  const scoped = useMemo(() => {
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
     const rows = all.filter((p) => {
       if (program && p.dataset !== program) return false;
-      if (status && p.bridge_group !== status) return false;
       if (why && !p.reasons.some((r) => `${r.kind}:${r.label}` === why)) return false;
       if (office && p.office !== office) return false;
       if (words.length) {
@@ -198,7 +198,13 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
       return true;
     });
     return rows.sort((a, b) => SORTS[sort].cmp(a, b) || a.title.localeCompare(b.title));
-  }, [all, q, program, status, why, office, sort]);
+  }, [all, q, program, why, office, sort]);
+  const scopedSummary = useMemo(() => summarise(scoped), [scoped]);
+
+  const filtered = useMemo(() => {
+    const rows = status ? scoped.filter((p) => p.bridge_group === status) : scoped;
+    return rows;
+  }, [scoped, status]);
   const filteredSummary = useMemo(() => summarise(filtered), [filtered]);
   const narrowed = filtered.length !== all.length;
 
@@ -351,19 +357,31 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
     const showingLabel = status ? compactChipLabel(status, groups[status]?.label) : compactChipLabel('all');
     const displaySummary = narrowed ? filteredSummary : summary;
     const officeCount = config.scope.offices?.length ?? offices.length;
+    const shownOffices = new Set(
+      filtered
+        .filter((p) => p.office && !p.flags?.includes('office_difference'))
+        .map((p) => p.office as string),
+    ).size;
+    const compactLede =
+      config.home?.compactLede?.trim() ||
+      `Projects tied to ${name} in national budget documents — by office, program, and name.`;
     return (
       <>
-        <div className="page-head">
-          <div className="page-head-row">
-            <h1>Public budgets across {name}</h1>
-            <span className="fy-badge">FY2027</span>
-          </div>
-          <p className="lede">
-            Projects tied to Iloilo Province and Iloilo City in national budget documents — by office, program, and name.
-          </p>
-        </div>
+        <PageHead
+          eyebrow={<>NEP and House Bill 10858<span className="sep">·</span>{name}</>}
+          title={`Public budgets across ${name}`}
+          fyLabel="FY2027"
+        >
+          <p>{compactLede}</p>
+        </PageHead>
 
-        <CompactSummaryCards summary={displaySummary} officeCount={officeCount} />
+        <CompactSummaryCards
+          summary={displaySummary}
+          totalRows={summary.rows}
+          totalOffices={officeCount}
+          shownOffices={shownOffices}
+          filtered={narrowed}
+        />
 
         <div className="search-toolbar">
           <div className="search-field">
@@ -405,17 +423,19 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
         </div>
 
         <CompactStatusChips
-          summary={summary}
+          summary={scopedSummary}
           status={status}
           onStatus={setStatus}
           onClear={clearFilters}
           narrowed={narrowed}
           showingLabel={showingLabel}
+          showingCount={filtered.length}
         />
 
         <OfficesSection
           compact={{
             filtered,
+            scoped,
             all,
             status,
             office,
