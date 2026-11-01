@@ -74,12 +74,19 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   }
 }) as typeof globalThis.fetch;
 
-/** `fetch failed`, plus the underlying cause when Node hid it there. */
+/** Walk the cause chain; join distinct messages so ECONNREFUSED is not lost. */
 function describeFailure(err: unknown): string {
   if (!(err instanceof Error)) return String(err);
-  const cause = err.cause;
-  const detail = cause instanceof Error ? cause.message : '';
-  return detail && detail !== err.message ? `${err.message}: ${detail}` : err.message;
+  const parts: string[] = [];
+  const seen = new Set<string>();
+  let cur: unknown = err;
+  for (let depth = 0; depth < 8 && cur instanceof Error; depth++, cur = cur.cause) {
+    const msg = cur.message.trim();
+    if (!msg || seen.has(msg)) continue;
+    seen.add(msg);
+    parts.push(msg);
+  }
+  return parts.length ? parts.join(': ') : String(err);
 }
 
 async function main() {

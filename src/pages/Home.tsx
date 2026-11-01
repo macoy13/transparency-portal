@@ -47,9 +47,11 @@ function useCountAnnouncement(text: string): { announced: string; silence: () =>
   const timerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
 
   const silence = () => {
-    if (timerRef.current == null) return;
-    window.clearTimeout(timerRef.current);
-    timerRef.current = null;
+    if (timerRef.current != null) {
+      window.clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    setAnnounced('');
   };
 
   useEffect(() => {
