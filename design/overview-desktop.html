@@ -82,7 +82,7 @@
             <p class="stat-label">Proposed vs House by office <span class="sample-badge">Sample data</span></p>
             <div class="chart-legend">
               <span class="legend-item"><span class="legend-swatch legend-swatch--nep" aria-hidden="true"></span><span class="legend-label">Proposed (NEP)</span></span>
-              <span class="legend-item"><span class="legend-swatch legend-swatch--house" aria-hidden="true"></span><span class="legend-label">House version</span></span>
+              <span class="legend-item"><span class="legend-swatch legend-swatch--house" aria-hidden="true"></span><span class="legend-label legend-label--amber">House version</span></span>
             </div>
             <div class="bar-chart" role="img" aria-label="Sample horizontal bars comparing proposed and House amounts by office">
               <div class="bar-row">
@@ -117,7 +117,17 @@
         </section>
 
         <p class="stat-note" id="enacted-ref">Enacted budgets (2020–2026) live at route <code>/gaa</code> — see Enacted mockup in README.</p>
-        <p class="stat-note" id="about-ref">Methodology and scope exclusions: route <code>/about</code>.</p>
+        <section class="section" id="about-ref" aria-labelledby="about-h">
+          <h2 id="about-h" class="section-title">About · methodology &amp; corrections</h2>
+          <p class="lede" style="margin-bottom: 0.75rem">
+            Scope, hand exclusions, and data-version notes live on route <code>/about</code> in the app.
+          </p>
+          <p>
+            <strong>Corrections:</strong> report mistakes or missing context by email at
+            <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a>.
+            Routing for this address still needs to be verified before the production app is updated.
+          </p>
+        </section>
       </main>
 
       <footer class="site-footer">
@@ -129,7 +139,7 @@
           </p>
           <div class="footer-links">
             <a href="overview-desktop.html#about-ref">Methodology</a>
-            <span>Corrections: <em>open question</em> (placeholder contact)</span>
+            <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a> (corrections)
             <span>Data built 2026-10-15 (sample footer copy)</span>
           </div>
           <p class="footer-disclosure">Independent volunteer project — not an official government site.</p>

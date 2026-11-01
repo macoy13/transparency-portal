@@ -410,7 +410,7 @@ select:focus-visible {
 }
 
 .legend-swatch--house {
-  background: var(--color-primary);
+  background: var(--color-amber-fill);
 }
 
 .legend-label {
@@ -476,9 +476,9 @@ select:focus-visible {
 }
 
 .bar-fill--house {
-  background: var(--color-primary);
+  background: var(--color-amber-fill);
   left: 0;
-  opacity: 0.85;
+  opacity: 0.92;
   z-index: 3;
 }
 

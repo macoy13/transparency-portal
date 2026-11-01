@@ -32,10 +32,15 @@ Labeling: **NEP → “Proposed (NEP)”**; **House bill → “House version”
 
 ## Chart plan
 
-- **Horizontal bars by DPWH office** (and district cards where data exists): grouped **proposed (teal)** vs **House (blue)**, shared zero baseline, no stacked NEP+House totals.
+- **Colour roles:** blue is only for nav, links, selection, and primary actions. **Data series:** proposed (NEP) **teal** (`#218579`); **House version amber** (fills `#B7791F`, labels `#7A5216`) — each labelled, never colour alone.
+- **Horizontal bars by DPWH office** (and district cards where data exists): grouped **proposed (teal)** vs **House (amber)**, shared zero baseline, no stacked NEP+House totals.
 - **History:** only years/stages the API compares on the same basis (Enacted page: 2020–22, 2023–25, 2026, and 2027’s two versions where both exist — skip incomparable series, e.g. Iloilo 6th DEO before 2025 per About reading note).
 - **Accessibility:** status uses dot + text; teal/amber never alone. Amber **fills** use `#B7791F`; **text** uses `#7A5216` (see contrast).
 - **Alternative:** sortable table with the same columns as the chart (office, proposed, House, delta, held/residual note) — link from chart footer.
+
+## Corrections (About page)
+
+The production **About** route (`/about`) should include a short **Corrections** section: invite readers to email **hello@iloilotransparency.info** (`mailto:`) for factual corrections or scope questions. Footer links on every page point to the same address. **Note:** inbox routing for this address still needs to be verified before `src/` footer/About code is changed.
 
 ## Dependencies (proposed)
 
@@ -78,18 +83,16 @@ GAA responses use `meta` with `dataset: 'gaa'` (years, optional `matched` counts
 | Amber `#B7791F` text on white | 3.64:1 | **Fail** | **Decision:** restrict `#B7791F` to **chart/chip fills**; use **`--color-amber-text: #7A5216`** (6.89:1 on white) for labels |
 | Amber text `#7A5216` on white | 6.89:1 | Pass | Adopt in tokens |
 | Body on selection `#EDF2FC` | 11.53:1 | Pass | |
-| Teal/primary bar fills on white | 4.47:1 / 6.41:1 | Pass non-text | Adjacent blue/teal bars also need ≥3:1 — separate tracks or legend required |
+| Teal / amber bar fills on white | 4.47:1 / 3.64:1 | Pass non-text (3:1) | Adjacent teal/amber bars need ≥3:1 separation — offset tracks or legend; amber text uses `#7A5216` |
 | Border `#DCE3EC` on white | 1.29:1 | N/A | Decorative rules only |
 
 ## Open questions (Mark)
 
 1. **Logo direction** — window, bridge, or IT monogram (or wordmark-only)?
-2. **Corrections channel** — footer previously pointed to GitHub Issues; Issues is disabled on the fork and GitHub links were removed. Email, form, or BetterGov reporting when enabled?
-3. **City vs Province split** — disabled “after classification” chip until geography is in scope?
-4. **Office chart vs filters** — should list filters recompute office bars, or stay scope-wide with a clear label?
-5. **Teal for proposed** — confirm teal/blue encoding vs current status-dot colours in production CSS.
-6. **Enacted mockup** — worth a dedicated `design/enacted.html` in R1?
-7. **Self-hosted fonts** — OK to add WOFF2 under `public/fonts/` in a later PR?
+2. **City vs Province split** — disabled “after classification” chip until geography is in scope?
+3. **Office chart vs filters** — should list filters recompute office bars, or stay scope-wide with a clear label?
+4. **Enacted mockup** — worth a dedicated `design/enacted.html` in R1?
+5. **Self-hosted fonts** — OK to add WOFF2 under `public/fonts/` in a later PR?
 
 ## Files
 
