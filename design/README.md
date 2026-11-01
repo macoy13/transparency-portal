@@ -67,7 +67,15 @@ HGAB **`meta`** (`built_at`, `source_repo`, `source_commit`, `notice`) is on **p
 
 Live reference: **`built_at`** `2026-10-26T08:46:14Z` → footer **data built October 26, 2026** (`date()` in `Asia/Manila`); About **Data version: comparison csiiiv, DPWH-NEP-HB-2027-ANALYSIS, a0caa77, built October 26, 2026.**
 
-**Sample totals (mockups):** **Six offices** — **360** project records (60 × 6), **₱16.0B** proposed (NEP), **₱17.0B** House version; summary row matches card sums. Portal-wide bridge chips: **400** records; **40** House-version-only · **20** proposed-only (not added into office card totals).
+**Sample totals (mockups):**
+
+| Scope | Records | Both lines | House-only | Proposed-only | NEP on | House on | Amounts (sample) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| Six offices | 360 | 330 | 20 | 10 | 340 | 350 | ₱16.0B NEP · ₱17.0B House |
+| Other (not in six offices) | 40 | 10 | 20 | 10 | — | — | (illustrative) |
+| **Portal-wide** | **400** | **340** | **40** | **20** | **360** | **380** | — |
+
+Bridge chips: unchanged (200) + increased (80) + decreased (60) = **340** with both lines; **House-only (40)** and **proposed-only (20)** separate.
 
 **Proposal:** Keep **`meta.built_at`** as the canonical freshness line in the footer; About keeps **`source_commit`** as above. Do not substitute client fetch time for `built_at`.
 
