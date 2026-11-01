@@ -39,23 +39,37 @@ function countLabel(shown: number, total: number): string {
 /**
  * One polite live region. The visible count updates immediately; this copy
  * waits, so a screen reader does not speak each letter of a word.
+ * `silence` drops a pending update, for when focus is about to read the count.
  */
-function CountAnnouncer({ text }: { text: string }) {
+function useCountAnnouncement(text: string): { announced: string; silence: () => void } {
   const [announced, setAnnounced] = useState(text);
-  const skip = useRef(true);
+  const skipRef = useRef(true);
+  const timerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+
+  const silence = () => {
+    if (timerRef.current == null) return;
+    window.clearTimeout(timerRef.current);
+    timerRef.current = null;
+  };
+
   useEffect(() => {
-    if (skip.current) {
-      skip.current = false;
+    if (skipRef.current) {
+      skipRef.current = false;
       return;
     }
-    const id = window.setTimeout(() => setAnnounced(text), 500);
-    return () => window.clearTimeout(id);
+    if (timerRef.current != null) window.clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(() => {
+      timerRef.current = null;
+      setAnnounced(text);
+    }, 500);
+    return () => {
+      if (timerRef.current == null) return;
+      window.clearTimeout(timerRef.current);
+      timerRef.current = null;
+    };
   }, [text]);
-  return (
-    <p className="sr-only" aria-live="polite">
-      {announced}
-    </p>
-  );
+
+  return { announced, silence };
 }
 
 /** The one `q` field. `controls` points the hero search at the project list. */
@@ -396,18 +410,21 @@ function LeadSearch({
   onQuery: (value: string) => void;
   onSubmit: () => void;
 }) {
+  const { announced, silence } = useCountAnnouncement(countLabel(shown, total));
   return (
     <form
       className="home-search"
       role="search"
       onSubmit={(e) => {
         e.preventDefault();
+        // The heading is about to say the count. Drop the pending live update.
+        silence();
         onSubmit();
       }}
     >
       <QueryField q={q} controls="projects" submitHint onChange={onQuery} />
       <p className="home-search-count" aria-hidden="true">{countLabel(shown, total)}</p>
-      <CountAnnouncer text={countLabel(shown, total)} />
+      <p className="sr-only" aria-live="polite" aria-atomic="true">{announced}</p>
     </form>
   );
 }
