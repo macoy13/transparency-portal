@@ -38,14 +38,14 @@ export default function Project() {
 
   if (!valid) {
     return (
-      <main className="page main">
+      <main id="main" className="page main">
         <p className="state">There is no program called “{dataset}”. <Link to="/">Back to every project</Link></p>
       </main>
     );
   }
   const current: Async<Envelope<ProjectDetail>> = state?.key === key ? state.value : { status: 'loading' };
   return (
-    <main className="page main">
+    <main id="main" className="page main">
       <p className="crumbs"><Link to="/">← Every project</Link></p>
       <Await state={current} what="the project">
         {(env) => <ProjectView env={env} />}

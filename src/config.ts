@@ -64,6 +64,25 @@ export interface PortalConfig {
   operator: { name: string; url?: string; email?: string };
   /** Optional logo: a path under public/ ("/brand/lgu-seal.png") or a URL. */
   logo?: string;
+  /**
+   * Optional brand assets for compact chrome. Paths are under public/.
+   * `lockup` is the full logo image for the header; `icons` are favicons
+   * derived from the same mark (cropped). Omit `brand` to keep BetterGov chrome.
+   */
+  brand?: {
+    /** Full lockup (1x) shown in the compact header. */
+    lockup?: string;
+    /** Optional 2x lockup for denser displays. */
+    lockup2x?: string;
+    /** Favicon set — only linked when compact is on. */
+    icons?: {
+      svg?: string;
+      png16?: string;
+      png32?: string;
+      ico?: string;
+      appleTouch?: string;
+    };
+  };
   /** Canonical URL of this deployment, for link previews. */
   siteUrl?: string;
   /**
@@ -85,6 +104,12 @@ export interface PortalConfig {
     sourceLinks?: boolean;
     /** The header "API" link, the footer API link, and a project's API-record link. */
     apiLinks?: boolean;
+    /**
+     * Compact branded chrome: R0 header/footer, self-hosted type, and the
+     * portal's own mark. Off unless set to true, so other BetterGov forks keep
+     * the default masthead.
+     */
+    compact?: boolean;
   };
   /**
    * Home-page presentation. Omitted, the home page stays as it is upstream:
@@ -98,6 +123,16 @@ export interface PortalConfig {
      * Off unless set to true.
      */
     searchUnderLede?: boolean;
+    /**
+     * Compact Overview lede under the H1. Only read when `chrome.compact` is
+     * on; omit to keep the default dynamic lede wording.
+     */
+    compactLede?: string;
+    /**
+     * Compact office-card region eyebrow when the API gives no region.
+     * Only read when `chrome.compact` is on.
+     */
+    compactRegionEyebrow?: string;
   };
   /** Budget API host. Default https://budget.bettergov.ph. VITE_API_BASE overrides it. */
   api?: string;
@@ -178,6 +213,11 @@ export function showBuildStrip(config: PortalConfig): boolean {
 /** Links to the Budget API docs and to a project's API record. On unless `chrome.apiLinks` is false. */
 export function showApiLinks(config: PortalConfig): boolean {
   return config.chrome?.apiLinks !== false;
+}
+
+/** Compact branded header/footer and tokens. Off unless `chrome.compact` is true. */
+export function compactChrome(config: PortalConfig): boolean {
+  return config.chrome?.compact === true;
 }
 
 /** The home-page search sits under the lede. Off unless `home.searchUnderLede` is true. */

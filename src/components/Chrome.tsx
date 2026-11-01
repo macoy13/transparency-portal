@@ -1,6 +1,14 @@
-import { Fragment, useMemo, type ReactNode } from 'react';
+import { Fragment, useEffect, useMemo, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { KIND_LABELS, MASTHEAD_YEARS, shortNameOf, showApiLinks, showBuildStrip, showSourceLinks } from '../config';
+import {
+  KIND_LABELS,
+  MASTHEAD_YEARS,
+  compactChrome,
+  shortNameOf,
+  showApiLinks,
+  showBuildStrip,
+  showSourceLinks,
+} from '../config';
 import { usePortal } from '../lib/portal-context';
 import { date } from '../lib/format';
 import { NATIONAL_URL, SOURCE_CODE_URL } from '../lib/links';
@@ -31,7 +39,35 @@ const NAV = [
   { to: '/about', hash: '', label: 'About the data' },
 ];
 
+/** Compact primary nav — routes that already exist; drop anything not in the app yet. */
+const COMPACT_NAV = [
+  { to: '/', hash: '', label: 'Overview' },
+  { to: '/gaa', hash: '', label: 'Enacted budgets' },
+  { to: '/', hash: '#projects', label: 'Project explorer' },
+  { to: '/', hash: '#offices', label: 'Offices' },
+  { to: '/about', hash: '', label: 'About the data' },
+];
+
+/** Sets `data-chrome` on <html> so CSS tokens apply without a framework. */
+export function ChromeRoot({ children }: { children: ReactNode }) {
+  const { config } = usePortal();
+  const compact = compactChrome(config);
+  useEffect(() => {
+    const root = document.documentElement;
+    if (compact) root.setAttribute('data-chrome', 'compact');
+    else root.removeAttribute('data-chrome');
+    return () => root.removeAttribute('data-chrome');
+  }, [compact]);
+  return <>{children}</>;
+}
+
 export function Masthead() {
+  const { config } = usePortal();
+  if (compactChrome(config)) return <CompactMasthead />;
+  return <DefaultMasthead />;
+}
+
+function DefaultMasthead() {
   const { config, client } = usePortal();
   const kicker = config.kicker?.trim();
   const sourceLinks = showSourceLinks(config);
@@ -118,7 +154,74 @@ export function Masthead() {
   );
 }
 
+function CompactMasthead() {
+  const { config } = usePortal();
+  const { pathname, hash } = useLocation();
+  const lockup = config.brand?.lockup;
+  const lockup2x = config.brand?.lockup2x;
+  return (
+    <>
+      <a className="skip-link" href="#main">Skip to content</a>
+      <header className="site-header">
+        <div className="site-header-bar">
+          <Link
+            to="/"
+            className="nav-brand"
+            aria-label={`${config.name}, home`}
+            onClick={() => pathname === '/' && window.scrollTo(0, 0)}
+          >
+            {lockup ? (
+              <img
+                src={lockup}
+                srcSet={lockup2x ? `${lockup} 1x, ${lockup2x} 2x` : undefined}
+                alt={config.name}
+                width="163"
+                height="48"
+                className="nav-brand-lockup"
+              />
+            ) : (
+              <span className="nav-brand-name">{config.name}</span>
+            )}
+            <span className="nav-brand-sub">
+              Independent <span aria-hidden="true">·</span>
+              <span className="sr-only">,</span> Unofficial
+            </span>
+          </Link>
+          <nav className="site-nav" aria-label="Primary">
+            {COMPACT_NAV.map((n) => {
+              // Hash links never get aria-current. Overview only when on `/` with no hash;
+              // other path links when their pathname matches.
+              const currentPage =
+                n.hash !== ''
+                  ? false
+                  : n.to === '/'
+                    ? pathname === '/' && !hash
+                    : pathname === n.to;
+              return (
+                <Link
+                  key={n.label}
+                  to={{ pathname: n.to, hash: n.hash }}
+                  aria-current={currentPage ? 'page' : undefined}
+                  onClick={() => !n.hash && pathname === n.to && window.scrollTo(0, 0)}
+                >
+                  {n.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+      </header>
+    </>
+  );
+}
+
 export function Footer() {
+  const { config } = usePortal();
+  if (compactChrome(config)) return <CompactFooter />;
+  return <DefaultFooter />;
+}
+
+function DefaultFooter() {
   const { config, scope, client } = usePortal();
   const meta = scope.status === 'ready' ? scope.value.meta : null;
   return (
@@ -167,6 +270,52 @@ export function Footer() {
   );
 }
 
+function CompactFooter() {
+  const { config, scope } = usePortal();
+  const meta = scope.status === 'ready' ? scope.value.meta : null;
+  return (
+    <footer className="site-footer">
+      <div className="page footer-inner">
+        <div className="footer-meta">
+          <p>Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API</p>
+          {meta?.notice && (
+            <details className="footer-notice-details">
+              <summary>Independent and unofficial — full notice</summary>
+              <p className="footer-notice">{meta.notice}</p>
+            </details>
+          )}
+          <p>
+            This portal: {shortNameOf(config)}, run by{' '}
+            {config.operator.url ? (
+              <a href={config.operator.url} target="_blank" rel="noopener">{config.operator.name}</a>
+            ) : (
+              config.operator.name
+            )}
+            {config.operator.email && (
+              <>
+                {' '}
+                · Corrections: <a href={`mailto:${config.operator.email}`}>{config.operator.email}</a>
+              </>
+            )}
+            {' · '}
+            <Link to="/about">About the data</Link>
+          </p>
+          <p>
+            Every project, nationwide:{' '}
+            <a href={NATIONAL_URL} target="_blank" rel="noopener">budget.bettergov.ph ↗</a>
+          </p>
+          <PortalCredits />
+        </div>
+        <a className="footer-powered" href="https://bettergov.ph" target="_blank" rel="noopener">
+          <span className="label">Data from</span>
+          <img src={BETTERGOV_LOGO} alt="BetterGov.ph" width="128" height="28" />
+        </a>
+        <p className="footer-disclosure">Independent volunteer project — not an official government site.</p>
+      </div>
+    </footer>
+  );
+}
+
 /** Same-site software notice, plus the API's data licence. Shown on every fork. */
 export function PortalCredits() {
   return (
@@ -180,7 +329,32 @@ export function PortalCredits() {
   );
 }
 
-export function PageHead({ eyebrow, title, children }: { eyebrow: ReactNode; title: ReactNode; children?: ReactNode }) {
+export function PageHead({
+  eyebrow,
+  title,
+  children,
+  fyLabel,
+}: {
+  eyebrow: ReactNode;
+  title: ReactNode;
+  children?: ReactNode;
+  /** Existing FY label only — no new selector state. Shown beside the H1 under compact chrome. */
+  fyLabel?: string;
+}) {
+  const { config } = usePortal();
+  const compact = compactChrome(config);
+  if (compact && fyLabel) {
+    return (
+      <div className="page-head">
+        <p className="eyebrow">{eyebrow}</p>
+        <div className="page-head-row">
+          <h1>{title}</h1>
+          <span className="fy-badge">{fyLabel}</span>
+        </div>
+        {children && <div className="lede">{children}</div>}
+      </div>
+    );
+  }
   return (
     <div className="page-head">
       <p className="eyebrow">{eyebrow}</p>

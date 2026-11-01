@@ -1,5 +1,5 @@
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
-import { Footer, Masthead } from './components/Chrome';
+import { ChromeRoot, Footer, Masthead } from './components/Chrome';
 import ScrollToTop from './components/ScrollToTop';
 import { configProblems } from './config';
 import { usePortal } from './lib/portal-context';
@@ -12,7 +12,7 @@ export default function App() {
   const { config } = usePortal();
   const problems = import.meta.env.DEV ? configProblems(config) : [];
   return (
-    <>
+    <ChromeRoot>
       <ScrollToTop />
       <Masthead />
       {problems.length > 0 && (
@@ -31,13 +31,13 @@ export default function App() {
         <Route
           path="*"
           element={
-            <main className="page main">
+            <main id="main" className="page main">
               <p className="state">This page does not exist. <Link to="/">See every project</Link></p>
             </main>
           }
         />
       </Routes>
       <Footer />
-    </>
+    </ChromeRoot>
   );
 }

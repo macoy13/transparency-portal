@@ -5,6 +5,10 @@
 
    Republic of the Philippines brand guidelines, section 04:
    "Figtree speaks. Inter works. Mono labels."
+
+   Compact branded chrome (html[data-chrome="compact"]) remaps the
+   palette and type; @font-face for Manrope / Source Sans 3 lives in
+   /fonts/compact-fonts.css and is linked only when compact is on.
    ============================================================= */
 
 :root {
@@ -35,6 +39,51 @@
   /* Layout */
   --page: 1280px;
   --gutter: 32px;
+
+  /* Shared motion token (matches prior .12s control fades; 0 under reduced motion) */
+  --motion-control: .12s;
+}
+
+/* Iloilo / fork compact brand: R0 palette + self-hosted type stacks */
+html[data-chrome="compact"] {
+  --paper: #ffffff;
+  --paper-2: #f7f8f5;
+  --paper-3: #edf2fc;
+  --rule: #dce3ec;
+  --rule-soft: #e7eaef;
+  --ink: #243247;
+  --ink-2: #243247;
+  --ink-3: #56647a;
+  --ink-mute: #56647a;
+
+  --accent: #3659b8;       /* interface blue only */
+  --accent-deep: #294696;
+  --accent-soft: #edf2fc;
+  --neutral: #b7791f;      /* amber fill role */
+
+  /* Contrast roles (R0): amber fill vs amber text; teal for fills/large text */
+  --amber-fill: #b7791f;
+  --amber-text: #7a5216;
+  --teal: #218579;
+
+  --font-hero: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --page: 72rem;
+  --gutter: 1.25rem;
+  --radius: 6px;
+  --focus-ring: 0 0 0 3px var(--paper-2), 0 0 0 5px var(--accent);
+  --motion-control: 180ms ease;
+  --motion-card: 320ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  html[data-chrome="compact"] {
+    --motion-control: 0s;
+    --motion-card: 0s;
+  }
 }
 
 * { box-sizing: border-box; }
@@ -52,6 +101,13 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
+html[data-chrome="compact"],
+html[data-chrome="compact"] body {
+  background: var(--paper-2);
+  font-size: 16px;
+  overflow-x: clip;
+}
+
 #root { min-height: 100svh; display: flex; flex-direction: column; }
 
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
@@ -61,6 +117,10 @@ button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+html[data-chrome="compact"] :focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--focus-ring);
+}
 
 h1, h2, h3 {
   font-family: var(--font-hero);
@@ -68,6 +128,13 @@ h1, h2, h3 {
   letter-spacing: -0.02em;
   line-height: 1.12;
   margin: 0;
+}
+
+html[data-chrome="compact"] h1,
+html[data-chrome="compact"] h2,
+html[data-chrome="compact"] h3 {
+  font-weight: 600;
+  color: #192d50;
 }
 
 .sr-only {
@@ -95,3 +162,20 @@ h1, h2, h3 {
 }
 .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .muted { color: var(--ink-3); }
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

@@ -220,7 +220,17 @@ export interface DistrictOffice {
     hgab3_records: number;
     bridge: { net_php: number; groups: Record<BridgeGroup, GroupCell> };
     annotations?: { unconfirmed_rows: number; unconfirmed_php: number };
-    office_change?: { rows: number; nep_php: number; hgab3_php: number };
+    /**
+     * Paired lines held out of this office's figures because the two versions
+     * name different offices. Amounts here are never in nep_php / hgab3_php.
+     */
+    office_change?: {
+      rows: number;
+      nep_php: number;
+      hgab3_php: number;
+      lines?: { id: string; url?: string; api_url?: string }[];
+      note?: string;
+    };
   } | null;
   projects_url?: string;
 }

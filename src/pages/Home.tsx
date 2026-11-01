@@ -2,12 +2,19 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactN
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import type { BridgeGroup, DatasetInfo, Disclaimer, GroupInfo } from '../api/types';
 import { BRIDGE_GROUPS } from '../api/types';
-import { homeSearchUnderLede, shortNameOf, type DatasetKey } from '../config';
+import { compactChrome, homeSearchUnderLede, shortNameOf, type DatasetKey } from '../config';
 import { Await, Disclaimers, ReasonTags, StatusChip } from '../components/Bits';
 import { PageHead } from '../components/Chrome';
+import {
+  CompactAccordions,
+  CompactStatusChips,
+  CompactSummaryCards,
+} from '../components/CompactHome';
 import OfficesSection from '../components/OfficesSection';
 import { projectsCsv, downloadText } from '../lib/csv';
+import { compactChipLabel } from '../lib/compact-chips';
 import { count, php, phpDelta, plural } from '../lib/format';
+import { countVisibleCompactOffices, heldOutLineIdsFromDistricts } from '../lib/office-figures';
 import { usePortal } from '../lib/portal-context';
 import { summarise, type ScopedProject, type ScopeResult, type Summary } from '../lib/scope';
 import { useTitle } from '../lib/use-title';
@@ -104,7 +111,7 @@ export default function Home() {
   useTitle(`Every FY 2027 project · ${shortNameOf(config)}`);
   const datasets = overview.status === 'ready' ? overview.value.data.datasets : [];
   return (
-    <main className="page main">
+    <main id="main" className="page main">
       <Await state={scope} what="projects">
         {(s) => <Projects scope={s} datasets={datasets} />}
       </Await>
@@ -178,11 +185,11 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
     return [...seen.entries()];
   }, [all]);
 
-  const filtered = useMemo(() => {
+  /** Search + office (+ program/why) without status — drives chip counts. */
+  const scoped = useMemo(() => {
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
     const rows = all.filter((p) => {
       if (program && p.dataset !== program) return false;
-      if (status && p.bridge_group !== status) return false;
       if (why && !p.reasons.some((r) => `${r.kind}:${r.label}` === why)) return false;
       if (office && p.office !== office) return false;
       if (words.length) {
@@ -192,10 +199,17 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
       return true;
     });
     return rows.sort((a, b) => SORTS[sort].cmp(a, b) || a.title.localeCompare(b.title));
-  }, [all, q, program, status, why, office, sort]);
+  }, [all, q, program, why, office, sort]);
+  const scopedSummary = useMemo(() => summarise(scoped), [scoped]);
+
+  const filtered = useMemo(() => {
+    const rows = status ? scoped.filter((p) => p.bridge_group === status) : scoped;
+    return rows;
+  }, [scoped, status]);
   const filteredSummary = useMemo(() => summarise(filtered), [filtered]);
   const narrowed = filtered.length !== all.length;
 
+  const compact = compactChrome(config);
   const eyebrow = <>FY 2027<span className="sep">·</span>NEP and House Bill 10858<span className="sep">·</span>{name}</>;
   const title = `${plural(summary.rows, 'project')} for ${name} in the 2027 budget`;
   const lede = (
@@ -204,6 +218,246 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
     </div>
   );
   const totals = <Stats summary={summary} programName={programName} />;
+  const clearFilters = () => {
+    setParams(new URLSearchParams(), { replace: true });
+    setShown(PAGE);
+    // Prefer the filter group; fall back to the list heading — never leave focus on BODY.
+    const target =
+      document.getElementById('status-filters') ??
+      document.getElementById('list-h');
+    target?.focus({ preventScroll: true });
+  };
+
+  const setStatus = (g: BridgeGroup | '') => setParam('status', g);
+
+  const statusFilters = (
+    <div
+      className="groups"
+      role="group"
+      aria-label="Filter by status"
+    >
+      {BRIDGE_GROUPS.map((g) => {
+        const cell = summary.groups[g];
+        const info = groups[g];
+        const active = status === g;
+        const empty = !cell.rows;
+        return (
+          <button
+            key={g}
+            type="button"
+            className={`group-tile${active ? ' active' : ''}`}
+            disabled={empty}
+            aria-pressed={active}
+            title={info.help}
+            onClick={() => setParam('status', active ? '' : g)}
+          >
+            <span className="group-label">
+              <span className={`status-dot g-${g}`} aria-hidden="true" />
+              {info.label}
+            </span>
+            {info.sub && <span className="label">{info.sub}</span>}
+            <span className="group-count num">{count(cell.rows)}</span>
+            <span className="group-php num">{groupAmount(g, cell)}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  const projectList = (
+    <section className="section" id="projects" aria-labelledby="list-h">
+      <div className="list-head">
+        <h2 id="list-h" className="section-h" tabIndex={leadSearch || compact ? -1 : undefined}>
+          {narrowed ? `${count(filtered.length)} of ${plural(all.length, 'project')}` : `Every project (${count(all.length)})`}
+        </h2>
+        <button type="button" className="button button-quiet" onClick={() => downloadText(`${config.id}-fy2027-projects.csv`, projectsCsv(filtered))}>
+          Download CSV{narrowed ? ` (${count(filtered.length)})` : ''}
+        </button>
+      </div>
+
+      <div className="toolbar">
+        {!leadSearch && !compact && <QueryField q={q} onChange={(value) => setParam('q', value)} />}
+        <label className="field">
+          <span className="label">Program</span>
+          <select value={program} onChange={(e) => setParam('program', e.target.value)}>
+            <option value="">All programs</option>
+            {(Object.keys(summary.byDataset) as DatasetKey[]).map((k) => (
+              <option key={k} value={k}>{programName(k)} ({count(summary.byDataset[k]!.rows)})</option>
+            ))}
+          </select>
+        </label>
+        <label className="field">
+          <span className="label">Status</span>
+          <select value={status} onChange={(e) => setParam('status', e.target.value)}>
+            <option value="">Any status</option>
+            {BRIDGE_GROUPS.filter((g) => summary.groups[g].rows).map((g) => (
+              <option key={g} value={g}>{groups[g].label} ({count(summary.groups[g].rows)})</option>
+            ))}
+          </select>
+        </label>
+        {offices.length > 1 && !compact && (
+          <label className="field">
+            <span className="label">DPWH office</span>
+            <select value={office} onChange={(e) => setParam('office', e.target.value)}>
+              <option value="">Any office</option>
+              {offices.map(([o, n]) => <option key={o} value={o}>{shortOffice(o)} ({count(n)})</option>)}
+            </select>
+          </label>
+        )}
+        {reasons.length > 1 && (
+          <label className="field">
+            <span className="label">Listed because</span>
+            <select value={why} onChange={(e) => setParam('why', e.target.value)}>
+              <option value="">Any reason</option>
+              {reasons.map(([k, label]) => <option key={k} value={k}>{label}</option>)}
+            </select>
+          </label>
+        )}
+        <label className="field">
+          <span className="label">Sort by</span>
+          <select value={sort} onChange={(e) => setParam('sort', e.target.value === 'house' ? '' : e.target.value)}>
+            {(Object.keys(SORTS) as Sort[]).map((k) => <option key={k} value={k}>{SORTS[k].label}</option>)}
+          </select>
+        </label>
+      </div>
+
+      {narrowed && (
+        <p className="filter-sums">
+          These {count(filtered.length)}: NEP {php(filteredSummary.nep.php)} on {count(filteredSummary.nep.rows)}
+          <span className="sep">·</span>House bill {php(filteredSummary.house.php)} on {count(filteredSummary.house.rows)}
+          {!compact && (
+            <>
+              <span className="sep">·</span>
+              <button type="button" className="link-button" onClick={clearFilters}>
+                Clear filters
+              </button>
+            </>
+          )}
+        </p>
+      )}
+
+      <ProjectTable rows={filtered.slice(0, shown)} programName={programName} />
+
+      {filtered.length === 0 && <p className="state">No project matches. Try fewer words or clear the filters.</p>}
+      {filtered.length > shown && (
+        <div className="more">
+          <span className="muted">Showing {count(shown)} of {count(filtered.length)}</span>
+          <button type="button" className="button" onClick={() => setShown((n) => n + PAGE)}>Show {count(Math.min(PAGE, filtered.length - shown))} more</button>
+          <button type="button" className="button button-quiet" onClick={() => setShown(filtered.length)}>Show all</button>
+        </div>
+      )}
+
+      <p className="fine">
+        Amounts are in pesos, as each document publishes them. A dash means that document has no such line. The NEP
+        and the House bill are two versions of one budget: their totals are compared, never added.
+      </p>
+    </section>
+  );
+
+  const heldIds = useMemo(
+    () => (districts.status === 'ready' ? heldOutLineIdsFromDistricts(districts.value) : new Set<string>()),
+    [districts],
+  );
+  const scopeOfficeList = useMemo(() => config.scope.offices ?? [], [config.scope.offices]);
+  const visibleOfficeCount = useMemo(
+    () => countVisibleCompactOffices(scopeOfficeList, filtered, heldIds),
+    [scopeOfficeList, filtered, heldIds],
+  );
+
+  if (compact) {
+    const showingLabel = status ? compactChipLabel(status, groups[status]?.label) : compactChipLabel('all');
+    const displaySummary = narrowed ? filteredSummary : summary;
+    const officeCount = scopeOfficeList.length || offices.length;
+    const compactLede =
+      config.home?.compactLede?.trim() ||
+      `Projects tied to ${name} in national budget documents — by office, program, and name.`;
+    return (
+      <>
+        <PageHead
+          eyebrow={<>NEP and House Bill 10858<span className="sep">·</span>{name}</>}
+          title={`Public budgets across ${name}`}
+          fyLabel="FY2027"
+        >
+          <p>{compactLede}</p>
+        </PageHead>
+
+        <CompactSummaryCards
+          summary={displaySummary}
+          totalRows={summary.rows}
+          totalOffices={officeCount}
+          shownOffices={visibleOfficeCount}
+          filtered={narrowed}
+        />
+
+        <div className="search-toolbar">
+          <div className="search-field">
+            <SearchIcon />
+            <label className="sr-only" htmlFor="overview-q">Search projects</label>
+            <input
+              id="overview-q"
+              type="search"
+              value={q}
+              placeholder="Search projects, offices, barangay, or keyword…"
+              aria-controls="projects"
+              onChange={(e) => setParam('q', e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  scrollToProjects();
+                  document.getElementById('list-h')?.focus({ preventScroll: true });
+                }
+              }}
+            />
+          </div>
+          {offices.length > 0 && (
+            <label className="sr-only" htmlFor="office-filter">Office</label>
+          )}
+          {offices.length > 0 && (
+            <select
+              id="office-filter"
+              className="office-select"
+              value={office}
+              aria-label="Office"
+              onChange={(e) => setParam('office', e.target.value)}
+            >
+              <option value="">All offices</option>
+              {offices.map(([o, n]) => (
+                <option key={o} value={o}>{shortOffice(o)} ({count(n)})</option>
+              ))}
+            </select>
+          )}
+        </div>
+
+        <CompactStatusChips
+          summary={scopedSummary}
+          status={status}
+          onStatus={setStatus}
+          onClear={clearFilters}
+          narrowed={narrowed}
+          showingLabel={showingLabel}
+          showingCount={filtered.length}
+        />
+
+        <OfficesSection
+          compact={{
+            filtered,
+            scoped,
+            all,
+            status,
+            office,
+            chipLabel: (g) => compactChipLabel(g, g === 'all' ? undefined : groups[g]?.label),
+            onStatus: setStatus,
+          }}
+        />
+
+        <CompactAccordions />
+
+        {projectList}
+
+        <Disclaimers items={disclaimers} compact />
+      </>
+    );
+  }
 
   return (
     <>
@@ -232,117 +486,22 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
 
       <section className="section" aria-labelledby="groups-h">
         <h2 id="groups-h" className="section-h">What the House bill did to them</h2>
-        <div className="groups" role="group" aria-label="Filter by status">
-          {BRIDGE_GROUPS.map((g) => {
-            const cell = summary.groups[g];
-            const info = groups[g];
-            const active = status === g;
-            return (
-              <button
-                key={g}
-                type="button"
-                className={`group-tile${active ? ' active' : ''}`}
-                disabled={!cell.rows}
-                aria-pressed={active}
-                title={info.help}
-                onClick={() => setParam('status', active ? '' : g)}
-              >
-                <span className="group-label"><span className={`status-dot g-${g}`} aria-hidden="true" />{info.label}</span>
-                {info.sub && <span className="label">{info.sub}</span>}
-                <span className="group-count num">{count(cell.rows)}</span>
-                <span className="group-php num">{groupAmount(g, cell)}</span>
-              </button>
-            );
-          })}
-        </div>
+        {statusFilters}
       </section>
 
-      <section className="section" id="projects" aria-labelledby="list-h">
-        <div className="list-head">
-          <h2 id="list-h" className="section-h" tabIndex={leadSearch ? -1 : undefined}>
-            {narrowed ? `${count(filtered.length)} of ${plural(all.length, 'project')}` : `Every project (${count(all.length)})`}
-          </h2>
-          <button type="button" className="button button-quiet" onClick={() => downloadText(`${config.id}-fy2027-projects.csv`, projectsCsv(filtered))}>
-            Download CSV{narrowed ? ` (${count(filtered.length)})` : ''}
-          </button>
-        </div>
-
-        <div className="toolbar">
-          {!leadSearch && <QueryField q={q} onChange={(value) => setParam('q', value)} />}
-          <label className="field">
-            <span className="label">Program</span>
-            <select value={program} onChange={(e) => setParam('program', e.target.value)}>
-              <option value="">All programs</option>
-              {(Object.keys(summary.byDataset) as DatasetKey[]).map((k) => (
-                <option key={k} value={k}>{programName(k)} ({count(summary.byDataset[k]!.rows)})</option>
-              ))}
-            </select>
-          </label>
-          <label className="field">
-            <span className="label">Status</span>
-            <select value={status} onChange={(e) => setParam('status', e.target.value)}>
-              <option value="">Any status</option>
-              {BRIDGE_GROUPS.filter((g) => summary.groups[g].rows).map((g) => (
-                <option key={g} value={g}>{groups[g].label} ({count(summary.groups[g].rows)})</option>
-              ))}
-            </select>
-          </label>
-          {offices.length > 1 && (
-            <label className="field">
-              <span className="label">DPWH office</span>
-              <select value={office} onChange={(e) => setParam('office', e.target.value)}>
-                <option value="">Any office</option>
-                {offices.map(([o, n]) => <option key={o} value={o}>{shortOffice(o)} ({count(n)})</option>)}
-              </select>
-            </label>
-          )}
-          {reasons.length > 1 && (
-            <label className="field">
-              <span className="label">Listed because</span>
-              <select value={why} onChange={(e) => setParam('why', e.target.value)}>
-                <option value="">Any reason</option>
-                {reasons.map(([k, label]) => <option key={k} value={k}>{label}</option>)}
-              </select>
-            </label>
-          )}
-          <label className="field">
-            <span className="label">Sort by</span>
-            <select value={sort} onChange={(e) => setParam('sort', e.target.value === 'house' ? '' : e.target.value)}>
-              {(Object.keys(SORTS) as Sort[]).map((k) => <option key={k} value={k}>{SORTS[k].label}</option>)}
-            </select>
-          </label>
-        </div>
-
-        {narrowed && (
-          <p className="filter-sums">
-            These {count(filtered.length)}: NEP {php(filteredSummary.nep.php)} on {count(filteredSummary.nep.rows)}
-            <span className="sep">·</span>House bill {php(filteredSummary.house.php)} on {count(filteredSummary.house.rows)}
-            <span className="sep">·</span>
-            <button type="button" className="link-button" onClick={() => { setParams(new URLSearchParams(), { replace: true }); setShown(PAGE); }}>
-              Clear filters
-            </button>
-          </p>
-        )}
-
-        <ProjectTable rows={filtered.slice(0, shown)} programName={programName} />
-
-        {filtered.length === 0 && <p className="state">No project matches. Try fewer words or clear the filters.</p>}
-        {filtered.length > shown && (
-          <div className="more">
-            <span className="muted">Showing {count(shown)} of {count(filtered.length)}</span>
-            <button type="button" className="button" onClick={() => setShown((n) => n + PAGE)}>Show {count(Math.min(PAGE, filtered.length - shown))} more</button>
-            <button type="button" className="button button-quiet" onClick={() => setShown(filtered.length)}>Show all</button>
-          </div>
-        )}
-
-        <p className="fine">
-          Amounts are in pesos, as each document publishes them. A dash means that document has no such line. The NEP
-          and the House bill are two versions of one budget: their totals are compared, never added.
-        </p>
-      </section>
+      {projectList}
 
       <Disclaimers items={disclaimers} compact />
     </>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
   );
 }
 
@@ -361,6 +520,7 @@ function HomeIntro({
   shown,
   total,
   onQuery,
+  fyLabel,
 }: {
   narrow: boolean;
   eyebrow: ReactNode;
@@ -371,6 +531,7 @@ function HomeIntro({
   shown: number;
   total: number;
   onQuery: (value: string) => void;
+  fyLabel?: string;
 }) {
   // Enter, or the keyboard's search key, opens the list. Typing does not scroll.
   const submit = () => {
@@ -381,7 +542,7 @@ function HomeIntro({
 
   return (
     <div className={narrow ? 'home-top home-top-narrow' : 'home-top'}>
-      <PageHead eyebrow={eyebrow} title={title} />
+      <PageHead eyebrow={eyebrow} title={title} fyLabel={fyLabel} />
       {narrow ? (
         <>
           {search}

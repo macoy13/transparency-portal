@@ -33,9 +33,27 @@ export default defineConfig({
   // Kind alone would say "Province". This copy covers the province and the city, and it is unofficial.
   kicker: 'Iloilo Province and Iloilo City · Independent, unofficial',
   // No GitHub "build your own" links, and no links to the API docs. BetterGov.ph pages stay.
-  chrome: { sourceLinks: false, apiLinks: false },
+  // Compact branded chrome (R0 tokens, mark, header/footer) is Iloilo-only.
+  chrome: { sourceLinks: false, apiLinks: false, compact: true },
+  brand: {
+    lockup: '/brand/iloilo/logo-lockup.png',
+    lockup2x: '/brand/iloilo/logo-lockup@2x.png',
+    icons: {
+      // Cropped window mark from Mark’s PNG (no hand-drawn SVG).
+      png16: '/brand/iloilo/favicon-16.png',
+      png32: '/brand/iloilo/favicon-32.png',
+      ico: '/brand/iloilo/favicon.ico',
+      appleTouch: '/brand/iloilo/apple-touch-icon.png',
+    },
+  },
   // The project search sits under the lede, so the first screen offers a place to look up.
-  home: { searchUnderLede: true },
+  // Compact Overview copy (R0): lede + Region VI fallback when an office has no region.
+  home: {
+    searchUnderLede: true,
+    compactLede:
+      'Projects tied to Iloilo Province and Iloilo City in national budget documents — by office, program, and name.',
+    compactRegionEyebrow: 'Region VI',
+  },
   name: 'Iloilo Transparency',
   shortName: 'Iloilo',
   operator: { name: 'Iloilo Transparency, an independent volunteer project' },

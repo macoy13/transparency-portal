@@ -9,7 +9,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import type { DistrictCard, DistrictOffice, Envelope } from '../api/types';
 import { GAA_YEARS } from '../api/types';
-import { shortNameOf } from '../config';
+import { compactChrome, shortNameOf } from '../config';
 import { Await, Disclaimers, External } from '../components/Bits';
 import { PageHead } from '../components/Chrome';
 import { downloadText } from '../lib/csv';
@@ -50,10 +50,12 @@ export default function Enacted() {
   }, [hash, districts.status]);
 
   const placeList = places.map((p) => p.label).join(', ');
+  const compact = compactChrome(config);
   return (
-    <main className="page main">
+    <main id="main" className="page main">
       <PageHead
         eyebrow={<>GAA<span className="sep">·</span>FY {FIRST}–{LAST}<span className="sep">·</span>{name}</>}
+        fyLabel={compact ? `FY${FIRST}–${LAST}` : undefined}
         title={
           state.status === 'ready'
             ? `${plural(state.value.rows.length, 'program and project', 'programs and projects')} in the ${FIRST}–${LAST} budgets name ${placeList}`
@@ -120,6 +122,8 @@ function OfficeHistories() {
 }
 
 function OfficeHistoryList({ list }: { list: Envelope<DistrictCard>[] }) {
+  const { config } = usePortal();
+  const compact = compactChrome(config);
   const offices = useMemo(() => {
     const byId = new Map<string, DistrictOffice>();
     for (const env of list) for (const o of env.data.offices) if (!byId.has(o.id)) byId.set(o.id, o);
@@ -129,16 +133,22 @@ function OfficeHistoryList({ list }: { list: Envelope<DistrictCard>[] }) {
   if (!offices.length) return null;
   return (
     <section className="section" aria-labelledby="office-years-h">
-      <h2 id="office-years-h" className="section-h">
+      <h2 id="office-years-h" className={compact ? 'section-title' : 'section-h'}>
         {offices.length === 1 ? 'The DPWH office’s budget, year by year' : `${count(offices.length)} DPWH offices’ budgets, year by year`}
       </h2>
-      <p className="legend">
-        <span><i className="sw sw-gaa" /> Enacted (GAA), whole office</span>
-        <span><i className="sw sw-nep" /> 2027 NEP, whole office</span>
-        <span><i className="sw sw-house" /> 2027 House bill, named projects only</span>
-      </p>
+      {compact ? (
+        <p className="enacted-legend">
+          <span><i className="sw sw-gaa" /> Enacted (GAA), whole office — one linear scale from zero per card.</span>
+        </p>
+      ) : (
+        <p className="legend">
+          <span><i className="sw sw-gaa" /> Enacted (GAA), whole office</span>
+          <span><i className="sw sw-nep" /> 2027 NEP, whole office</span>
+          <span><i className="sw sw-house" /> 2027 House bill, named projects only</span>
+        </p>
+      )}
       <div className="hgrid">
-        {offices.map((o) => <OfficeHistory key={o.id} office={o} />)}
+        {offices.map((o) => <OfficeHistory key={o.id} office={o} compact={compact} />)}
       </div>
       <Disclaimers items={officeDisclaimer} compact />
     </section>
@@ -148,9 +158,77 @@ function OfficeHistoryList({ list }: { list: Envelope<DistrictCard>[] }) {
 /** Three bars each: 2020–22, 2023–25, and 2026 with the two 2027 versions. */
 const CONGRESSES = [{ label: '18th Congress' }, { label: '19th Congress' }, { label: '20th Congress' }];
 
-function OfficeHistory({ office }: { office: DistrictOffice }) {
+function OfficeHistory({ office, compact }: { office: DistrictOffice; compact: boolean }) {
   const years = office.years ?? [];
   const slot = (fy: number, stage: string) => years.find((y) => y.fy === fy && y.stage === stage);
+  if (compact) {
+    const gaaBars = GAA_YEARS.map((fy) => ({ key: `${fy}`, label: String(fy), v: slot(fy, 'gaa') }));
+    const max = Math.max(1, ...gaaBars.map((b) => b.v?.php ?? 0));
+    const nep2027 = slot(2027, 'nep');
+    const house2027 = slot(2027, 'hgab3');
+    return (
+      <article className="hcard" id={office.id}>
+        <header className="hcard-head">
+          <h3>DPWH {office.name}</h3>
+          <span className={`tag tier tier-${office.tier}`}>{office.tier_text}</span>
+        </header>
+        <p className="hcard-group-label">Enacted (GAA), whole office</p>
+        <div
+          className="bars"
+          role="img"
+          aria-label={`Enacted budget by year: ${gaaBars.map((b) => `${b.label} ${b.v?.php != null ? phpFull(b.v.php) : 'not found'}`).join('; ')}`}
+        >
+          {gaaBars.map((b) => (
+            <div
+              key={b.key}
+              className={`bar-col k-gaa${b.v?.php == null ? ' k-missing' : ''}`}
+              title={b.v?.php != null ? `${b.v.stage_label} ${b.key}: ${phpFull(b.v.php)} (${b.v.scope})` : 'The office was not found that year'}
+            >
+              <span className="bar-v num">{b.v?.php != null ? php(b.v.php).replace('₱', '') : '—'}</span>
+              <span className="bar-track">
+                <span className="bar-fill" style={{ height: `${((b.v?.php ?? 0) / max) * 100}%` }} />
+              </span>
+              <span className="bar-x">{b.label}</span>
+            </div>
+          ))}
+        </div>
+        <table className="hcard-values">
+          <thead>
+            <tr>
+              <th scope="col">Year</th>
+              <th scope="col" className="num">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {gaaBars.map((b) => (
+              <tr key={b.key}>
+                <th scope="row">{b.label}</th>
+                <td className="num">{php(b.v?.php)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="hcard-2027">
+          <p className="hcard-group-label">2027 bill figures — not comparable to GAA bars above.</p>
+          <dl className="hcard-2027-figs">
+            <div>
+              <dt>2027 NEP (whole office)</dt>
+              <dd className="num">{php(nep2027?.php)}</dd>
+            </div>
+            <div>
+              <dt>2027 House (named projects only)</dt>
+              <dd className="num">{php(house2027?.php)}</dd>
+            </div>
+          </dl>
+          <p className="fine">Different scopes — never shown on the GAA scale.</p>
+        </div>
+        {office.co_served_districts.length > 0 && (
+          <p className="fine">Whole office, shared with {office.co_served_districts.map((d) => d.label).join('; ')}; not split.</p>
+        )}
+      </article>
+    );
+  }
+
   const bars = [
     ...GAA_YEARS.map((fy) => ({ key: `${fy}`, label: String(fy), kind: 'gaa', v: slot(fy, 'gaa') })),
     { key: '2027-nep', label: 'NEP', kind: 'nep', v: slot(2027, 'nep') },
