@@ -34,6 +34,8 @@ export default defineConfig({
   kicker: 'Iloilo Province and Iloilo City · Independent, unofficial',
   // No GitHub "build your own" links, and no links to the API docs. BetterGov.ph pages stay.
   chrome: { sourceLinks: false, apiLinks: false },
+  // The project search sits under the lede, so the first screen offers a place to look up.
+  home: { searchUnderLede: true },
   name: 'Iloilo Transparency',
   shortName: 'Iloilo',
   operator: { name: 'Iloilo Transparency, an independent volunteer project' },

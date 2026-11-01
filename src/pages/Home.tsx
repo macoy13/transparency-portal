@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import type { BridgeGroup, DatasetInfo, Disclaimer, GroupInfo } from '../api/types';
 import { BRIDGE_GROUPS } from '../api/types';
-import { shortNameOf, type DatasetKey } from '../config';
+import { homeSearchUnderLede, shortNameOf, type DatasetKey } from '../config';
 import { Await, Disclaimers, ReasonTags, StatusChip } from '../components/Bits';
 import { PageHead } from '../components/Chrome';
 import OfficesSection from '../components/OfficesSection';
@@ -13,6 +13,67 @@ import { summarise, type ScopedProject, type ScopeResult, type Summary } from '.
 import { useTitle } from '../lib/use-title';
 
 const PAGE = 100;
+
+/** Same breakpoint as the narrow layout in app.css. */
+const NARROW_SCREEN = '(max-width: 560px)';
+
+function subscribeNarrow(onChange: () => void) {
+  const mq = window.matchMedia(NARROW_SCREEN);
+  mq.addEventListener('change', onChange);
+  return () => mq.removeEventListener('change', onChange);
+}
+
+function useNarrowScreen(): boolean {
+  return useSyncExternalStore(subscribeNarrow, () => window.matchMedia(NARROW_SCREEN).matches, () => false);
+}
+
+function scrollToProjects() {
+  document.getElementById('projects')?.scrollIntoView({ block: 'start' });
+}
+
+/** What the count says: the total, or "N of M" once the list is narrowed. */
+function countLabel(shown: number, total: number): string {
+  return shown === total ? plural(total, 'project') : `${count(shown)} of ${plural(total, 'project')}`;
+}
+
+/**
+ * One polite live region. The visible count updates immediately; this copy
+ * waits, so a screen reader does not speak each letter of a word.
+ */
+function CountAnnouncer({ text }: { text: string }) {
+  const [announced, setAnnounced] = useState(text);
+  const skip = useRef(true);
+  useEffect(() => {
+    if (skip.current) {
+      skip.current = false;
+      return;
+    }
+    const id = window.setTimeout(() => setAnnounced(text), 500);
+    return () => window.clearTimeout(id);
+  }, [text]);
+  return (
+    <p className="sr-only" aria-live="polite">
+      {announced}
+    </p>
+  );
+}
+
+/** The one `q` field. `controls` points the hero search at the project list. */
+function QueryField({ q, onChange, controls, submitHint }: { q: string; onChange: (value: string) => void; controls?: string; submitHint?: boolean }) {
+  return (
+    <label className="field field-grow">
+      <span className="label">Search</span>
+      <input
+        type="search"
+        value={q}
+        placeholder="Barangay, road, school, office…"
+        aria-controls={controls}
+        enterKeyHint={submitHint ? 'search' : undefined}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </label>
+  );
+}
 
 type Sort = 'house' | 'nep' | 'change' | 'title';
 const SORTS: Record<Sort, { label: string; cmp: (a: ScopedProject, b: ScopedProject) => number }> = {
@@ -49,6 +110,8 @@ function groupInfo(datasets: DatasetInfo[], rows: ScopedProject[]): Record<Bridg
 
 function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetInfo[] }) {
   const { config, districts } = usePortal();
+  const leadSearch = homeSearchUnderLede(config);
+  const narrow = useNarrowScreen();
   const { hash } = useLocation();
 
   // #offices and #projects links land on their section once it has rendered.
@@ -117,16 +180,37 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
   const filteredSummary = useMemo(() => summarise(filtered), [filtered]);
   const narrowed = filtered.length !== all.length;
 
+  const eyebrow = <>FY 2027<span className="sep">·</span>NEP and House Bill 10858<span className="sep">·</span>{name}</>;
+  const title = `${plural(summary.rows, 'project')} for ${name} in the 2027 budget`;
+  const lede = (
+    <div className="lede">
+      <Lede summary={summary} />
+    </div>
+  );
+  const totals = <Stats summary={summary} programName={programName} />;
+
   return (
     <>
-      <PageHead
-        eyebrow={<>FY 2027<span className="sep">·</span>NEP and House Bill 10858<span className="sep">·</span>{name}</>}
-        title={`${plural(summary.rows, 'project')} for ${name} in the 2027 budget`}
-      >
-        <Lede summary={summary} />
-      </PageHead>
-
-      <Stats summary={summary} programName={programName} />
+      {leadSearch ? (
+        <HomeIntro
+          narrow={narrow}
+          eyebrow={eyebrow}
+          title={title}
+          lede={lede}
+          totals={totals}
+          q={q}
+          shown={filtered.length}
+          total={all.length}
+          onQuery={(value) => setParam('q', value)}
+        />
+      ) : (
+        <>
+          <PageHead eyebrow={eyebrow} title={title}>
+            <Lede summary={summary} />
+          </PageHead>
+          {totals}
+        </>
+      )}
 
       <OfficesSection />
 
@@ -159,7 +243,7 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
 
       <section className="section" id="projects" aria-labelledby="list-h">
         <div className="list-head">
-          <h2 id="list-h" className="section-h">
+          <h2 id="list-h" className="section-h" tabIndex={leadSearch ? -1 : undefined}>
             {narrowed ? `${count(filtered.length)} of ${plural(all.length, 'project')}` : `Every project (${count(all.length)})`}
           </h2>
           <button type="button" className="button button-quiet" onClick={() => downloadText(`${config.id}-fy2027-projects.csv`, projectsCsv(filtered))}>
@@ -168,10 +252,7 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
         </div>
 
         <div className="toolbar">
-          <label className="field field-grow">
-            <span className="label">Search</span>
-            <input type="search" value={q} placeholder="Barangay, road, school, office…" onChange={(e) => setParam('q', e.target.value)} />
-          </label>
+          {!leadSearch && <QueryField q={q} onChange={(value) => setParam('q', value)} />}
           <label className="field">
             <span className="label">Program</span>
             <select value={program} onChange={(e) => setParam('program', e.target.value)}>
@@ -246,6 +327,88 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
 
       <Disclaimers items={disclaimers} compact />
     </>
+  );
+}
+
+/**
+ * Search under the lede, then the four totals, then (unchanged) the offices.
+ * At 560px and below the lede follows the totals, so the search stays on the
+ * first screen. The order is real markup: tab order matches the screen.
+ */
+function HomeIntro({
+  narrow,
+  eyebrow,
+  title,
+  lede,
+  totals,
+  q,
+  shown,
+  total,
+  onQuery,
+}: {
+  narrow: boolean;
+  eyebrow: ReactNode;
+  title: string;
+  lede: ReactNode;
+  totals: ReactNode;
+  q: string;
+  shown: number;
+  total: number;
+  onQuery: (value: string) => void;
+}) {
+  // Enter, or the keyboard's search key, opens the list. Typing does not scroll.
+  const submit = () => {
+    scrollToProjects();
+    document.getElementById('list-h')?.focus({ preventScroll: true });
+  };
+  const search = <LeadSearch q={q} shown={shown} total={total} onQuery={onQuery} onSubmit={submit} />;
+
+  return (
+    <div className={narrow ? 'home-top home-top-narrow' : 'home-top'}>
+      <PageHead eyebrow={eyebrow} title={title} />
+      {narrow ? (
+        <>
+          {search}
+          {totals}
+          {lede}
+        </>
+      ) : (
+        <>
+          {lede}
+          {search}
+          {totals}
+        </>
+      )}
+    </div>
+  );
+}
+
+function LeadSearch({
+  q,
+  shown,
+  total,
+  onQuery,
+  onSubmit,
+}: {
+  q: string;
+  shown: number;
+  total: number;
+  onQuery: (value: string) => void;
+  onSubmit: () => void;
+}) {
+  return (
+    <form
+      className="home-search"
+      role="search"
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit();
+      }}
+    >
+      <QueryField q={q} controls="projects" submitHint onChange={onQuery} />
+      <p className="home-search-count" aria-hidden="true">{countLabel(shown, total)}</p>
+      <CountAnnouncer text={countLabel(shown, total)} />
+    </form>
   );
 }
 
