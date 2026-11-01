@@ -17,6 +17,7 @@ import { createClient } from '../src/api/client.ts';
 import { configProblems, DEFAULT_API } from '../src/config.ts';
 import { resolveScope, summarise } from '../src/lib/scope.ts';
 import { departmentShort, gaaYearTotals, resolveGaa } from '../src/lib/gaa.ts';
+import { ILOILO_NEIGHBOUR_SHARES, ILOILO_PORTAL_ID, formatIloiloNeighbourShares, neighbourShareProblems, neighbourYearShares } from '../src/lib/iloilo-neighbours.ts';
 import { GAA_YEARS, type GaaEnvelope } from '../src/api/types.ts';
 import { count, php, plural } from '../src/lib/format.ts';
 
@@ -92,6 +93,16 @@ async function main() {
       if (q.truncated) problems.push(`"${q.q}" matches ${count(q.matched)} ${departmentShort(q.department)} programs, more than the portal loads. Make q narrower.`);
     }
     for (const t of gaaYearTotals(gaa.rows)) console.log(`  ${t.year}: ${php(t.amount)} on ${count(t.programs)} programs`);
+
+    // Iloilo only. The About page publishes each year's share of that total
+    // that also names Capiz, Antique or Aklan. Recompute it from these rows
+    // so the sentence cannot drift. Other portals skip this.
+    if (config.id === ILOILO_PORTAL_ID) {
+      const shares = neighbourYearShares(gaa.rows);
+      const shown = shares.map((s) => ({ year: s.year, percent: s.percent ?? '—' }));
+      console.log(`  neighbouring-province shares: ${formatIloiloNeighbourShares(shown)}`);
+      for (const p of neighbourShareProblems(shares, ILOILO_NEIGHBOUR_SHARES)) problems.push(p);
+    }
 
     // Reconcile: for every search and year, the rows loaded add up to the API's own total for that search.
     const withExcluded = [...gaa.rows, ...gaa.excluded.flatMap((x) => (x.row ? [x.row] : []))];

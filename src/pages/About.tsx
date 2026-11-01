@@ -9,6 +9,7 @@ import { SOURCE_CODE_URL } from '../lib/links';
 import { usePortal } from '../lib/portal-context';
 import type { ScopeResult } from '../lib/scope';
 import { departmentShort, loadGaa, type GaaResult } from '../lib/gaa';
+import { ILOILO_NEIGHBOUR_SHARES, ILOILO_PORTAL_ID, formatIloiloNeighbourShares } from '../lib/iloilo-neighbours';
 import type { Async } from '../lib/portal-context';
 import { useTitle } from '../lib/use-title';
 
@@ -167,11 +168,12 @@ function AboutView({ scope, overview }: { scope: ScopeResult; overview: Overview
 /**
  * Iloilo only. The config has no field for a reading note, so the
  * district-to-DEO mapping and the neighbouring-province caveat live here.
- * Other portals do not show them.
+ * The yearly shares are `ILOILO_NEIGHBOUR_SHARES`, which `npm run check`
+ * recomputes. Other portals do not show them.
  */
 function DeoMappingNote() {
   const { config } = usePortal();
-  if (config.id !== 'iloilo') return null;
+  if (config.id !== ILOILO_PORTAL_ID) return null;
   return (
     <>
       <section className="section" aria-labelledby="neighbours-h">
@@ -179,7 +181,7 @@ function DeoMappingNote() {
         <p>
           Many enacted-budget lines also name Capiz or Antique, mostly shared roads and the Panay River Basin.
           Each line is shown in full. Its amount is not divided between the provinces.
-          Of each year’s enacted-budget total on this portal, that share is 28.5% in 2020, 19.2% in 2021, 28.9% in 2022, 19.8% in 2023, 14.7% in 2024, 18.4% in 2025 and 25.7% in 2026.
+          Of each year’s enacted-budget total on this portal, that share is {formatIloiloNeighbourShares(ILOILO_NEIGHBOUR_SHARES)}.
         </p>
         <p>
           Among the enacted-budget lines, Aklan is named only in the nationwide Iloilo-Capiz-Aklan Expressway bundles. Those are removed by hand, for the reason published above, and they are not part of these shares.
