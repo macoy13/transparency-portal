@@ -26,9 +26,9 @@ const verbose = argv.includes('--verbose');
 const configPath = resolve(cwd(), argv.find((a) => a.startsWith('--config='))?.slice('--config='.length) ?? 'portal.config.ts');
 
 // Node's fetch waits up to five minutes for response headers, and a body read
-// can stall after the headers have arrived. Bound each request. "fetch failed"
-// and "The operation was aborted due to timeout" do not name the URL, so both
-// paths below do. Messages stay the request URL and the cause: no headers.
+// can stall after the headers have arrived. Bound each request. A timeout and
+// a connection failure ("fetch failed") do not name the URL, so the paths below
+// do. Messages stay the request URL and the cause: no headers.
 const REQUEST_MS = 30_000;
 const fetchImpl = globalThis.fetch.bind(globalThis);
 
@@ -68,17 +68,25 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   try {
     return guardJson(await fetchImpl(input, { ...init, signal }), url, deadline);
   } catch (err) {
-    if (!timedOut(err, deadline)) throw err;
-    throw new Error(`no response within ${REQUEST_MS / 1000}s from ${url}`, { cause: err });
+    if (timedOut(err, deadline)) throw new Error(`no response within ${REQUEST_MS / 1000}s from ${url}`, { cause: err });
+    // Connection refused, DNS, and the other failures Node reports as "fetch failed".
+    throw new Error(`request failed for ${url}`, { cause: err });
   }
 }) as typeof globalThis.fetch;
 
-/** `fetch failed`, plus the underlying cause when Node hid it there. */
+/** Walk the cause chain; join distinct messages so ECONNREFUSED is not lost. */
 function describeFailure(err: unknown): string {
   if (!(err instanceof Error)) return String(err);
-  const cause = err.cause;
-  const detail = cause instanceof Error ? cause.message : '';
-  return detail && detail !== err.message ? `${err.message}: ${detail}` : err.message;
+  const parts: string[] = [];
+  const seen = new Set<string>();
+  let cur: unknown = err;
+  for (let depth = 0; depth < 8 && cur instanceof Error; depth++, cur = cur.cause) {
+    const msg = cur.message.trim();
+    if (!msg || seen.has(msg)) continue;
+    seen.add(msg);
+    parts.push(msg);
+  }
+  return parts.length ? parts.join(': ') : String(err);
 }
 
 async function main() {
