@@ -34,7 +34,7 @@ export const ILOILO_NEIGHBOUR_SHARES: readonly { year: number; percent: string }
 /** Capiz, Antique or Aklan as a whole word. A hyphen is a boundary, so "Iloilo-Capiz" matches. */
 const NEIGHBOUR_PROVINCE = /\b(?:capiz|antique|aklan)\b/i;
 
-export function namesNeighbourProvince(name: string): boolean {
+function namesNeighbourProvince(name: string): boolean {
   return NEIGHBOUR_PROVINCE.test(name);
 }
 
@@ -124,7 +124,5 @@ function roundedTenths(numerator: number, denominator: number): number {
 }
 
 function formatTenths(tenths: number): string {
-  const abs = Math.abs(tenths);
-  const sign = tenths < 0 ? '-' : '';
-  return `${sign}${Math.trunc(abs / 10)}.${abs % 10}`;
+  return `${Math.trunc(tenths / 10)}.${tenths % 10}`;
 }
