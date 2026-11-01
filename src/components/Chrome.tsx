@@ -157,7 +157,8 @@ function DefaultMasthead() {
 function CompactMasthead() {
   const { config } = usePortal();
   const { pathname, hash } = useLocation();
-  const mark = config.brand?.mark;
+  const lockup = config.brand?.lockup;
+  const lockup2x = config.brand?.lockup2x;
   return (
     <>
       <a className="skip-link" href="#main">Skip to content</a>
@@ -169,13 +170,21 @@ function CompactMasthead() {
             aria-label={`${config.name}, home`}
             onClick={() => pathname === '/' && window.scrollTo(0, 0)}
           >
-            {mark && <img src={mark} alt="" width="36" height="36" className="nav-brand-mark" />}
-            <span className="nav-brand-text">
+            {lockup ? (
+              <img
+                src={lockup}
+                srcSet={lockup2x ? `${lockup} 1x, ${lockup2x} 2x` : undefined}
+                alt={config.name}
+                width="163"
+                height="48"
+                className="nav-brand-lockup"
+              />
+            ) : (
               <span className="nav-brand-name">{config.name}</span>
-              <span className="nav-brand-sub">
-                Independent <span aria-hidden="true">·</span>
-                <span className="sr-only">,</span> Unofficial
-              </span>
+            )}
+            <span className="nav-brand-sub">
+              Independent <span aria-hidden="true">·</span>
+              <span className="sr-only">,</span> Unofficial
             </span>
           </Link>
           <nav className="site-nav" aria-label="Primary">

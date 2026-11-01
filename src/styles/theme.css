@@ -75,11 +75,14 @@ html[data-chrome="compact"] {
   --radius: 6px;
   --focus-ring: 0 0 0 3px var(--paper-2), 0 0 0 5px var(--accent);
   --motion-control: 180ms ease;
+  --motion-card: 320ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root {
+  :root,
+  html[data-chrome="compact"] {
     --motion-control: 0s;
+    --motion-card: 0s;
   }
 }
 

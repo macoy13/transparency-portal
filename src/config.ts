@@ -65,10 +65,24 @@ export interface PortalConfig {
   /** Optional logo: a path under public/ ("/brand/lgu-seal.png") or a URL. */
   logo?: string;
   /**
-   * Optional brand assets for compact chrome. `mark` is the header/favicon
-   * SVG path under public/ (for example "/brand/iloilo/window-mark.svg").
+   * Optional brand assets for compact chrome. Paths are under public/.
+   * `lockup` is the full logo image for the header; `icons` are favicons
+   * derived from the same mark (cropped). Omit `brand` to keep BetterGov chrome.
    */
-  brand?: { mark?: string };
+  brand?: {
+    /** Full lockup (1x) shown in the compact header. */
+    lockup?: string;
+    /** Optional 2x lockup for denser displays. */
+    lockup2x?: string;
+    /** Favicon set — only linked when compact is on. */
+    icons?: {
+      svg?: string;
+      png16?: string;
+      png32?: string;
+      ico?: string;
+      appleTouch?: string;
+    };
+  };
   /** Canonical URL of this deployment, for link previews. */
   siteUrl?: string;
   /**

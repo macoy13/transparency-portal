@@ -22,12 +22,20 @@ const COMPACT_FONT_LINKS = [
 
 const MAIN_ICON_LINKS = '<link rel="icon" type="image/svg+xml" href="/favicon.svg" />';
 
-const COMPACT_ICON_LINKS = [
-  '<link rel="icon" type="image/svg+xml" href="/brand/iloilo/favicon.svg" />',
-  '<link rel="icon" type="image/png" sizes="32x32" href="/brand/iloilo/favicon-32.png" />',
-  '<link rel="shortcut icon" href="/brand/iloilo/favicon.ico" />',
-  '<link rel="apple-touch-icon" sizes="180x180" href="/brand/iloilo/apple-touch-icon.png" />',
-].join('\n    ');
+/** Favicon links from `portal.brand.icons` when compact is on; otherwise main's SVG. */
+function compactIconLinks(): string {
+  const icons = portal.brand?.icons;
+  if (!icons) return MAIN_ICON_LINKS;
+  const lines: string[] = [];
+  if (icons.svg) lines.push(`<link rel="icon" type="image/svg+xml" href="${escape(icons.svg)}" />`);
+  if (icons.png16) lines.push(`<link rel="icon" type="image/png" sizes="16x16" href="${escape(icons.png16)}" />`);
+  if (icons.png32) lines.push(`<link rel="icon" type="image/png" sizes="32x32" href="${escape(icons.png32)}" />`);
+  if (icons.ico) lines.push(`<link rel="shortcut icon" href="${escape(icons.ico)}" />`);
+  if (icons.appleTouch) {
+    lines.push(`<link rel="apple-touch-icon" sizes="180x180" href="${escape(icons.appleTouch)}" />`);
+  }
+  return lines.length ? lines.join('\n    ') : MAIN_ICON_LINKS;
+}
 
 /** The portal's name and description in the HTML itself, for link previews and search engines. */
 function portalHtml(api: string): Plugin {
@@ -38,7 +46,7 @@ function portalHtml(api: string): Plugin {
     : '';
   const compact = compactChrome(portal);
   const fontLinks = compact ? COMPACT_FONT_LINKS : MAIN_FONT_LINKS;
-  const iconLinks = compact ? COMPACT_ICON_LINKS : MAIN_ICON_LINKS;
+  const iconLinks = compact ? compactIconLinks() : MAIN_ICON_LINKS;
   const themeColor = compact ? '#3659b8' : '#0b4fd9';
   return {
     name: 'portal-html',
