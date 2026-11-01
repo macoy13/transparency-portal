@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import type { BridgeGroup, DatasetInfo, Disclaimer, GroupInfo } from '../api/types';
 import { BRIDGE_GROUPS } from '../api/types';
@@ -29,6 +29,33 @@ function useNarrowScreen(): boolean {
 
 function scrollToProjects() {
   document.getElementById('projects')?.scrollIntoView({ block: 'start' });
+}
+
+/** What the count says: the total, or "N of M" once the list is narrowed. */
+function countLabel(shown: number, total: number): string {
+  return shown === total ? plural(total, 'project') : `${count(shown)} of ${plural(total, 'project')}`;
+}
+
+/**
+ * One polite live region. The visible count updates immediately; this copy
+ * waits, so a screen reader does not speak each letter of a word.
+ */
+function CountAnnouncer({ text }: { text: string }) {
+  const [announced, setAnnounced] = useState(text);
+  const skip = useRef(true);
+  useEffect(() => {
+    if (skip.current) {
+      skip.current = false;
+      return;
+    }
+    const id = window.setTimeout(() => setAnnounced(text), 500);
+    return () => window.clearTimeout(id);
+  }, [text]);
+  return (
+    <p className="sr-only" aria-live="polite">
+      {announced}
+    </p>
+  );
 }
 
 /** The one `q` field. `controls` points the hero search at the project list. */
@@ -379,9 +406,8 @@ function LeadSearch({
       }}
     >
       <QueryField q={q} controls="projects" submitHint onChange={onQuery} />
-      <p className="home-search-count" aria-live="polite" aria-atomic="true">
-        {count(shown)} of {plural(total, 'project')}
-      </p>
+      <p className="home-search-count" aria-hidden="true">{countLabel(shown, total)}</p>
+      <CountAnnouncer text={countLabel(shown, total)} />
     </form>
   );
 }

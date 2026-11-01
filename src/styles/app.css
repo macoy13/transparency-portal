@@ -109,10 +109,12 @@
    Spacing only. The narrow order is in the markup, so focus follows the screen. */
 .home-top .page-head { margin-bottom: 0; }
 .home-top .lede { max-width: 860px; margin-bottom: 18px; }
-.home-search { margin: 0 0 28px; min-width: 0; max-width: 100%; }
+.home-search { margin: 0 0 28px; min-width: 0; max-width: 860px; }
 .home-search .field { width: 100%; max-width: 100%; min-width: 0; }
 .home-search input { width: 100%; max-width: 100%; min-width: 0; }
 .home-search-count { margin: 8px 0 0; font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); }
+/* Room for the focus outline when Enter jumps to the list. */
+#projects { scroll-margin-top: 12px; }
 .home-top-narrow .home-search { margin-top: 16px; margin-bottom: 16px; }
 .home-top-narrow .stats { margin-bottom: 16px; }
 .home-top-narrow .lede { margin-top: 0; margin-bottom: 28px; }
