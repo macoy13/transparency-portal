@@ -1418,3 +1418,87 @@ table.data-table {
   font-size: 0.875rem;
   line-height: 1.5;
 }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.chip-demo-note {
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--color-secondary);
+}
+
+.chip-demo-help {
+  margin-top: var(--space-2);
+  width: 100%;
+}
+
+.chip:disabled .num {
+  opacity: 0.9;
+}
+
+.portraits-credit {
+  margin: 0 0 var(--space-4);
+  font-size: 0.8125rem;
+  color: var(--color-secondary);
+}
+
+.hcard-group-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin: 0 0 var(--space-2);
+}
+
+.hcard-values {
+  margin: var(--space-3) 0;
+  font-size: 0.8125rem;
+}
+
+.hcard-values th,
+.hcard-values td {
+  padding: 0.25rem 0.5rem;
+}
+
+.hcard-2027 {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--color-border);
+}
+
+.hcard-2027-figs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-2);
+}
+
+.hcard-2027-figs dt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin: 0 0 var(--space-1);
+}
+
+.hcard-2027-figs dd {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.bar-col.k-missing .bar-v {
+  color: var(--color-secondary);
+}
+
+.odistrict-links a {
+  max-width: 100%;
+}

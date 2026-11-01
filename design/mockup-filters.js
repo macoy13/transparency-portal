@@ -11,6 +11,7 @@
     '<svg class="odistrict-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
   const ICON_EXTERNAL =
     '<svg class="link-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
+  const NEW_TAB = '<span class="visually-hidden">(opens in new tab)</span>';
 
   let currentScope = '';
 
@@ -35,29 +36,30 @@
       .map((g) => {
         const label = data.chipLabels[g];
         const n = office.groups[g];
-        const text = `${n} ${label.charAt(0).toLowerCase() + label.slice(1)}`;
-        return `<span class="ocard-group-chip"><span class="status-dot g-${g}" aria-hidden="true"></span>${esc(text)}</span>`;
+        return `<span class="ocard-group-chip"><span class="status-dot g-${g}" aria-hidden="true"></span>${n} ${esc(label)}</span>`;
       })
       .join('');
   }
 
-  function noteHtml(o) {
+  function noteHtml(o, showFullNotes) {
     const n = o.note;
     let html = `Named projects: ${n.nepRecords} in the NEP, ${n.houseRecords} in the House bill.`;
-    html += ` The whole office in the NEP: ${esc(n.wholeNep)}.`;
-    if (n.unconfirmed > 0) {
+    if (showFullNotes && n.wholeNep != null) {
+      html += ` The whole office in the NEP: ${esc(n.wholeNep)}.`;
+    }
+    if (showFullNotes && n.unconfirmed > 0) {
       html += ` Includes ${n.unconfirmed} unconfirmed match${n.unconfirmed === 1 ? '' : 'es'} (${esc(n.unconfirmedPhp)}).`;
     }
     if (n.held > 0) {
       html += ` ${n.held} line${n.held === 1 ? '' : 's'} whose two versions name different offices ${n.held === 1 ? 'is' : 'are'} not in these figures.`;
     }
-    html += ` <a href="enacted.html#${esc(o.gaaHash)}">Its budget each year since 2020 →</a>`;
+    html += ` <a href="enacted.html#${esc(o.gaaHash)}">${esc(o.printed)} budget each year since 2020 →</a>`;
     return html;
   }
 
-  function officeCard(o) {
+  function officeCard(o, showFullNotes) {
     const rep = o.rep;
-    const leadership = rep.leadership ? `<p class="rep-leadership">${esc(rep.leadership)}</p>` : '';
+    const linesLabel = `${o.lines} record${o.lines === 1 ? '' : 's'} for ${o.printed}`;
     return `<article class="office-card ocard" data-office-id="${esc(o.id)}">
       <header class="office-card-head ocard-head">
         <div class="ocard-head-main">
@@ -72,7 +74,7 @@
       <dl class="office-card-figures ocard-figs">
         <div>
           <dt class="label">In this portal <span class="sample-badge">Sample</span></dt>
-          <dd class="office-card-value"><span class="is-visible"><a class="ocard-lines" href="explorer.html?office=${encodeURIComponent(o.printed)}">${o.lines} line${o.lines === 1 ? '' : 's'} →</a></span></dd>
+          <dd class="office-card-value"><span class="is-visible"><a class="ocard-lines" href="explorer.html?office=${encodeURIComponent(o.printed)}" aria-label="${esc(linesLabel)}">${o.lines} line${o.lines === 1 ? '' : 's'} →</a></span></dd>
         </div>
         <div>
           <dt class="label">NEP <span class="sample-badge">Sample</span></dt>
@@ -88,7 +90,7 @@
         </div>
       </dl>
       <p class="ocard-groups">${groupChips(o)}</p>
-      <p class="ocard-note">${noteHtml(o)}</p>
+      <p class="ocard-note">${noteHtml(o, showFullNotes)}</p>
       <div class="ocard-districts">
         <p class="label">Legislative district it serves</p>
         <ul>
@@ -100,10 +102,9 @@
             <div>
               <p class="rep-honorific">${esc(rep.honorific)}</p>
               <p class="rep-name">${esc(rep.name)}</p>
-              ${leadership}
               <p class="odistrict-links small">
-                <a href="${esc(rep.bills)}" target="_blank" rel="noopener">Bills ${ICON_EXTERNAL}</a>
-                <a href="${esc(rep.districtPage)}" target="_blank" rel="noopener">District page ${ICON_EXTERNAL}</a>
+                <a href="${esc(rep.bills)}" target="_blank" rel="noopener" aria-label="Bills by Rep. ${esc(rep.name)}">Bills${NEW_TAB} ${ICON_EXTERNAL}</a>
+                <a href="${esc(rep.districtPage)}" target="_blank" rel="noopener" aria-label="${esc(rep.districtLabel)} district page">District page${NEW_TAB} ${ICON_EXTERNAL}</a>
               </p>
             </div>
           </li>
@@ -115,16 +116,20 @@
   function renderChips(scope) {
     const chipHost = document.getElementById('bridge-chips');
     if (!chipHost) return;
-    chipHost.innerHTML = data.chipOrder
-      .concat(['toggle'])
-      .filter((g) => g !== 'toggle')
-      .map((g) => {
-        const n = scope.chips[g];
-        const pressed = scope.activeChip === g;
-        const label = data.chipLabels[g];
-        return `<button type="button" class="chip" data-bridge="${g}" aria-pressed="${pressed}">${esc(label)} <span class="num">(${n})</span></button>`;
-      })
-      .join('');
+    const wired = new Set(data.wiredChips);
+    chipHost.innerHTML =
+      data.chipOrder
+        .map((g) => {
+          const n = scope.chips[g];
+          const pressed = scope.activeChip === g;
+          const label = data.chipLabels[g];
+          const isWired = wired.has(g);
+          const disabled = isWired ? '' : ' disabled';
+          const demoNote = isWired ? '' : ' <span class="chip-demo-note">(demo: not wired)</span>';
+          return `<button type="button" class="chip" data-bridge="${g}" aria-pressed="${pressed}"${disabled}>${esc(label)} <span class="num">(${n})</span>${demoNote}</button>`;
+        })
+        .join('') +
+      '<p class="stat-note chip-demo-help">Demo: only <strong>higher in House</strong> is wired — click it to filter cards, summary, and table.</p>';
   }
 
   function renderTable(scope) {
@@ -156,10 +161,16 @@
     });
     const note = document.getElementById('summary-records-note');
     if (note) note.textContent = s.note;
+    const nepNote = document.getElementById('summary-nep-note');
+    const houseNote = document.getElementById('summary-house-note');
+    if (nepNote) nepNote.hidden = !s.nepHouseNote;
+    if (houseNote) houseNote.hidden = !s.nepHouseNote;
     const scopeNote = document.getElementById('office-scope-note');
     if (scopeNote) scopeNote.textContent = scope.scopeNote;
     const showing = document.getElementById('filter-showing');
-    if (showing) showing.textContent = scope.filterLabel;
+    if (showing) {
+      showing.innerHTML = `Showing: ${esc(scope.filterLabel)} <span class="sample-badge">Sample</span>`;
+    }
   }
 
   function applyScope(key) {
@@ -167,7 +178,7 @@
     currentScope = key in data.scopes ? key : '';
     const grid = document.getElementById('office-grid');
     if (grid) {
-      grid.innerHTML = scope.offices.map(officeCard).join('');
+      grid.innerHTML = scope.offices.map((o) => officeCard(o, scope.showFullNotes)).join('');
     }
     renderChips(scope);
     renderTable(scope);
@@ -177,15 +188,11 @@
   }
 
   function bindChips() {
-    document.querySelectorAll('#bridge-chips .chip').forEach((btn) => {
+    document.querySelectorAll('#bridge-chips .chip:not([disabled])').forEach((btn) => {
       btn.onclick = () => {
         const g = btn.getAttribute('data-bridge');
         if (g === 'increased') {
           applyScope(currentScope === 'increased' ? '' : 'increased');
-        } else if (g === 'unchanged' && currentScope === 'increased') {
-          applyScope('');
-        } else {
-          applyScope(currentScope === 'increased' ? 'increased' : '');
         }
       };
     });

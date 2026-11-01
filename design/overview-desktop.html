@@ -58,7 +58,7 @@
             districts, and a shared office’s money is never split between them. Representatives shown hold the seat in the 20th
             Congress. Representatives are listed so a reader can find their district. Nothing here establishes that a representative requested, sponsored or controlled any project or amount.
           </p>
-          <p class="filter-showing" id="filter-showing-wrap">Showing: <span id="filter-showing">All project records (six offices)</span> <span class="sample-badge">Sample</span></p>
+          <p class="filter-showing" id="filter-showing" aria-live="polite">Showing: All project records (six offices) <span class="sample-badge">Sample</span></p>
           <p class="stat-note" style="margin-bottom: var(--space-4)">
             <a href="explorer.html">Open the project explorer</a> · compared, not added · every figure <span class="sample-badge">Sample</span>
           </p>
@@ -94,12 +94,12 @@
           <div class="stat-cell">
             <p class="stat-label">Proposed (NEP) <span class="sample-badge">Sample</span></p>
             <p class="stat-value num filter-value" id="summary-nep"><span class="is-visible">₱16.0B</span></p>
-            <p class="stat-note">NEP on 340 records · compared, not added</p>
+            <p class="stat-note" id="summary-nep-note">NEP on 340 records · compared, not added</p>
           </div>
           <div class="stat-cell">
             <p class="stat-label">House version <span class="sample-badge">Sample</span></p>
             <p class="stat-value num filter-value" id="summary-house"><span class="is-visible">₱17.0B</span></p>
-            <p class="stat-note">House on 350 records · compared, not added</p>
+            <p class="stat-note" id="summary-house-note">House on 350 records · compared, not added</p>
           </div>
         </div>
         <p class="stat-note">
@@ -107,12 +107,12 @@
           Other 40 records (outside the six offices): 10 with both lines, 20 House-only, 10 proposed-only.
           In the House version only: <strong class="num">40</strong> (portal-wide).
         </p>
-        <p class="stat-note">Bridge chips: unchanged + increased + decreased = 340 records with both lines; House-only and proposed-only shown separately.</p>
+        <p class="stat-note">Bridge chips: same amount + higher in House + lower in House = 330 records with both lines; House only and NEP only shown separately.</p>
+        <p class="fine portraits-credit">Portraits: House of Representatives of the Philippines, public domain, via Wikimedia Commons.</p>
 
         <section class="section" aria-labelledby="groups-h">
           <h2 id="groups-h" class="section-title">What the House version did to them</h2>
           <div class="chips" id="bridge-chips" role="group" aria-label="Filter by bridge status"></div>
-          <p class="stat-note">Click <strong>higher in House</strong> to swap in a second filtered sample set (cards, summary, and table update together).</p>
         </section>
 
         <p class="stat-note" id="enacted-ref">Enacted budgets (2020–2026): <a href="enacted.html">Enacted mockup</a> · route <code>/gaa</code> in the app.</p>

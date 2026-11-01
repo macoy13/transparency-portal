@@ -42,15 +42,26 @@ Labeling: **NEP → “Proposed (NEP)”** on Home summary tiles; office card dl
 
 Portraits are copied under `design/portraits/` from the Budget API (`representative.portrait.url` on each district card). Mockups do not fetch images at render time.
 
-Honorifics in mockups follow **congress.gov.ph** member profiles (`representative.profile_url` in the API). Those pages title every Iloilo member **District Representative** (plus **Deputy Speaker** or **Deputy majority leader** where listed). They do **not** publish “Congressman” or “Congresswoman”. The API `Representative` type has no gender or honorific field.
+**Portraits:** House of Representatives of the Philippines, public domain, via Wikimedia Commons.
 
-| Legislative district | Representative | Title on congress.gov.ph profile | Source |
+| Representative | Portrait `source_url` |
+| --- | --- |
+| Baronda, Julienne "Jam" L. | https://commons.wikimedia.org/wiki/File:Rep._Julienne_Baronda_(20th_Congress).jpg |
+| Garin, Janette L. | https://commons.wikimedia.org/wiki/File:Rep._Janette_Garin_(20th_Congress).jpg |
+| Gorriceta, Kathryn Joyce F., MD | https://commons.wikimedia.org/wiki/File:Rep._Kathryn_Joyce_Gorriceta_(20th_Congress).jpg |
+| Defensor, Lorenz R. | https://commons.wikimedia.org/wiki/File:Rep._Lorenz_Defensor_(20th_Congress).jpg |
+| Biron, Ferjenel G., M.D. | https://commons.wikimedia.org/wiki/File:Rep._Ferjenel_Biron_(20th_Congress).jpg |
+| Tupas, Binky April M. | https://commons.wikimedia.org/wiki/File:Rep._Binky_April_Tupas_(20th_Congress).jpg |
+
+Honorifics in mockups follow **congress.gov.ph** member profiles (`representative.profile_url` in the API): **District Representative** only (no leadership titles — API `leadership_roles` is empty). They do **not** publish “Congressman” or “Congresswoman”. Bills links use each card’s API `bills_url` verbatim.
+
+| Legislative district | Representative | Title | Profile |
 | --- | --- | --- | --- |
-| Iloilo City, Lone District | Baronda, Julienne "Jam" L. | District Representative · Deputy majority leader | https://www.congress.gov.ph/house-members/view/J013 |
-| Iloilo, 1st District | Garin, Janette L. | District Representative · Deputy Speaker | https://www.congress.gov.ph/house-members/view/E032 |
+| Iloilo City, Lone District | Baronda, Julienne "Jam" L. | District Representative | https://www.congress.gov.ph/house-members/view/J013 |
+| Iloilo, 1st District | Garin, Janette L. | District Representative | https://www.congress.gov.ph/house-members/view/E032 |
 | Iloilo, 2nd District | Gorriceta, Kathryn Joyce F., MD | District Representative | https://www.congress.gov.ph/house-members/view/L042 |
 | Iloilo, 3rd District | Defensor, Lorenz R. | District Representative | https://www.congress.gov.ph/house-members/view/J119 |
-| Iloilo, 4th District | Biron, Ferjenel G., M.D. | District Representative · Deputy Speaker | https://www.congress.gov.ph/house-members/view/E018 |
+| Iloilo, 4th District | Biron, Ferjenel G., M.D. | District Representative | https://www.congress.gov.ph/house-members/view/E018 |
 | Iloilo, 5th District | Tupas, Binky April M. | District Representative | https://www.congress.gov.ph/house-members/view/L084 |
 
 **Mark’s “3 congresswomen” check:** gender is **not** on the API or on the allowed congress.gov.ph profile text, so this R0 pass cannot confirm a count of three. Do not infer gender from given names.
@@ -106,7 +117,7 @@ Live reference: **`built_at`** `2026-10-26T08:46:14Z` → footer **data built Oc
 | Other (not in six offices) | 40 | 10 | 20 | 10 | — | — | (illustrative) |
 | **Portal-wide** | **400** | **340** | **40** | **20** | **360** | **380** | — |
 
-Bridge chips: unchanged (186) + increased (96) + decreased (48) = **330** with both lines across six offices; **House-only (20)** and **NEP-only (10)** separate.
+Bridge chips: same amount (186) + higher in House (96) + lower in House (48) = **330** with both lines across six offices; **House only (20)** and **NEP only (10)** separate. Per-card both-lines **54/54/55/55/56/56** with House-only **4/4/3/3/3/3** and NEP-only **2/2/2/2/1/1**. Filtered demo (**higher in House**): **96** records (16 per office), NEP **₱10.4B** / House **₱11.4B**.
 
 **Proposal:** Keep **`meta.built_at`** as the canonical freshness line in the footer; About keeps **`source_commit`** as above. Do not substitute client fetch time for `built_at`.
 
@@ -145,4 +156,4 @@ Bridge chips: unchanged (186) + increased (96) + decreased (48) = **330** with b
 - `logos/*.svg` (six)
 - `screenshots/*.png`
 
-Re-capture screenshots: `node design/capture-screenshots.mjs` (1s wait for motion; copies to `/opt/cursor/artifacts/workspace/design/screenshots/`).
+Re-capture screenshots: `node design/capture-screenshots.mjs` (1s wait for motion). Optional copy: `ARTIFACTS_DIR=/path/to/dir node design/capture-screenshots.mjs`.

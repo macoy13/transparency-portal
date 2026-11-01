@@ -21,6 +21,7 @@
           <a class="masthead-with" href="https://bettergov.ph/" target="_blank" rel="noopener">
             <span class="label">Data from</span>
             <img src="../public/brand/bettergov-horizontal-primary.png" alt="BetterGov.ph" width="128" height="28" />
+            <span class="visually-hidden">(opens in new tab)</span>
           </a>
         </div>
         <nav class="subnav" aria-label="Primary">
@@ -43,9 +44,7 @@
         <section class="section" aria-labelledby="office-years-h">
           <h2 id="office-years-h" class="section-title">6 DPWH offices’ budgets, year by year <span class="sample-badge">Sample</span></h2>
           <p class="enacted-legend">
-            <span><i class="sw sw-gaa" aria-hidden="true"></i> Enacted (GAA), whole office</span>
-            <span><i class="sw sw-nep" aria-hidden="true"></i> 2027 NEP, whole office</span>
-            <span><i class="sw sw-house" aria-hidden="true"></i> 2027 House bill, named projects only</span>
+            <span><i class="sw sw-gaa" aria-hidden="true"></i> Enacted (GAA), whole office — one linear scale from zero per card</span>
           </p>
           <div class="hgrid">
             <article class="hcard" id="office:iloilo-city-deo">
@@ -53,24 +52,94 @@
                 <h3>DPWH Iloilo City DEO</h3>
                 <span class="tag tier tier-A">Tier A</span>
               </header>
-              <div class="bars" role="img" aria-label="Sample budget by year for Iloilo City DEO">
-                <div class="bar-col k-gaa"><span class="bar-v num">420M</span><span class="bar-track"><span class="bar-fill" style="height: 72%"></span></span><span class="bar-x">2024</span></div>
-                <div class="bar-col k-gaa"><span class="bar-v num">445M</span><span class="bar-track"><span class="bar-fill" style="height: 76%"></span></span><span class="bar-x">2025</span></div>
-                <div class="bar-col k-gaa"><span class="bar-v num">460M</span><span class="bar-track"><span class="bar-fill" style="height: 79%"></span></span><span class="bar-x">2026</span></div>
-                <div class="bar-col k-nep"><span class="bar-v num">3.6B</span><span class="bar-track"><span class="bar-fill" style="height: 85%"></span></span><span class="bar-x">NEP</span></div>
-                <div class="bar-col k-house"><span class="bar-v num">3.9B</span><span class="bar-track"><span class="bar-fill" style="height: 92%"></span></span><span class="bar-x">House</span></div>
+              <p class="hcard-group-label">Enacted GAA (whole office) <span class="sample-badge">Sample</span></p>
+              <div
+                class="bars"
+                role="img"
+                aria-label="Iloilo City DEO GAA whole office: 2020 ₱380M; 2021 ₱395M; 2022 ₱410M; 2023 ₱425M; 2024 ₱440M; 2025 ₱455M; 2026 ₱470M. Scale from zero to ₱470M."
+              >
+                <div class="bar-col k-gaa"><span class="bar-v num">380M</span><span class="bar-track"><span class="bar-fill" style="height: 80.851%"></span></span><span class="bar-x">2020</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">395M</span><span class="bar-track"><span class="bar-fill" style="height: 84.043%"></span></span><span class="bar-x">2021</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">410M</span><span class="bar-track"><span class="bar-fill" style="height: 87.234%"></span></span><span class="bar-x">2022</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">425M</span><span class="bar-track"><span class="bar-fill" style="height: 90.426%"></span></span><span class="bar-x">2023</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">440M</span><span class="bar-track"><span class="bar-fill" style="height: 93.617%"></span></span><span class="bar-x">2024</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">455M</span><span class="bar-track"><span class="bar-fill" style="height: 96.809%"></span></span><span class="bar-x">2025</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">470M</span><span class="bar-track"><span class="bar-fill" style="height: 100%"></span></span><span class="bar-x">2026</span></div>
+              </div>
+              <table class="hcard-values data-table">
+                <caption class="visually-hidden">Iloilo City DEO GAA amounts</caption>
+                <thead><tr><th scope="col">Year</th><th scope="col" class="num">Amount</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">2020</th><td class="num">₱380M</td></tr>
+                  <tr><th scope="row">2021</th><td class="num">₱395M</td></tr>
+                  <tr><th scope="row">2022</th><td class="num">₱410M</td></tr>
+                  <tr><th scope="row">2023</th><td class="num">₱425M</td></tr>
+                  <tr><th scope="row">2024</th><td class="num">₱440M</td></tr>
+                  <tr><th scope="row">2025</th><td class="num">₱455M</td></tr>
+                  <tr><th scope="row">2026</th><td class="num">₱470M</td></tr>
+                </tbody>
+              </table>
+              <div class="hcard-2027">
+                <p class="hcard-group-label">2027 bill figures — not comparable to GAA bars above <span class="sample-badge">Sample</span></p>
+                <dl class="hcard-2027-figs">
+                  <div>
+                    <dt>2027 NEP (whole office)</dt>
+                    <dd class="num">₱4.1B</dd>
+                  </div>
+                  <div>
+                    <dt>2027 House (named projects only)</dt>
+                    <dd class="num">₱3.9B</dd>
+                  </div>
+                </dl>
+                <p class="stat-note">Whole-office NEP and named-projects House are different scopes; shown separately, never on the GAA scale.</p>
               </div>
             </article>
+
             <article class="hcard" id="office:iloilo-1st-deo">
               <header class="hcard-head">
                 <h3>DPWH Iloilo 1st DEO</h3>
                 <span class="tag tier tier-A">Tier A</span>
               </header>
-              <div class="bars" role="img" aria-label="Sample budget by year for Iloilo 1st DEO">
-                <div class="bar-col k-gaa"><span class="bar-v num">310M</span><span class="bar-track"><span class="bar-fill" style="height: 65%"></span></span><span class="bar-x">2024</span></div>
-                <div class="bar-col k-gaa"><span class="bar-v num">328M</span><span class="bar-track"><span class="bar-fill" style="height: 68%"></span></span><span class="bar-x">2025</span></div>
-                <div class="bar-col k-nep"><span class="bar-v num">2.8B</span><span class="bar-track"><span class="bar-fill" style="height: 80%"></span></span><span class="bar-x">NEP</span></div>
-                <div class="bar-col k-house"><span class="bar-v num">3.0B</span><span class="bar-track"><span class="bar-fill" style="height: 86%"></span></span><span class="bar-x">House</span></div>
+              <p class="hcard-group-label">Enacted GAA (whole office) <span class="sample-badge">Sample</span></p>
+              <div
+                class="bars"
+                role="img"
+                aria-label="Iloilo 1st DEO GAA whole office: 2020 ₱280M; 2021 ₱290M; 2022 ₱300M; 2023 ₱310M; 2024 ₱320M; 2025 ₱330M; 2026 not found. Scale from zero to ₱330M."
+              >
+                <div class="bar-col k-gaa"><span class="bar-v num">280M</span><span class="bar-track"><span class="bar-fill" style="height: 84.848%"></span></span><span class="bar-x">2020</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">290M</span><span class="bar-track"><span class="bar-fill" style="height: 87.879%"></span></span><span class="bar-x">2021</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">300M</span><span class="bar-track"><span class="bar-fill" style="height: 90.909%"></span></span><span class="bar-x">2022</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">310M</span><span class="bar-track"><span class="bar-fill" style="height: 93.939%"></span></span><span class="bar-x">2023</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">320M</span><span class="bar-track"><span class="bar-fill" style="height: 96.970%"></span></span><span class="bar-x">2024</span></div>
+                <div class="bar-col k-gaa"><span class="bar-v num">330M</span><span class="bar-track"><span class="bar-fill" style="height: 100%"></span></span><span class="bar-x">2025</span></div>
+                <div class="bar-col k-missing"><span class="bar-v num">—</span><span class="bar-track"><span class="bar-fill" style="height: 0"></span></span><span class="bar-x">2026</span></div>
+              </div>
+              <table class="hcard-values data-table">
+                <caption class="visually-hidden">Iloilo 1st DEO GAA amounts</caption>
+                <thead><tr><th scope="col">Year</th><th scope="col" class="num">Amount</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">2020</th><td class="num">₱280M</td></tr>
+                  <tr><th scope="row">2021</th><td class="num">₱290M</td></tr>
+                  <tr><th scope="row">2022</th><td class="num">₱300M</td></tr>
+                  <tr><th scope="row">2023</th><td class="num">₱310M</td></tr>
+                  <tr><th scope="row">2024</th><td class="num">₱320M</td></tr>
+                  <tr><th scope="row">2025</th><td class="num">₱330M</td></tr>
+                  <tr><th scope="row">2026</th><td class="num">—</td></tr>
+                </tbody>
+              </table>
+              <div class="hcard-2027">
+                <p class="hcard-group-label">2027 bill figures — not comparable to GAA bars above <span class="sample-badge">Sample</span></p>
+                <dl class="hcard-2027-figs">
+                  <div>
+                    <dt>2027 NEP (whole office)</dt>
+                    <dd class="num">₱3.2B</dd>
+                  </div>
+                  <div>
+                    <dt>2027 House (named projects only)</dt>
+                    <dd class="num">₱3.0B</dd>
+                  </div>
+                </dl>
+                <p class="stat-note">Whole-office NEP and named-projects House are different scopes; shown separately, never on the GAA scale.</p>
               </div>
             </article>
           </div>
@@ -130,9 +199,11 @@
 
       <footer class="site-footer">
         <div class="footer-inner">
-          <p class="footer-source">Source: General Appropriations Acts 2020–2026 · via the BetterGov.ph Budget API · sample build</p>
-          <p class="footer-notice">Figures are appropriations (authority to spend), not actual spending or project completion.</p>
-          <p class="footer-legal">Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+          <p class="footer-source">Source: General Appropriations Acts 2020–2026 · via the BetterGov.ph Budget API</p>
+          <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
+          <p class="footer-legal"><a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a> · Data: BetterGov.ph Budget API, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0<span class="visually-hidden">(opens in new tab)</span></a>, filtered and summarised for this portal.</p>
+          <p class="footer-legal">This portal: Iloilo, run by Iloilo Transparency, an independent volunteer project · Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a> · <a href="overview-desktop.html#about-ref">About the data</a></p>
+          <p class="footer-disclosure">Independent volunteer project — not an official government site.</p>
         </div>
       </footer>
     </div>

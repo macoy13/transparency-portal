@@ -43,7 +43,7 @@
 
         <section id="offices" class="section">
           <h2 class="section-title" style="font-size: 1.125rem">6 DPWH offices</h2>
-          <p class="filter-showing" id="filter-showing-wrap">Showing: <span id="filter-showing">All project records (six offices)</span> <span class="sample-badge">Sample</span></p>
+          <p class="filter-showing" id="filter-showing" aria-live="polite">Showing: All project records (six offices) <span class="sample-badge">Sample</span></p>
           <div class="office-grid" id="office-grid"></div>
           <p class="progress-note">Progress data: not available. These are budget amounts, not spending or completion.</p>
           <p class="stat-note office-scope-note" id="office-scope-note"><strong>Sample summary for the six offices (table below)</strong> <span class="sample-badge">Sample</span> — 360 records; NEP on 340 · House on 350.</p>
@@ -75,13 +75,15 @@
           <div class="stat-cell">
             <p class="stat-label">Proposed (NEP) <span class="sample-badge">Sample</span></p>
             <p class="stat-value num filter-value" id="summary-nep" style="font-size: 1.5rem"><span class="is-visible">₱16.0B</span></p>
+            <p class="stat-note" id="summary-nep-note">NEP on 340 records</p>
           </div>
           <div class="stat-cell">
             <p class="stat-label">House version <span class="sample-badge">Sample</span></p>
             <p class="stat-value num filter-value" id="summary-house" style="font-size: 1.5rem"><span class="is-visible">₱17.0B</span></p>
-            <p class="stat-note">House on 350 records</p>
+            <p class="stat-note" id="summary-house-note">House on 350 records</p>
           </div>
         </div>
+        <p class="fine portraits-credit">Portraits: House of Representatives of the Philippines, public domain, via Wikimedia Commons.</p>
         <p class="stat-note">Portal-wide sample: 400 records · NEP on 360 · House on 380 · House version only 40.</p>
       </main>
 
