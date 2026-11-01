@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>R0 · Components · Iloilo Transparency</title>
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="mockups.css" />
+  </head>
+  <body>
+    <p class="sample-banner" role="status">Sample data · Illustrative figures only.</p>
+    <div class="mockup-frame--desktop components-page">
+      <header class="site-header">
+        <div class="site-header-bar">
+          <a class="nav-brand" href="overview-desktop.html">
+            <img src="logos/window-color.svg" width="36" height="36" alt="" />
+            <span class="nav-brand-text">
+              <span class="nav-brand-name">Iloilo Transparency</span>
+              <span class="nav-brand-sub">R0 components · Independent · Unofficial</span>
+            </span>
+          </a>
+          <nav class="site-nav" aria-label="Primary">
+            <a href="overview-desktop.html">Overview</a>
+            <a href="enacted.html">Enacted budgets</a>
+            <a href="explorer.html">Project explorer</a>
+            <a href="components.html" aria-current="page">Components</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="page-wrap component-grid">
+        <h1 class="page-title">Component &amp; type sheet</h1>
+        <section class="component-row type-scale">
+          <h2>Typography</h2>
+          <p class="t-display">Display title (32–40px desktop)</p>
+          <p class="t-h2">Section heading</p>
+          <p class="t-body">Body 16px — Source Sans 3 (mockups use system UI fallback).</p>
+          <p class="t-table tabular">Table/chart label: ₱12,500,000 · 1,234</p>
+        </section>
+
+        <section class="component-row">
+          <h2>Buttons &amp; links</h2>
+          <p style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center">
+            <button type="button" class="button">Primary action</button>
+            <a href="components.html">Text link</a>
+            <button type="button" class="clear-filters" style="margin: 0">Clear filters</button>
+          </p>
+        </section>
+
+        <section class="component-row">
+          <h2>Focus ring</h2>
+          <p><button type="button" class="button" id="focus-demo">Tab to me</button> — <code>box-shadow</code> focus ring, 3px page + 2px primary.</p>
+        </section>
+
+        <section class="component-row">
+          <h2>Filter chips</h2>
+          <div class="chips">
+            <button type="button" class="chip" aria-pressed="true">All (360)</button>
+            <button type="button" class="chip" aria-pressed="false">Higher in House (96)</button>
+            <button type="button" class="chip" disabled>Same amount (186) <span class="chip-demo-note">(demo: not wired)</span></button>
+          </div>
+        </section>
+
+        <section class="component-row">
+          <h2>Search &amp; select</h2>
+          <div class="search-toolbar">
+            <div class="search-field">
+              <label class="visually-hidden" for="c-search">Search</label>
+              <input id="c-search" type="search" placeholder="Barangay, road…" />
+            </div>
+            <select class="office-select" aria-label="Program"><option>All programs</option></select>
+          </div>
+        </section>
+
+        <section class="component-row">
+          <h2>Summary figure cards <span class="sample-badge">Sample</span></h2>
+          <div class="summary-cards" style="max-width: 48rem">
+            <div class="summary-card">
+              <div>
+                <p class="stat-label">Project records</p>
+                <p class="stat-value num">360</p>
+                <p class="stat-note">Six offices · 60 per office (sample)</p>
+              </div>
+            </div>
+            <div class="summary-card">
+              <div>
+                <p class="stat-label">Proposed · NEP</p>
+                <p class="stat-value num">₱16.0B</p>
+                <p class="stat-note">NEP on 340 records (sample)</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="component-row">
+          <h2>Table row</h2>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Project</th><th class="num">House version</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Sample project line</td>
+                  <td class="num">₱14,200,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="component-row">
+          <h2>Office card (Mark layout) <span class="sample-badge">Sample</span></h2>
+          <article class="office-card" style="max-width: 22rem">
+            <header class="ocard-top">
+              <div class="ocard-title-row">
+                <svg class="office-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+                <div>
+                  <p class="ocard-eyebrow">Region VI</p>
+                  <h3 class="office-card-title">Iloilo 1st District Engineering Office</h3>
+                </div>
+              </div>
+              <span class="records-badge">60 records</span>
+            </header>
+            <div class="ocard-amounts">
+              <div><p class="stat-label">Proposed · NEP</p><p class="ocard-fig num">₱2.8B</p></div>
+              <div><p class="stat-label">House version</p><p class="ocard-fig num">₱3.0B</p></div>
+            </div>
+            <p class="change-pill">+₱0.2B (+7.1%)</p>
+            <a class="button button-card" href="explorer.html">View projects →</a>
+          </article>
+        </section>
+
+        <section class="component-row">
+          <h2>Project record · missing NEP line <span class="sample-badge">Sample</span></h2>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th scope="col">Project</th>
+                  <th scope="col" class="num">Proposed (NEP)</th>
+                  <th scope="col" class="num">House version</th>
+                  <th scope="col">Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>FMR: Barangay access road improvement</td>
+                  <td class="missing">— <span class="office-missing-note">no line in NEP</span></td>
+                  <td class="num">₱8,000,000</td>
+                  <td><span class="status-pill"><span class="status-dot" aria-hidden="true"></span>House version only</span> · not comparable</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="component-row">
+          <h2>States</h2>
+          <div style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr))">
+            <div class="state-panel">
+              <h3>Loading</h3>
+              <div class="skeleton" style="height: 2rem; margin-bottom: 0.5rem"></div>
+              <div class="skeleton" style="width: 70%"></div>
+            </div>
+            <div class="state-panel">
+              <h3>Empty</h3>
+              <p>No project matches. Try fewer words or clear the filters.</p>
+            </div>
+            <div class="state-panel">
+              <h3>Error</h3>
+              <p>Could not load projects. Check your connection and try again.</p>
+              <p style="margin-top: 0.75rem"><button type="button" class="button">Retry</button></p>
+            </div>
+            <div class="state-panel">
+              <h3>Unavailable</h3>
+              <p>Reporting is not enabled on this portal yet.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <div class="footer-meta">
+            <p>Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API</p>
+            <details class="footer-notice-details">
+              <summary>Independent and unofficial — full notice</summary>
+              <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
+            </details>
+            <p class="footer-legal">
+              <a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a>
+              · Data: BetterGov.ph Budget API, licensed
+              <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" aria-label="CC BY 4.0 (opens in new tab)">CC BY 4.0</a>, filtered and summarised for this portal.
+            </p>
+            <p>This portal: Iloilo, run by Iloilo Transparency, an independent volunteer project · Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+          </div>
+          <p class="footer-disclosure">Independent volunteer project — not an official government site.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
