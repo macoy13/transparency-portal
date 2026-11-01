@@ -30,6 +30,8 @@ import { defineConfig } from './src/config';
 export default defineConfig({
   id: 'iloilo',
   kind: 'province',
+  // Kind alone would say "Province". This copy covers the province and the city, and it is unofficial.
+  kicker: 'Iloilo Province and Iloilo City · Independent, unofficial',
   name: 'Iloilo Transparency',
   shortName: 'Iloilo',
   operator: { name: 'Iloilo Transparency, an independent volunteer project' },

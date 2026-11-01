@@ -21,6 +21,9 @@ export const KIND_LABELS: Record<PortalKind, string> = {
   municipality: 'Municipality',
 };
 
+/** The years that follow the kind on the default masthead line. */
+export const MASTHEAD_YEARS = 'Budgets 2020–2027';
+
 /** A place whose name, in a project's title, brings the project into the portal. */
 export interface PlaceQuery {
   /** What readers see: "Tagbilaran". */
@@ -48,6 +51,11 @@ export interface PortalConfig {
   /** Stable id, lowercase with hyphens. Sent with citizen reports: "bohol-province". */
   id: string;
   kind: PortalKind;
+  /**
+   * The line above the portal name. When omitted, the masthead shows the kind
+   * ("Province", "City", …) and "· Budgets 2020–2027".
+   */
+  kicker?: string;
   /** The LGU or office in full: "Province of Bohol". */
   name: string;
   /** Short form for headings: "Bohol". Defaults to `name`. */

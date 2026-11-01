@@ -1,6 +1,6 @@
 import { useMemo, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { KIND_LABELS, shortNameOf } from '../config';
+import { KIND_LABELS, MASTHEAD_YEARS, shortNameOf } from '../config';
 import { usePortal } from '../lib/portal-context';
 import { date } from '../lib/format';
 import { NATIONAL_URL, SOURCE_CODE_URL } from '../lib/links';
@@ -16,6 +16,7 @@ const NAV = [
 
 export function Masthead() {
   const { config, client } = usePortal();
+  const kicker = config.kicker?.trim();
   const { pathname, hash } = useLocation();
   const today = useMemo(
     () => new Date().toLocaleDateString('en-PH', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }),
@@ -53,8 +54,14 @@ export function Masthead() {
         <Link to="/" className="masthead-title">
           {config.logo && <img src={config.logo} alt="" className="masthead-logo" />}
           <span>
-            <span className="masthead-kicker">
-              {KIND_LABELS[config.kind]} <span aria-hidden="true">·</span> Budgets 2020–2027
+            <span className={kicker ? 'masthead-kicker masthead-kicker-custom' : 'masthead-kicker'}>
+              {kicker ? (
+                kicker
+              ) : (
+                <>
+                  {KIND_LABELS[config.kind]} <span aria-hidden="true">·</span> {MASTHEAD_YEARS}
+                </>
+              )}
             </span>
             <span className="masthead-name">{config.name}</span>
           </span>
