@@ -13,6 +13,7 @@
     </style>
   </head>
   <body>
+    <p class="sample-banner" role="status">Sample data: figures are illustrative, not real values.</p>
     <div id="root-frame" class="mockup-frame--desktop layout-explorer">
       <header class="site-header">
         <p class="site-header-top">Iloilo Province and Iloilo City · Independent, unofficial</p>
@@ -21,18 +22,17 @@
             <img src="logos/window-color.svg" width="40" height="40" alt="" />
             <span class="nav-brand-name">Iloilo Transparency</span>
           </a>
-          <nav class="site-nav" aria-label="Site">
-            <a href="overview-desktop.html">FY2027 projects</a>
-            <a href="explorer.html" aria-current="page">Explorer</a>
-            <a href="overview-desktop.html#enacted-ref">Enacted budgets</a>
-            <a href="overview-desktop.html#about-ref">About</a>
-          </nav>
+          <a class="masthead-with" href="https://bettergov.ph/" target="_blank" rel="noopener">
+            <span class="label">Data from</span>
+            <img src="../public/brand/bettergov-horizontal-primary.png" alt="BetterGov.ph" width="128" height="28" />
+          </a>
         </div>
       </header>
 
       <main class="page-wrap">
+        <p class="terminology-note"><strong>Project records</strong> — FY2027 project rows in this portal (one row per compared project).</p>
         <p class="kicker">Route <code>/</code> · project list &amp; filters</p>
-        <h1 class="page-title" style="font-size: 2rem">Every project (412) <span class="sample-badge">Sample data</span></h1>
+        <h1 class="page-title" style="font-size: 2rem">Every project record (400) <span class="sample-badge">Sample</span></h1>
 
         <div class="layout-toggle" role="group" aria-label="Preview layout width">
           <button type="button" id="btn-desktop" aria-pressed="true">Desktop table</button>
@@ -50,7 +50,7 @@
           </div>
           <div class="field">
             <label for="status">Status</label>
-            <select id="status"><option>Increased</option></select>
+            <select id="status"><option>Change between versions</option></select>
           </div>
           <div class="field">
             <label for="office">DPWH office</label>
@@ -63,7 +63,7 @@
         </div>
 
         <p class="stat-note" style="margin-bottom: 1rem">
-          Filtered: NEP ₱240M on 12 projects · House version ₱265M on 12 projects ·
+          Filtered (sample): proposed ₱240M on 12 project records · House version ₱265M on 12 ·
           <button type="button" class="link-button">Clear filters</button>
         </p>
 
@@ -71,7 +71,7 @@
           <div class="data-table-wrap">
             <table class="data-table">
               <caption class="stat-label" style="caption-side: top; padding: 0.75rem 1rem; text-align: left">
-                Budget lines (project records) — amounts compared, never summed across versions
+                Project records — amounts compared, never summed across versions <span class="sample-badge">Sample</span>
               </caption>
               <thead>
                 <tr>
@@ -80,20 +80,20 @@
                   <th scope="col">Office</th>
                   <th scope="col" class="num">Proposed (NEP)</th>
                   <th scope="col" class="num">House version</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">Comparison</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><a href="explorer.html#detail">Construction of two-storey school building, Barangay Sample</a></td>
+                  <td><a href="explorer.html#record-1">Construction of two-storey school building, Barangay Sample</a></td>
                   <td>DPWH</td>
                   <td>Iloilo 1st DEO</td>
                   <td class="num">₱12,500,000</td>
                   <td class="num">₱14,200,000</td>
-                  <td><span class="status-pill"><span class="status-dot status-dot--up" aria-hidden="true"></span>Increased · +₱1.7M</span></td>
+                  <td><span class="status-pill"><span class="status-dot status-dot--change" aria-hidden="true"></span>Δ +₱1.7M</span></td>
                 </tr>
                 <tr>
-                  <td><a href="explorer.html#detail">FMR: Barangay access road improvement</a></td>
+                  <td><a href="explorer.html#record-2">FMR: Barangay access road improvement</a></td>
                   <td>FMR</td>
                   <td>—</td>
                   <td class="num missing">—</td>
@@ -101,7 +101,7 @@
                   <td><span class="status-pill"><span class="status-dot" aria-hidden="true"></span>House version only</span></td>
                 </tr>
                 <tr>
-                  <td><a href="explorer.html#detail">Health facility upgrade (title names Iloilo)</a></td>
+                  <td><a href="explorer.html#record-3">Health facility upgrade (title names Iloilo)</a></td>
                   <td>HFEP</td>
                   <td>Central Office · listed by place</td>
                   <td class="num">₱45,000,000</td>
@@ -113,27 +113,37 @@
           </div>
         </div>
 
-        <div class="mobile-only" id="detail">
+        <div class="mobile-only">
           <div class="project-cards">
-            <article class="project-card">
-              <h3><a href="explorer.html">Construction of two-storey school building, Barangay Sample</a></h3>
+            <article class="project-card" id="record-1">
+              <h2 class="project-card-title"><a href="explorer.html">Construction of two-storey school building, Barangay Sample</a></h2>
               <dl>
                 <dt>Program</dt><dd>DPWH</dd>
                 <dt>Office</dt><dd>Iloilo 1st DEO</dd>
                 <dt>Proposed (NEP)</dt><dd class="num">₱12,500,000</dd>
                 <dt>House version</dt><dd class="num">₱14,200,000</dd>
-                <dt>Change</dt><dd><span class="status-pill"><span class="status-dot status-dot--up" aria-hidden="true"></span>Increased · +₱1.7M</span></dd>
+                <dt>Comparison</dt><dd><span class="status-pill"><span class="status-dot status-dot--change" aria-hidden="true"></span>Δ +₱1.7M</span></dd>
                 <dt>Listed because</dt><dd>Title names Iloilo</dd>
-                <dt>Region</dt><dd>VI · <span class="missing">uncertain location tag if API flags review</span></dd>
               </dl>
             </article>
-            <article class="project-card">
-              <h3>FMR: Barangay access road improvement</h3>
+            <article class="project-card" id="record-2">
+              <h2 class="project-card-title"><a href="explorer.html">FMR: Barangay access road improvement</a></h2>
               <dl>
                 <dt>Program</dt><dd>FMR</dd>
+                <dt>Office</dt><dd>—</dd>
                 <dt>Proposed (NEP)</dt><dd class="missing">— (no line in NEP)</dd>
                 <dt>House version</dt><dd class="num">₱8,000,000</dd>
-                <dt>Status</dt><dd>House version only · candidate to check</dd>
+                <dt>Comparison</dt><dd>House version only · candidate to check</dd>
+              </dl>
+            </article>
+            <article class="project-card" id="record-3">
+              <h2 class="project-card-title"><a href="explorer.html">Health facility upgrade (title names Iloilo)</a></h2>
+              <dl>
+                <dt>Program</dt><dd>HFEP</dd>
+                <dt>Office</dt><dd>Central Office · listed by place</dd>
+                <dt>Proposed (NEP)</dt><dd class="num">₱45,000,000</dd>
+                <dt>House version</dt><dd class="num">₱45,000,000</dd>
+                <dt>Comparison</dt><dd>Unchanged</dd>
               </dl>
             </article>
           </div>
@@ -146,9 +156,10 @@
 
       <footer class="site-footer">
         <div class="footer-inner">
-          <p><a href="https://bettergov.ph/">BetterGov.ph</a> · <a href="/LICENSE.txt">MIT</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p>
-          <p><a href="overview-desktop.html#about-ref">Methodology</a> · <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
-          <p class="footer-disclosure">Independent, unofficial</p>
+          <p class="footer-source">Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API · data built October 26, 2026</p>
+          <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
+          <p class="footer-legal"><a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a> · Data: BetterGov.ph Budget API, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, filtered and summarised for this portal.</p>
+          <p class="footer-legal">Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
         </div>
       </footer>
     </div>

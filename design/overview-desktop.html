@@ -10,6 +10,7 @@
   <body>
     <div class="mockup-frame--desktop">
       <a class="skip-link" href="#main">Skip to content</a>
+      <p class="sample-banner" role="status">Sample data: figures are illustrative, not real values.</p>
       <header class="site-header">
         <p class="site-header-top">Iloilo Province and Iloilo City · Independent, unofficial</p>
         <div class="site-header-main">
@@ -17,12 +18,10 @@
             <img src="logos/window-color.svg" width="40" height="40" alt="" />
             <span class="nav-brand-name">Iloilo Transparency</span>
           </a>
-          <nav class="site-nav" aria-label="Site">
-            <a href="overview-desktop.html" aria-current="page">FY2027 projects</a>
-            <a href="explorer.html">Explorer</a>
-            <a href="overview-desktop.html#enacted-ref">Enacted budgets</a>
-            <a href="overview-desktop.html#about-ref">About</a>
-          </nav>
+          <a class="masthead-with" href="https://bettergov.ph/" target="_blank" rel="noopener">
+            <span class="label">Data from</span>
+            <img src="../public/brand/bettergov-horizontal-primary.png" alt="BetterGov.ph" width="128" height="28" />
+          </a>
         </div>
         <nav class="subnav" aria-label="Primary">
           <div class="subnav-inner">
@@ -34,6 +33,7 @@
       </header>
 
       <main id="main" class="page-wrap">
+        <p class="terminology-note"><strong>Project records</strong> — FY2027 project rows in this portal (one row per compared project). Figures below count project records, not enacted budget lines.</p>
         <p class="kicker">Budgets 2020–2027 · Route <code>/</code></p>
         <h1 class="page-title">Understand public budgets across Iloilo.</h1>
         <p class="lede">
@@ -52,24 +52,24 @@
 
         <div class="stats-grid" aria-label="Summary figures">
           <div class="stat-cell">
-            <p class="stat-label">Projects</p>
-            <p class="stat-value num">412</p>
-            <p class="stat-note">Sample data · DPWH 318 · FMR 52 · others</p>
+            <p class="stat-label">Projects <span class="sample-badge">Sample</span></p>
+            <p class="stat-value num">400</p>
+            <p class="stat-note">DPWH 300 · FMR 60 · HFEP 25 · NIA 15</p>
           </div>
           <div class="stat-cell">
-            <p class="stat-label">Proposed (NEP)</p>
-            <p class="stat-value num">₱18.4B</p>
-            <p class="stat-note">Sample data · 398 projects with a NEP line</p>
+            <p class="stat-label">Proposed (NEP) <span class="sample-badge">Sample</span></p>
+            <p class="stat-value num">₱18.0B</p>
+            <p class="stat-note">380 project records · compared, not added</p>
           </div>
           <div class="stat-cell">
-            <p class="stat-label">House version</p>
-            <p class="stat-value num">₱19.1B</p>
-            <p class="stat-note">Sample data · compared with NEP, not added</p>
+            <p class="stat-label">House version <span class="sample-badge">Sample</span></p>
+            <p class="stat-value num">₱18.5B</p>
+            <p class="stat-note">390 project records · compared, not added</p>
           </div>
           <div class="stat-cell">
-            <p class="stat-label">In the House version only</p>
-            <p class="stat-value num">24</p>
-            <p class="stat-note">Sample data · insertion candidates to check</p>
+            <p class="stat-label">In the House version only <span class="sample-badge">Sample</span></p>
+            <p class="stat-value num">40</p>
+            <p class="stat-note">Insertion candidates to check</p>
           </div>
         </div>
 
@@ -79,40 +79,105 @@
             Six district engineering offices; tier‑B (shared) offices list co‑served districts without splitting amounts.
           </p>
           <div class="chart-block">
-            <p class="stat-label">Proposed vs House by office <span class="sample-badge">Sample data</span></p>
+            <p class="stat-label">Proposed vs House by office <span class="sample-badge">Sample</span></p>
             <div class="chart-legend">
               <span class="legend-item"><span class="legend-swatch legend-swatch--nep" aria-hidden="true"></span><span class="legend-label">Proposed (NEP)</span></span>
               <span class="legend-item"><span class="legend-swatch legend-swatch--house" aria-hidden="true"></span><span class="legend-label legend-label--amber">House version</span></span>
             </div>
-            <div class="bar-chart" role="img" aria-label="Sample horizontal bars comparing proposed and House amounts by office">
-              <div class="bar-row">
-                <span class="bar-label">City DEO</span>
-                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 62%"></span><span class="bar-fill bar-fill--house" style="width: 68%"></span></div>
-                <span class="bar-amount num">₱4.2B</span>
+            <figure class="chart-figure">
+              <div class="bar-chart" role="img" aria-label="Sample chart: proposed and House amounts by office on separate rows from a zero baseline; compared, not added. City DEO proposed 3.6 billion pesos, House 3.9 billion; 1st DEO proposed 2.8 billion, House 3.0 billion; 2nd DEO proposed 3.0 billion, House 2.9 billion.">
+                <div class="bar-office-block">
+                  <p class="bar-office-title">City DEO</p>
+                  <div class="bar-series-row">
+                    <span class="bar-series-label">Proposed (NEP) ₱3.6B</span>
+                    <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 72%"></span></div>
+                    <span class="bar-amount num">₱3.6B</span>
+                  </div>
+                  <div class="bar-series-row">
+                    <span class="bar-series-label legend-label--amber">House version ₱3.9B</span>
+                    <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--house" style="width: 78%"></span></div>
+                    <span class="bar-amount num">₱3.9B</span>
+                  </div>
+                  <p class="bar-compare-note">Compared, not added.</p>
+                </div>
+                <div class="bar-office-block">
+                  <p class="bar-office-title">1st DEO</p>
+                  <div class="bar-series-row">
+                    <span class="bar-series-label">Proposed (NEP) ₱2.8B</span>
+                    <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 56%"></span></div>
+                    <span class="bar-amount num">₱2.8B</span>
+                  </div>
+                  <div class="bar-series-row">
+                    <span class="bar-series-label legend-label--amber">House version ₱3.0B</span>
+                    <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--house" style="width: 60%"></span></div>
+                    <span class="bar-amount num">₱3.0B</span>
+                  </div>
+                  <p class="bar-compare-note">Compared, not added.</p>
+                </div>
+                <div class="bar-office-block">
+                  <p class="bar-office-title">2nd DEO</p>
+                  <div class="bar-series-row">
+                    <span class="bar-series-label">Proposed (NEP) ₱3.0B</span>
+                    <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 60%"></span></div>
+                    <span class="bar-amount num">₱3.0B</span>
+                  </div>
+                  <div class="bar-series-row">
+                    <span class="bar-series-label legend-label--amber">House version ₱2.9B</span>
+                    <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--house" style="width: 58%"></span></div>
+                    <span class="bar-amount num">₱2.9B</span>
+                  </div>
+                  <p class="bar-compare-note">Compared, not added.</p>
+                </div>
               </div>
-              <div class="bar-row">
-                <span class="bar-label">1st DEO</span>
-                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 48%"></span><span class="bar-fill bar-fill--house" style="width: 51%"></span></div>
-                <span class="bar-amount num">₱3.1B</span>
-              </div>
-              <div class="bar-row">
-                <span class="bar-label">2nd DEO</span>
-                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 55%"></span><span class="bar-fill bar-fill--house" style="width: 52%"></span></div>
-                <span class="bar-amount num">₱3.4B</span>
-              </div>
-            </div>
-            <p class="chart-alt"><a href="explorer.html">Table view</a> with the same offices, sortable columns, and zero baseline noted.</p>
+              <figcaption class="chart-caption">Sample data · each version has its own row from a zero baseline.</figcaption>
+            </figure>
+            <p class="chart-alt"><a href="#office-table">Table view</a> · same offices, compared not added.</p>
+          </div>
+          <div class="data-table-wrap" id="office-table">
+            <table class="data-table">
+              <caption class="stat-label" style="caption-side: top; padding: 0.75rem 1rem; text-align: left">
+                Office comparison (sample) <span class="sample-badge">Sample</span>
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Office</th>
+                  <th scope="col" class="num">Proposed (NEP)</th>
+                  <th scope="col" class="num">House version</th>
+                  <th scope="col" class="num">Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>City DEO</td>
+                  <td class="num">₱3.6B</td>
+                  <td class="num">₱3.9B</td>
+                  <td class="num">+₱0.3B</td>
+                </tr>
+                <tr>
+                  <td>1st DEO</td>
+                  <td class="num">₱2.8B</td>
+                  <td class="num">₱3.0B</td>
+                  <td class="num">+₱0.2B</td>
+                </tr>
+                <tr>
+                  <td>2nd DEO</td>
+                  <td class="num">₱3.0B</td>
+                  <td class="num">₱2.9B</td>
+                  <td class="num">−₱0.1B</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
         <section class="section" aria-labelledby="groups-h">
           <h2 id="groups-h" class="section-title">What the House version did to them</h2>
           <div class="chips" role="group" aria-label="Filter by bridge status">
-            <button type="button" class="chip" aria-pressed="false">Unchanged <span class="num">(210)</span></button>
-            <button type="button" class="chip" aria-pressed="true">Increased <span class="num">(86)</span></button>
-            <button type="button" class="chip" aria-pressed="false">Decreased <span class="num">(44)</span></button>
-            <button type="button" class="chip" aria-pressed="false">House only <span class="num">(24)</span></button>
-            <button type="button" class="chip" aria-pressed="false">Proposed only <span class="num">(14)</span></button>
+            <button type="button" class="chip" aria-pressed="false">Unchanged <span class="num">(200)</span></button>
+            <button type="button" class="chip" aria-pressed="true">Increased <span class="num">(80)</span></button>
+            <button type="button" class="chip" aria-pressed="false">Decreased <span class="num">(60)</span></button>
+            <button type="button" class="chip" aria-pressed="false">House only <span class="num">(40)</span></button>
+            <button type="button" class="chip" aria-pressed="false">Proposed only <span class="num">(20)</span></button>
           </div>
         </section>
 
@@ -132,16 +197,10 @@
 
       <footer class="site-footer">
         <div class="footer-inner">
-          <p>
-            <a href="https://bettergov.ph/">BetterGov.ph</a> budget data · Portal software © 2026 BetterGov.ph,
-            <a href="/LICENSE.txt">MIT License</a> · Data
-            <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
-          </p>
-          <div class="footer-links">
-            <a href="overview-desktop.html#about-ref">Methodology</a>
-            <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a> (corrections)
-            <span>Data built 2026-10-15 (sample footer copy)</span>
-          </div>
+          <p class="footer-source">Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API · data built October 26, 2026</p>
+          <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
+          <p class="footer-legal"><a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a> · Data: BetterGov.ph Budget API, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, filtered and summarised for this portal.</p>
+          <p class="footer-legal">This portal: Iloilo, run by Iloilo Transparency, an independent volunteer project · Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a> · <a href="overview-desktop.html#about-ref">About the data</a></p>
           <p class="footer-disclosure">Independent volunteer project — not an official government site.</p>
         </div>
       </footer>

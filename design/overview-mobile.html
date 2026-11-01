@@ -9,12 +9,17 @@
   </head>
   <body>
     <div class="mockup-frame--mobile">
+      <p class="sample-banner" role="status">Sample data: figures are illustrative, not real values.</p>
       <header class="site-header">
         <p class="site-header-top">Iloilo Province and Iloilo City · Independent, unofficial</p>
         <div class="site-header-main" style="flex-direction: column; align-items: stretch">
           <a class="nav-brand" href="overview-mobile.html">
             <img src="logos/window-color.svg" width="32" height="32" alt="" />
             <span class="nav-brand-name">Iloilo Transparency</span>
+          </a>
+          <a class="masthead-with" href="https://bettergov.ph/" target="_blank" rel="noopener" style="align-items: flex-start; margin-top: 0.5rem">
+            <span class="label">Data from</span>
+            <img src="../public/brand/bettergov-horizontal-primary.png" alt="BetterGov.ph" width="128" height="28" />
           </a>
         </div>
         <nav class="subnav" aria-label="Primary">
@@ -40,24 +45,21 @@
 
         <div class="stats-grid">
           <div class="stat-cell">
-            <p class="stat-label">Projects</p>
-            <p class="stat-value num" style="font-size: 1.5rem">412</p>
-            <p class="stat-note">Sample data</p>
+            <p class="stat-label">Projects <span class="sample-badge">Sample</span></p>
+            <p class="stat-value num" style="font-size: 1.5rem">400</p>
           </div>
           <div class="stat-cell">
-            <p class="stat-label">Proposed (NEP)</p>
-            <p class="stat-value num" style="font-size: 1.5rem">₱18.4B</p>
-            <p class="stat-note">Sample data</p>
+            <p class="stat-label">Proposed (NEP) <span class="sample-badge">Sample</span></p>
+            <p class="stat-value num" style="font-size: 1.5rem">₱18.0B</p>
           </div>
           <div class="stat-cell">
-            <p class="stat-label">House version</p>
-            <p class="stat-value num" style="font-size: 1.5rem">₱19.1B</p>
+            <p class="stat-label">House version <span class="sample-badge">Sample</span></p>
+            <p class="stat-value num" style="font-size: 1.5rem">₱18.5B</p>
             <p class="stat-note">Compared, not added</p>
           </div>
           <div class="stat-cell">
-            <p class="stat-label">House only</p>
-            <p class="stat-value num" style="font-size: 1.5rem">24</p>
-            <p class="stat-note">Candidates to check</p>
+            <p class="stat-label">House only <span class="sample-badge">Sample</span></p>
+            <p class="stat-value num" style="font-size: 1.5rem">40</p>
           </div>
         </div>
 
@@ -70,13 +72,27 @@
           <h2 class="section-title" style="font-size: 1.125rem">Offices</h2>
           <div class="chart-block">
             <p class="stat-label">By office <span class="sample-badge">Sample</span></p>
-            <div class="bar-chart">
-              <div class="bar-row" style="grid-template-columns: 4.5rem 1fr 3.5rem">
-                <span class="bar-label">City</span>
-                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 62%"></span><span class="bar-fill bar-fill--house" style="width: 68%"></span></div>
-                <span class="bar-amount num">4.2B</span>
-              </div>
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-swatch legend-swatch--nep" aria-hidden="true"></span><span class="legend-label">Proposed (NEP)</span></span>
+              <span class="legend-item"><span class="legend-swatch legend-swatch--house" aria-hidden="true"></span><span class="legend-label legend-label--amber">House version</span></span>
             </div>
+            <figure class="chart-figure">
+              <div class="bar-chart" role="img" aria-label="Sample chart: City DEO proposed 3.6 billion pesos and House version 3.9 billion pesos on separate rows from zero; compared, not added.">
+                <div class="bar-office-block">
+                  <p class="bar-office-title">City DEO</p>
+                  <div class="bar-series-row" style="grid-template-columns: 1fr; gap: 0.25rem">
+                    <span class="bar-series-label">Proposed (NEP) ₱3.6B</span>
+                    <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 72%"></span></div>
+                  </div>
+                  <div class="bar-series-row" style="grid-template-columns: 1fr; gap: 0.25rem">
+                    <span class="bar-series-label legend-label--amber">House version ₱3.9B</span>
+                    <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--house" style="width: 78%"></span></div>
+                  </div>
+                  <p class="bar-compare-note">Compared, not added.</p>
+                </div>
+              </div>
+              <figcaption class="chart-caption">Sample data · <a href="overview-desktop.html#office-table">Table view</a></figcaption>
+            </figure>
           </div>
           <button type="button" class="chip" disabled title="After City/Province classification">City only (after classification)</button>
         </section>
@@ -84,9 +100,10 @@
 
       <footer class="site-footer">
         <div class="footer-inner">
-          <p><a href="https://bettergov.ph/">BetterGov.ph</a> · <a href="/LICENSE.txt">MIT</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p>
-          <p><a href="overview-desktop.html#about-ref">Methodology</a> · <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
-          <p class="footer-disclosure">Independent, unofficial</p>
+          <p class="footer-source">Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API · data built October 26, 2026</p>
+          <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
+          <p class="footer-legal"><a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a> · Data: BetterGov.ph Budget API, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, filtered and summarised for this portal.</p>
+          <p class="footer-legal">Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
         </div>
       </footer>
     </div>

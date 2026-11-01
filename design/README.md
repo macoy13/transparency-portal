@@ -33,10 +33,10 @@ Labeling: **NEP → “Proposed (NEP)”**; **House bill → “House version”
 ## Chart plan
 
 - **Colour roles:** blue is only for nav, links, selection, and primary actions. **Data series:** proposed (NEP) **teal** (`#218579`); **House version amber** (fills `#B7791F`, labels `#7A5216`) — each labelled, never colour alone.
-- **Horizontal bars by DPWH office** (and district cards where data exists): grouped **proposed (teal)** vs **House (amber)**, shared zero baseline, no stacked NEP+House totals.
+- **Horizontal bars by DPWH office** (and district cards where data exists): **two sub-rows per office** (proposed, then House), each from a **zero baseline** — no overlap, no stacking, **compared not added**.
 - **History:** only years/stages the API compares on the same basis (Enacted page: 2020–22, 2023–25, 2026, and 2027’s two versions where both exist — skip incomparable series, e.g. Iloilo 6th DEO before 2025 per About reading note).
 - **Accessibility:** status uses dot + text; teal/amber never alone. Amber **fills** use `#B7791F`; **text** uses `#7A5216` (see contrast).
-- **Alternative:** sortable table with the same columns as the chart (office, proposed, House, delta, held/residual note) — link from chart footer.
+- **Alternative:** `#office-table` with columns office, proposed (NEP), House version, change — linked from chart footer.
 
 ## Corrections (About page)
 
@@ -55,15 +55,11 @@ Mockups did not bundle WOFF2 files (network not required for review).
 
 ## Data refresh
 
-The Budget API attaches **`meta` on every envelope** (`src/api/types.ts`):
+HGAB **project list** responses (and the scope loader’s first successful list) carry **`meta`** on the envelope (`src/api/types.ts`): **`built_at`** (API dataset build time in ISO UTC — **not** the date of source PDFs), **`source_repo`**, **`source_commit`**, and **`notice`** (footer disclaimer via `Chrome.tsx`). The HGAB overview document at `/api/v1/hgab/2027` returns **no** `meta` envelope in the typed client path; the portal still reads **`built_at`** from project-list **`meta`** after scope resolves. **GAA** responses use `meta` with `dataset: 'gaa'` and **no** `built_at`.
 
-- **`built_at`** — ISO timestamp of the dataset build (footer today: “data built …” via `Chrome.tsx`).
-- **`source_repo`**, **`source_commit`** — comparison dataset identity (About page “Data version”).
-- **`notice`** — upstream disclaimer string in footer.
+Live reference (Oct 2026): **`built_at`** `2026-10-26T08:46:14Z` → footer **data built October 26, 2026** (`date()` in `Asia/Manila`); **`source_commit`** `a0caa77`. Mockups summarise this as **Data built 26 Oct 2026 · from BetterGov.ph** alongside the full Chrome source line.
 
-GAA responses use `meta` with `dataset: 'gaa'` (years, optional `matched` counts) — no separate `built_at` in the typed GAA meta, but HGAB scope loads HGAB `meta` for the footer.
-
-**Proposal:** Show **`meta.built_at`** (formatted, local timezone) as the primary “Data updated” line in the footer on all pages; link to About for **`source_commit`** detail. Optionally record **client fetch time** in dev-only or “Loaded just now” screen-reader text — do **not** replace `built_at` as the canonical freshness indicator.
+**Proposal:** Keep **`meta.built_at`** as the canonical freshness line in the footer; About keeps **`source_commit`** detail. Do not substitute client fetch time for `built_at`.
 
 ## WCAG 2.2 AA contrast (computed sRGB)
 

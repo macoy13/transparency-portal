@@ -8,16 +8,21 @@
     <link rel="stylesheet" href="mockups.css" />
   </head>
   <body>
+    <p class="sample-banner" role="status">Sample data: figures are illustrative, not real values.</p>
     <div class="mockup-frame--desktop">
       <header class="site-header">
         <p class="site-header-top">Design system sheet · not a production route</p>
         <div class="site-header-main">
           <span class="nav-brand-name">Iloilo Transparency · R0 components</span>
-          <nav class="site-nav"><a href="overview-desktop.html">Back to mockups</a></nav>
+          <a class="masthead-with" href="https://bettergov.ph/" target="_blank" rel="noopener">
+            <span class="label">Data from</span>
+            <img src="../public/brand/bettergov-horizontal-primary.png" alt="BetterGov.ph" width="128" height="28" />
+          </a>
         </div>
       </header>
 
       <main class="page-wrap component-grid">
+        <h1 class="page-title">Component &amp; type sheet</h1>
         <section class="component-row type-scale">
           <h2>Typography</h2>
           <p class="t-display">Display title (32–40px desktop)</p>
@@ -68,14 +73,13 @@
           <h2>Summary figure</h2>
           <div class="stats-grid" style="max-width: 28rem">
             <div class="stat-cell">
-              <p class="stat-label">House version</p>
-              <p class="stat-value num">₱19.1B</p>
-              <p class="stat-note">Sample data · compared with proposed, not added</p>
+              <p class="stat-label">House version <span class="sample-badge">Sample</span></p>
+              <p class="stat-value num">₱18.5B</p>
+              <p class="stat-note">Compared with proposed, not added</p>
             </div>
             <div class="stat-cell">
-              <p class="stat-label">Projects</p>
-              <p class="stat-value num">412</p>
-              <p class="stat-note">Sample data</p>
+              <p class="stat-label">Projects <span class="sample-badge">Sample</span></p>
+              <p class="stat-value num">400</p>
             </div>
           </div>
         </section>
@@ -102,10 +106,19 @@
             <span class="legend-item"><span class="legend-swatch legend-swatch--house"></span><span class="legend-label legend-label--amber">House version</span></span>
           </div>
           <div class="bar-chart">
-            <div class="bar-row">
-              <span class="bar-label">Office A</span>
-              <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 40%"></span><span class="bar-fill bar-fill--house" style="width: 45%"></span></div>
-              <span class="bar-amount num">₱1.2B</span>
+            <div class="bar-office-block">
+              <p class="bar-office-title">Office A</p>
+              <div class="bar-series-row">
+                <span class="bar-series-label">Proposed (NEP) ₱1.0B</span>
+                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 40%"></span></div>
+                <span class="bar-amount num">₱1.0B</span>
+              </div>
+              <div class="bar-series-row">
+                <span class="bar-series-label legend-label--amber">House version ₱1.2B</span>
+                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--house" style="width: 48%"></span></div>
+                <span class="bar-amount num">₱1.2B</span>
+              </div>
+              <p class="bar-compare-note">Compared, not added.</p>
             </div>
           </div>
         </section>
@@ -136,7 +149,10 @@
       </main>
       <footer class="site-footer">
         <div class="footer-inner">
-          <p><a href="https://bettergov.ph/">BetterGov.ph</a> · <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
+          <p class="footer-source">Source: NEP FY 2027 and House Bill 10858 · via the BetterGov.ph Budget API · data built October 26, 2026</p>
+          <p class="footer-notice">Independent and unofficial. This comparison is our own reading of the published documents, not an official record of the budget department, the agencies or the House. Figures are the amounts published in the documents, not spending. No allegations. An insertion, deletion, or amount-change candidate describes a provisional comparison between identified sources. That classification alone does not establish irregularity or wrongdoing by any office or official and should not be represented as such. Absence from an API snapshot likewise does not establish absence from the published NEP or concealment. Read the full notice: https://budget.bettergov.ph/hgab/2027/methodology#disclaimer.</p>
+          <p class="footer-legal"><a href="/LICENSE.txt">Portal software © 2026 BetterGov.ph, MIT License</a> · Data: BetterGov.ph Budget API, licensed <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>, filtered and summarised for this portal.</p>
+          <p class="footer-legal">Corrections: <a href="mailto:hello@iloilotransparency.info">hello@iloilotransparency.info</a></p>
         </div>
       </footer>
     </div>
