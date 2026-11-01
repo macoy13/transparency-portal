@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1280" />
+    <title>R0 · Overview (desktop) · Iloilo Transparency</title>
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="mockups.css" />
+  </head>
+  <body>
+    <div class="mockup-frame--desktop">
+      <a class="skip-link" href="#main">Skip to content</a>
+      <header class="site-header">
+        <p class="site-header-top">Iloilo Province and Iloilo City · Independent, unofficial</p>
+        <div class="site-header-main">
+          <a class="nav-brand" href="overview-desktop.html">
+            <img src="logos/window-color.svg" width="40" height="40" alt="" />
+            <span class="nav-brand-name">Iloilo Transparency</span>
+          </a>
+          <nav class="site-nav" aria-label="Site">
+            <a href="overview-desktop.html" aria-current="page">FY2027 projects</a>
+            <a href="explorer.html">Explorer</a>
+            <a href="overview-desktop.html#enacted-ref">Enacted budgets</a>
+            <a href="overview-desktop.html#about-ref">About</a>
+          </nav>
+        </div>
+        <nav class="subnav" aria-label="Primary">
+          <div class="subnav-inner">
+            <a href="overview-desktop.html" aria-current="page">Overview</a>
+            <a href="explorer.html">Search &amp; list</a>
+            <a href="overview-desktop.html#offices">Offices &amp; districts</a>
+          </div>
+        </nav>
+      </header>
+
+      <main id="main" class="page-wrap">
+        <p class="kicker">Budgets 2020–2027 · Route <code>/</code></p>
+        <h1 class="page-title">Understand public budgets across Iloilo.</h1>
+        <p class="lede">
+          Projects tied to Iloilo Province and Iloilo City in national budget documents—by office, program, and how the
+          House version compares with the proposed (NEP) amounts. Shared offices and uncertain locations are explained in
+          the list; geography is not recalculated here.
+        </p>
+
+        <form class="search-row" role="search" aria-label="Search projects" action="explorer.html">
+          <div class="field field-grow">
+            <label for="q">Search</label>
+            <input id="q" name="q" type="search" placeholder="Barangay, road, school, office…" />
+          </div>
+          <button type="submit" class="button">Search projects</button>
+        </form>
+
+        <div class="stats-grid" aria-label="Summary figures">
+          <div class="stat-cell">
+            <p class="stat-label">Projects</p>
+            <p class="stat-value num">412</p>
+            <p class="stat-note">Sample data · DPWH 318 · FMR 52 · others</p>
+          </div>
+          <div class="stat-cell">
+            <p class="stat-label">Proposed (NEP)</p>
+            <p class="stat-value num">₱18.4B</p>
+            <p class="stat-note">Sample data · 398 projects with a NEP line</p>
+          </div>
+          <div class="stat-cell">
+            <p class="stat-label">House version</p>
+            <p class="stat-value num">₱19.1B</p>
+            <p class="stat-note">Sample data · compared with NEP, not added</p>
+          </div>
+          <div class="stat-cell">
+            <p class="stat-label">In the House version only</p>
+            <p class="stat-value num">24</p>
+            <p class="stat-note">Sample data · insertion candidates to check</p>
+          </div>
+        </div>
+
+        <section class="section" id="offices" aria-labelledby="offices-h">
+          <h2 id="offices-h" class="section-title">DPWH offices and legislative districts</h2>
+          <p class="lede" style="margin-bottom: 1rem">
+            Six district engineering offices; tier‑B (shared) offices list co‑served districts without splitting amounts.
+          </p>
+          <div class="chart-block">
+            <p class="stat-label">Proposed vs House by office <span class="sample-badge">Sample data</span></p>
+            <div class="chart-legend">
+              <span class="legend-item"><span class="legend-swatch legend-swatch--nep" aria-hidden="true"></span><span class="legend-label">Proposed (NEP)</span></span>
+              <span class="legend-item"><span class="legend-swatch legend-swatch--house" aria-hidden="true"></span><span class="legend-label">House version</span></span>
+            </div>
+            <div class="bar-chart" role="img" aria-label="Sample horizontal bars comparing proposed and House amounts by office">
+              <div class="bar-row">
+                <span class="bar-label">City DEO</span>
+                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 62%"></span><span class="bar-fill bar-fill--house" style="width: 68%"></span></div>
+                <span class="bar-amount num">₱4.2B</span>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">1st DEO</span>
+                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 48%"></span><span class="bar-fill bar-fill--house" style="width: 51%"></span></div>
+                <span class="bar-amount num">₱3.1B</span>
+              </div>
+              <div class="bar-row">
+                <span class="bar-label">2nd DEO</span>
+                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 55%"></span><span class="bar-fill bar-fill--house" style="width: 52%"></span></div>
+                <span class="bar-amount num">₱3.4B</span>
+              </div>
+            </div>
+            <p class="chart-alt"><a href="explorer.html">Table view</a> with the same offices, sortable columns, and zero baseline noted.</p>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="groups-h">
+          <h2 id="groups-h" class="section-title">What the House version did to them</h2>
+          <div class="chips" role="group" aria-label="Filter by bridge status">
+            <button type="button" class="chip" aria-pressed="false">Unchanged <span class="num">(210)</span></button>
+            <button type="button" class="chip" aria-pressed="true">Increased <span class="num">(86)</span></button>
+            <button type="button" class="chip" aria-pressed="false">Decreased <span class="num">(44)</span></button>
+            <button type="button" class="chip" aria-pressed="false">House only <span class="num">(24)</span></button>
+            <button type="button" class="chip" aria-pressed="false">Proposed only <span class="num">(14)</span></button>
+          </div>
+        </section>
+
+        <p class="stat-note" id="enacted-ref">Enacted budgets (2020–2026) live at route <code>/gaa</code> — see Enacted mockup in README.</p>
+        <p class="stat-note" id="about-ref">Methodology and scope exclusions: route <code>/about</code>.</p>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <p>
+            <a href="https://bettergov.ph/">BetterGov.ph</a> budget data · Portal software © 2026 BetterGov.ph,
+            <a href="/LICENSE.txt">MIT License</a> · Data
+            <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>
+          </p>
+          <div class="footer-links">
+            <a href="overview-desktop.html#about-ref">Methodology</a>
+            <span>Corrections: <em>open question</em> (placeholder contact)</span>
+            <span>Data built 2026-10-15 (sample footer copy)</span>
+          </div>
+          <p class="footer-disclosure">Independent volunteer project — not an official government site.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=360" />
+    <title>R0 · Overview (mobile) · Iloilo Transparency</title>
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="mockups.css" />
+  </head>
+  <body>
+    <div class="mockup-frame--mobile">
+      <header class="site-header">
+        <p class="site-header-top">Iloilo Province and Iloilo City · Independent, unofficial</p>
+        <div class="site-header-main" style="flex-direction: column; align-items: stretch">
+          <a class="nav-brand" href="overview-mobile.html">
+            <img src="logos/window-color.svg" width="32" height="32" alt="" />
+            <span class="nav-brand-name">Iloilo Transparency</span>
+          </a>
+        </div>
+        <nav class="subnav" aria-label="Primary">
+          <div class="subnav-inner">
+            <a href="overview-mobile.html" aria-current="page">Overview</a>
+            <a href="explorer.html">List</a>
+            <a href="overview-mobile.html#offices">Offices</a>
+          </div>
+        </nav>
+      </header>
+
+      <main class="page-wrap" style="padding-top: 1.25rem">
+        <p class="kicker">FY2027 · Route <code>/</code></p>
+        <h1 class="page-title" style="font-size: 1.75rem">Understand public budgets across Iloilo.</h1>
+
+        <form class="search-row" role="search" aria-label="Search projects">
+          <div class="field field-grow">
+            <label for="q-m">Search</label>
+            <input id="q-m" type="search" placeholder="Barangay, road, school…" />
+          </div>
+          <button type="submit" class="button" style="width: 100%">Search</button>
+        </form>
+
+        <div class="stats-grid">
+          <div class="stat-cell">
+            <p class="stat-label">Projects</p>
+            <p class="stat-value num" style="font-size: 1.5rem">412</p>
+            <p class="stat-note">Sample data</p>
+          </div>
+          <div class="stat-cell">
+            <p class="stat-label">Proposed (NEP)</p>
+            <p class="stat-value num" style="font-size: 1.5rem">₱18.4B</p>
+            <p class="stat-note">Sample data</p>
+          </div>
+          <div class="stat-cell">
+            <p class="stat-label">House version</p>
+            <p class="stat-value num" style="font-size: 1.5rem">₱19.1B</p>
+            <p class="stat-note">Compared, not added</p>
+          </div>
+          <div class="stat-cell">
+            <p class="stat-label">House only</p>
+            <p class="stat-value num" style="font-size: 1.5rem">24</p>
+            <p class="stat-note">Candidates to check</p>
+          </div>
+        </div>
+
+        <p class="lede" style="font-size: 0.9375rem">
+          Search stays on the first screen; intro copy follows totals on narrow layouts (matches
+          <code>home.searchUnderLede</code>).
+        </p>
+
+        <section id="offices" class="section">
+          <h2 class="section-title" style="font-size: 1.125rem">Offices</h2>
+          <div class="chart-block">
+            <p class="stat-label">By office <span class="sample-badge">Sample</span></p>
+            <div class="bar-chart">
+              <div class="bar-row" style="grid-template-columns: 4.5rem 1fr 3.5rem">
+                <span class="bar-label">City</span>
+                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 62%"></span><span class="bar-fill bar-fill--house" style="width: 68%"></span></div>
+                <span class="bar-amount num">4.2B</span>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="chip" disabled title="After City/Province classification">City only (after classification)</button>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <p><a href="https://bettergov.ph/">BetterGov.ph</a> · <a href="/LICENSE.txt">MIT</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p>
+          <p class="footer-disclosure">Independent, unofficial · Corrections: open question</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

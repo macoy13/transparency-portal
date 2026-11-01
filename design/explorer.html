@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>R0 · Explorer · Iloilo Transparency</title>
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="mockups.css" />
+    <style>
+      .layout-toggle { margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+      .layout-toggle button { font: inherit; padding: 0.35rem 0.75rem; border-radius: 6px; border: 1px solid var(--color-border); background: var(--color-card); cursor: pointer; }
+      .layout-toggle button[aria-pressed="true"] { background: var(--color-selection); border-color: var(--color-primary); color: var(--color-primary-hover); font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div id="root-frame" class="mockup-frame--desktop layout-explorer">
+      <header class="site-header">
+        <p class="site-header-top">Iloilo Province and Iloilo City · Independent, unofficial</p>
+        <div class="site-header-main">
+          <a class="nav-brand" href="overview-desktop.html">
+            <img src="logos/window-color.svg" width="40" height="40" alt="" />
+            <span class="nav-brand-name">Iloilo Transparency</span>
+          </a>
+          <nav class="site-nav" aria-label="Site">
+            <a href="overview-desktop.html">FY2027 projects</a>
+            <a href="explorer.html" aria-current="page">Explorer</a>
+            <a href="overview-desktop.html#enacted-ref">Enacted budgets</a>
+            <a href="overview-desktop.html#about-ref">About</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="page-wrap">
+        <p class="kicker">Route <code>/</code> · project list &amp; filters</p>
+        <h1 class="page-title" style="font-size: 2rem">Every project (412) <span class="sample-badge">Sample data</span></h1>
+
+        <div class="layout-toggle" role="group" aria-label="Preview layout width">
+          <button type="button" id="btn-desktop" aria-pressed="true">Desktop table</button>
+          <button type="button" id="btn-mobile" aria-pressed="false">Mobile cards</button>
+        </div>
+
+        <div class="toolbar search-row">
+          <div class="field field-grow">
+            <label for="q">Search</label>
+            <input id="q" type="search" value="school" />
+          </div>
+          <div class="field">
+            <label for="program">Program</label>
+            <select id="program"><option>All programs</option><option>DPWH</option></select>
+          </div>
+          <div class="field">
+            <label for="status">Status</label>
+            <select id="status"><option>Increased</option></select>
+          </div>
+          <div class="field">
+            <label for="office">DPWH office</label>
+            <select id="office"><option>Any office</option></select>
+          </div>
+          <div class="field">
+            <label for="sort">Sort by</label>
+            <select id="sort"><option>House version amount</option></select>
+          </div>
+        </div>
+
+        <p class="stat-note" style="margin-bottom: 1rem">
+          Filtered: NEP ₱240M on 12 projects · House version ₱265M on 12 projects ·
+          <button type="button" class="link-button">Clear filters</button>
+        </p>
+
+        <div class="desktop-only">
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <caption class="stat-label" style="caption-side: top; padding: 0.75rem 1rem; text-align: left">
+                Budget lines (project records) — amounts compared, never summed across versions
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Project</th>
+                  <th scope="col">Program</th>
+                  <th scope="col">Office</th>
+                  <th scope="col" class="num">Proposed (NEP)</th>
+                  <th scope="col" class="num">House version</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><a href="explorer.html#detail">Construction of two-storey school building, Barangay Sample</a></td>
+                  <td>DPWH</td>
+                  <td>Iloilo 1st DEO</td>
+                  <td class="num">₱12,500,000</td>
+                  <td class="num">₱14,200,000</td>
+                  <td><span class="status-pill"><span class="status-dot status-dot--up" aria-hidden="true"></span>Increased · +₱1.7M</span></td>
+                </tr>
+                <tr>
+                  <td><a href="explorer.html#detail">FMR: Barangay access road improvement</a></td>
+                  <td>FMR</td>
+                  <td>—</td>
+                  <td class="num missing">—</td>
+                  <td class="num">₱8,000,000</td>
+                  <td><span class="status-pill"><span class="status-dot" aria-hidden="true"></span>House version only</span></td>
+                </tr>
+                <tr>
+                  <td><a href="explorer.html#detail">Health facility upgrade (title names Iloilo)</a></td>
+                  <td>HFEP</td>
+                  <td>Central Office · listed by place</td>
+                  <td class="num">₱45,000,000</td>
+                  <td class="num">₱45,000,000</td>
+                  <td><span class="status-pill"><span class="status-dot" aria-hidden="true"></span>Unchanged</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="mobile-only" id="detail">
+          <div class="project-cards">
+            <article class="project-card">
+              <h3><a href="explorer.html">Construction of two-storey school building, Barangay Sample</a></h3>
+              <dl>
+                <dt>Program</dt><dd>DPWH</dd>
+                <dt>Office</dt><dd>Iloilo 1st DEO</dd>
+                <dt>Proposed (NEP)</dt><dd class="num">₱12,500,000</dd>
+                <dt>House version</dt><dd class="num">₱14,200,000</dd>
+                <dt>Change</dt><dd><span class="status-pill"><span class="status-dot status-dot--up" aria-hidden="true"></span>Increased · +₱1.7M</span></dd>
+                <dt>Listed because</dt><dd>Title names Iloilo</dd>
+                <dt>Region</dt><dd>VI · <span class="missing">uncertain location tag if API flags review</span></dd>
+              </dl>
+            </article>
+            <article class="project-card">
+              <h3>FMR: Barangay access road improvement</h3>
+              <dl>
+                <dt>Program</dt><dd>FMR</dd>
+                <dt>Proposed (NEP)</dt><dd class="missing">— (no line in NEP)</dd>
+                <dt>House version</dt><dd class="num">₱8,000,000</dd>
+                <dt>Status</dt><dd>House version only · candidate to check</dd>
+              </dl>
+            </article>
+          </div>
+        </div>
+
+        <p class="stat-note" style="margin-top: 1.5rem">
+          Project detail route: <code>/projects/:dataset/:id</code> — version table, PDF links, match notes (production app).
+        </p>
+      </main>
+
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <p><a href="https://bettergov.ph/">BetterGov.ph</a> · <a href="/LICENSE.txt">MIT</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p>
+          <p class="footer-disclosure">Independent, unofficial</p>
+        </div>
+      </footer>
+    </div>
+    <script>
+      const root = document.getElementById("root-frame");
+      const btnD = document.getElementById("btn-desktop");
+      const btnM = document.getElementById("btn-mobile");
+      function setLayout(mobile) {
+        root.classList.toggle("mockup-frame--mobile", mobile);
+        root.classList.toggle("mockup-frame--desktop", !mobile);
+        root.classList.toggle("mobile-layout", mobile);
+        btnD.setAttribute("aria-pressed", String(!mobile));
+        btnM.setAttribute("aria-pressed", String(mobile));
+      }
+      btnD.addEventListener("click", () => setLayout(false));
+      btnM.addEventListener("click", () => setLayout(true));
+    </script>
+  </body>
+</html>

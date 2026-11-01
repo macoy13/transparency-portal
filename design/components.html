@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>R0 · Components · Iloilo Transparency</title>
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="mockups.css" />
+  </head>
+  <body>
+    <div class="mockup-frame--desktop">
+      <header class="site-header">
+        <p class="site-header-top">Design system sheet · not a production route</p>
+        <div class="site-header-main">
+          <span class="nav-brand-name">Iloilo Transparency · R0 components</span>
+          <nav class="site-nav"><a href="overview-desktop.html">Back to mockups</a></nav>
+        </div>
+      </header>
+
+      <main class="page-wrap component-grid">
+        <section class="component-row type-scale">
+          <h2>Typography</h2>
+          <p class="t-display">Display title (32–40px desktop)</p>
+          <p class="t-h2">Section heading</p>
+          <p class="t-body">Body 16px — Source Sans 3 (mockups use system UI fallback).</p>
+          <p class="t-table tabular">Table/chart label: ₱12,500,000 · 1,234</p>
+        </section>
+
+        <section class="component-row">
+          <h2>Buttons &amp; links</h2>
+          <p style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center">
+            <button type="button" class="button">Primary action</button>
+            <button type="button" class="button button-quiet">Quiet button</button>
+            <a href="components.html">Text link</a>
+            <button type="button" class="link-button">Link button</button>
+          </p>
+        </section>
+
+        <section class="component-row">
+          <h2>Focus ring</h2>
+          <p><button type="button" class="button" id="focus-demo">Tab to me</button> — <code>box-shadow</code> focus ring, 3px page + 2px primary.</p>
+        </section>
+
+        <section class="component-row">
+          <h2>Filter chips</h2>
+          <div class="chips">
+            <button type="button" class="chip" aria-pressed="true">Increased</button>
+            <button type="button" class="chip" aria-pressed="false">Decreased</button>
+            <button type="button" class="chip" disabled>Empty group</button>
+          </div>
+        </section>
+
+        <section class="component-row">
+          <h2>Search &amp; select</h2>
+          <div class="search-row">
+            <div class="field field-grow">
+              <label for="c-search">Search</label>
+              <input id="c-search" type="search" placeholder="Barangay, road…" />
+            </div>
+            <div class="field">
+              <label for="c-select">Program</label>
+              <select id="c-select"><option>All programs</option></select>
+            </div>
+          </div>
+        </section>
+
+        <section class="component-row">
+          <h2>Summary figure</h2>
+          <div class="stats-grid" style="max-width: 28rem">
+            <div class="stat-cell">
+              <p class="stat-label">House version</p>
+              <p class="stat-value num">₱19.1B</p>
+              <p class="stat-note">Sample data · compared with proposed, not added</p>
+            </div>
+            <div class="stat-cell">
+              <p class="stat-label">Projects</p>
+              <p class="stat-value num">412</p>
+              <p class="stat-note">Sample data</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="component-row">
+          <h2>Table row</h2>
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Project</th><th class="num">House version</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Sample project line</td>
+                  <td class="num">₱14,200,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="component-row">
+          <h2>Horizontal bar chart (CSS/SVG) <span class="sample-badge">Sample</span></h2>
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-swatch legend-swatch--nep"></span><span class="legend-label">Proposed (NEP)</span></span>
+            <span class="legend-item"><span class="legend-swatch legend-swatch--house"></span><span class="legend-label">House version</span></span>
+            <span class="legend-item"><span class="legend-swatch" style="background: var(--color-amber-fill)"></span><span class="legend-label legend-label--amber">Amber fill · label uses --color-amber-text</span></span>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-row">
+              <span class="bar-label">Office A</span>
+              <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 40%"></span><span class="bar-fill bar-fill--house" style="width: 45%"></span></div>
+              <span class="bar-amount num">₱1.2B</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="component-row">
+          <h2>States</h2>
+          <div style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr))">
+            <div class="state-panel">
+              <h3>Loading</h3>
+              <div class="skeleton" style="height: 2rem; margin-bottom: 0.5rem"></div>
+              <div class="skeleton" style="width: 70%"></div>
+            </div>
+            <div class="state-panel">
+              <h3>Empty</h3>
+              <p>No project matches. Try fewer words or clear the filters.</p>
+            </div>
+            <div class="state-panel">
+              <h3>Error</h3>
+              <p>Could not load projects. Check your connection and try again.</p>
+              <p style="margin-top: 0.75rem"><button type="button" class="button">Retry</button></p>
+            </div>
+            <div class="state-panel">
+              <h3>Unavailable</h3>
+              <p>Reporting is not enabled on this portal yet.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

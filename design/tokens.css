@@ -1,0 +1,51 @@
+/**
+ * Iloilo Transparency — R0 design tokens (proposal only).
+ * Production would self-host WOFF2 subsets; mockups use system-ui fallbacks.
+ */
+:root {
+  --color-primary: #3659b8;
+  --color-primary-hover: #294696;
+  --color-heading: #192d50;
+  --color-page: #f7f8f5;
+  --color-card: #ffffff;
+  --color-selection: #edf2fc;
+  --color-text: #243247;
+  --color-secondary: #56647a;
+  --color-border: #dce3ec;
+  --color-teal: #218579;
+  --color-amber-fill: #b7791f;
+  /* WCAG 2.2 AA body text on white/page (6.89:1 on #fff); fills stay --color-amber-fill */
+  --color-amber-text: #7a5216;
+
+  --font-heading: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --text-body: 1rem;
+  --text-table: 0.875rem;
+  --text-title: clamp(2rem, 2.5vw, 2.5rem);
+  --text-kicker: 0.8125rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+
+  --radius: 6px;
+  --focus-ring: 0 0 0 3px var(--color-page), 0 0 0 5px var(--color-primary);
+
+  --motion-control: 180ms ease;
+  --motion-chart: 420ms ease;
+
+  --page-max: 72rem;
+  --gutter: 1.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-control: 0ms;
+    --motion-chart: 0ms;
+  }
+}
