@@ -938,3 +938,144 @@ table.data-table {
 .type-scale .t-table {
   font-size: 0.875rem;
 }
+
+/* —— Office cards (Home) —— */
+.office-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .office-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .office-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.office-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+}
+
+.office-card-head {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  margin-bottom: var(--space-4);
+}
+
+.office-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  color: var(--color-heading);
+}
+
+.office-card-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0;
+  color: var(--color-heading);
+  font-family: var(--font-heading);
+}
+
+.office-card-figures {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.office-card-figures > div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2);
+  align-items: baseline;
+}
+
+.office-card-figures dt {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+.office-card-figures dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+  color: var(--color-text);
+}
+
+.office-change {
+  color: var(--color-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.office-missing {
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+.office-missing-note {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+}
+
+.progress-note {
+  font-size: 0.875rem;
+  color: var(--color-secondary);
+  margin: 0 0 var(--space-5);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-page);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+}
+
+.office-card-value {
+  /* wrapper for animation target */
+}
+
+.office-card-value > span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.office-card-value > span.is-visible {
+  animation: office-value-in var(--motion-card) ease forwards;
+}
+
+.office-card-figures > div:nth-child(1) .office-card-value > span.is-visible { animation-delay: 0ms; }
+.office-card-figures > div:nth-child(2) .office-card-value > span.is-visible { animation-delay: 40ms; }
+.office-card-figures > div:nth-child(3) .office-card-value > span.is-visible { animation-delay: 80ms; }
+.office-card-figures > div:nth-child(4) .office-card-value > span.is-visible { animation-delay: 120ms; }
+
+@keyframes office-value-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .office-card-value > span {
+    opacity: 1;
+    transform: none;
+  }
+
+  .office-card-value > span.is-visible {
+    animation: none;
+  }
+}

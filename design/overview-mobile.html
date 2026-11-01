@@ -32,9 +32,7 @@
       </header>
 
       <main class="page-wrap" style="padding-top: 1.25rem">
-        <p class="kicker">FY2027 · Route <code>/</code></p>
         <h1 class="page-title" style="font-size: 1.75rem">Understand public budgets across Iloilo.</h1>
-
         <form class="search-row" role="search" aria-label="Search projects">
           <div class="field field-grow">
             <label for="q-m">Search</label>
@@ -43,7 +41,52 @@
           <button type="submit" class="button" style="width: 100%">Search</button>
         </form>
 
-        <div class="stats-grid">
+        <section id="offices" class="section">
+          <h2 class="section-title" style="font-size: 1.125rem">DPWH offices</h2>
+          <div class="office-grid" id="office-grid">
+            <article class="office-card">
+              <div class="office-card-head">
+                <svg class="office-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+                <h3 class="office-card-title">Iloilo City District Engineering Office</h3>
+              </div>
+              <dl class="office-card-figures">
+                <div><dt>Proposed (NEP) <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">₱3.6B</span></dd></div>
+                <div><dt>House version <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">₱3.9B</span></dd></div>
+                <div><dt>Project records <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">85</span></dd></div>
+                <div><dt>Change <span class="sample-badge">Sample</span></dt><dd class="num office-change office-card-value"><span class="is-visible">+₱0.3B (+8.3%)</span></dd></div>
+              </dl>
+              <p class="bar-compare-note">Compared, not added.</p>
+            </article>
+            <article class="office-card">
+              <div class="office-card-head">
+                <svg class="office-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+                <h3 class="office-card-title">Iloilo 6th District Engineering Office</h3>
+              </div>
+              <dl class="office-card-figures">
+                <div><dt>Proposed (NEP) <span class="sample-badge">Sample</span></dt><dd class="office-missing office-card-value"><span class="is-visible">—<span class="office-missing-note">no line in NEP</span></span></dd></div>
+                <div><dt>House version <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">₱1.2B</span></dd></div>
+                <div><dt>Project records <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">45</span></dd></div>
+                <div><dt>Change <span class="sample-badge">Sample</span></dt><dd class="office-missing office-card-value"><span class="is-visible">—<span class="office-missing-note">not comparable</span></span></dd></div>
+              </dl>
+            </article>
+          </div>
+          <p class="progress-note">Progress data: not available. These are budget amounts, not spending or completion.</p>
+          <p class="chart-alt"><a href="#office-table">Table view</a></p>
+          <div class="data-table-wrap" id="office-table">
+            <table class="data-table">
+              <caption class="stat-label" style="caption-side: top; padding: 0.5rem 0.75rem; text-align: left">Offices (sample) <span class="sample-badge">Sample</span></caption>
+              <thead>
+                <tr><th scope="col">Office</th><th class="num">NEP</th><th class="num">House</th><th class="num">Δ</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Iloilo City DEO</td><td class="num">₱3.6B</td><td class="num">₱3.9B</td><td class="num">+8.3%</td></tr>
+                <tr><td>Iloilo 6th DEO</td><td class="missing">—</td><td class="num">₱1.2B</td><td class="missing">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="stats-grid" style="margin-top: 1.5rem">
           <div class="stat-cell">
             <p class="stat-label">Projects <span class="sample-badge">Sample</span></p>
             <p class="stat-value num" style="font-size: 1.5rem">400</p>
@@ -51,74 +94,9 @@
           <div class="stat-cell">
             <p class="stat-label">Proposed (NEP) <span class="sample-badge">Sample</span></p>
             <p class="stat-value num" style="font-size: 1.5rem">₱18.0B</p>
-          </div>
-          <div class="stat-cell">
-            <p class="stat-label">House version <span class="sample-badge">Sample</span></p>
-            <p class="stat-value num" style="font-size: 1.5rem">₱18.5B</p>
-            <p class="stat-note">Compared, not added</p>
-          </div>
-          <div class="stat-cell">
-            <p class="stat-label">House only <span class="sample-badge">Sample</span></p>
-            <p class="stat-value num" style="font-size: 1.5rem">40</p>
+            <p class="stat-note">360 records</p>
           </div>
         </div>
-
-        <p class="lede" style="font-size: 0.9375rem">
-          Search stays on the first screen; intro copy follows totals on narrow layouts (matches
-          <code>home.searchUnderLede</code>).
-        </p>
-
-        <section id="offices" class="section">
-          <h2 class="section-title" style="font-size: 1.125rem">Offices</h2>
-          <div class="chart-block">
-            <p class="stat-label">By office <span class="sample-badge">Sample</span></p>
-            <div class="chart-legend">
-              <span class="legend-item"><span class="legend-swatch legend-swatch--nep" aria-hidden="true"></span><span class="legend-label">Proposed (NEP)</span></span>
-              <span class="legend-item"><span class="legend-swatch legend-swatch--house" aria-hidden="true"></span><span class="legend-label legend-label--amber">House version</span></span>
-            </div>
-            <figure class="chart-figure">
-              <div class="bar-chart" role="img" aria-label="Sample chart: City DEO proposed 3.6 billion pesos and House version 3.9 billion pesos on separate rows from zero; compared, not added.">
-                <div class="bar-office-block">
-                  <p class="bar-office-title">City DEO</p>
-                  <div class="bar-series-row" style="grid-template-columns: 1fr; gap: 0.25rem">
-                    <span class="bar-series-label">Proposed (NEP) ₱3.6B</span>
-                    <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 72%"></span></div>
-                  </div>
-                  <div class="bar-series-row" style="grid-template-columns: 1fr; gap: 0.25rem">
-                    <span class="bar-series-label legend-label--amber">House version ₱3.9B</span>
-                    <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--house" style="width: 78%"></span></div>
-                  </div>
-                  <p class="bar-compare-note">Compared, not added.</p>
-                </div>
-              </div>
-              <figcaption class="chart-caption">Sample data · <a href="#office-table">Table view</a></figcaption>
-            </figure>
-          </div>
-          <div class="data-table-wrap" id="office-table">
-            <table class="data-table">
-              <caption class="stat-label" style="caption-side: top; padding: 0.5rem 0.75rem; text-align: left">
-                Office comparison (sample) <span class="sample-badge">Sample</span>
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">Office</th>
-                  <th scope="col" class="num">NEP</th>
-                  <th scope="col" class="num">House</th>
-                  <th scope="col" class="num">Δ</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>City DEO</td>
-                  <td class="num">₱3.6B</td>
-                  <td class="num">₱3.9B</td>
-                  <td class="num">+₱0.3B</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <button type="button" class="chip" disabled title="After City/Province classification">City only (after classification)</button>
-        </section>
       </main>
 
       <footer class="site-footer">

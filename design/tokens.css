@@ -38,6 +38,7 @@
 
   --motion-control: 180ms ease;
   --motion-chart: 420ms ease;
+  --motion-card: 320ms ease;
 
   --page-max: 72rem;
   --gutter: 1.25rem;
@@ -47,5 +48,6 @@
   :root {
     --motion-control: 0ms;
     --motion-chart: 0ms;
+    --motion-card: 0ms;
   }
 }

@@ -100,27 +100,21 @@
         </section>
 
         <section class="component-row">
-          <h2>Horizontal bar chart (CSS/SVG) <span class="sample-badge">Sample</span></h2>
-          <div class="chart-legend">
-            <span class="legend-item"><span class="legend-swatch legend-swatch--nep"></span><span class="legend-label">Proposed (NEP)</span></span>
-            <span class="legend-item"><span class="legend-swatch legend-swatch--house"></span><span class="legend-label legend-label--amber">House version</span></span>
-          </div>
-          <div class="bar-chart">
-            <div class="bar-office-block">
-              <p class="bar-office-title">Office A</p>
-              <div class="bar-series-row">
-                <span class="bar-series-label">Proposed (NEP) ₱1.0B</span>
-                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--nep" style="width: 40%"></span></div>
-                <span class="bar-amount num">₱1.0B</span>
-              </div>
-              <div class="bar-series-row">
-                <span class="bar-series-label legend-label--amber">House version ₱1.2B</span>
-                <div class="bar-track"><span class="bar-zero"></span><span class="bar-fill bar-fill--house" style="width: 48%"></span></div>
-                <span class="bar-amount num">₱1.2B</span>
-              </div>
-              <p class="bar-compare-note">Compared, not added.</p>
+          <h2>Office card (Home) <span class="sample-badge">Sample</span></h2>
+          <article class="office-card" style="max-width: 22rem">
+            <div class="office-card-head">
+              <svg class="office-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>
+              <h3 class="office-card-title">Iloilo 1st District Engineering Office</h3>
             </div>
-          </div>
+            <dl class="office-card-figures">
+              <div><dt>Proposed (NEP) <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">₱2.8B</span></dd></div>
+              <div><dt>House version <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">₱3.0B</span></dd></div>
+              <div><dt>Project records <span class="sample-badge">Sample</span></dt><dd class="num office-card-value"><span class="is-visible">70</span></dd></div>
+              <div><dt>Change <span class="sample-badge">Sample</span></dt><dd class="num office-change office-card-value"><span class="is-visible">+₱0.2B (+7.1%)</span></dd></div>
+            </dl>
+            <p class="bar-compare-note">Compared, not added.</p>
+          </article>
+          <p class="progress-note" style="margin-top: 1rem">Progress data: not available. These are budget amounts, not spending or completion.</p>
         </section>
 
         <section class="component-row">

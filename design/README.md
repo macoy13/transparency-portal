@@ -25,22 +25,30 @@ All figures respect API rules: **integer pesos**, **missing (`—`) ≠ zero**, 
 | **House version** | Sum on rows with a House bill amount; compared with NEP, not added | Same filters |
 | **In the House version only** | Rows in bridge group `house_only`; subcopy uses House amounts on those rows | Status filter / chips; other filters narrow the set |
 | **Bridge group tiles** | Per-group row counts and version-specific amounts (`groupAmount` in app) | `status` URL param / chip selection |
-| **Office chart/table** | API office figures (named projects, NEP vs House on one ledger); residual lines excluded | Not filter-linked in R0 proposal — office section is scope-wide; list filters do not re-aggregate offices in current app |
+| **Office cards / table** | API office figures per DEO (NEP vs House on one ledger); `#office-table` for detail | Not filter-linked in R0 — scope-wide unless filters recompute (open question) |
 | **Program breakdown** | Subline under Projects stat (`byDataset` row counts) | Program filter |
 
 Labeling: **NEP → “Proposed (NEP)”**; **House bill → “House version”**. Enacted `/gaa` uses GAA program families — separate from FY2027 project lines.
 
-## Chart plan
+## Home office layout (no bar chart)
 
-- **Colour roles:** blue is only for nav, links, selection, and primary actions. **Data series:** proposed (NEP) **teal** (`#218579`); **House version amber** (fills `#B7791F`, labels `#7A5216`) — each labelled, never colour alone.
-- **Horizontal bars by DPWH office** (and district cards where data exists): **two sub-rows per office** (proposed, then House), each from a **zero baseline** — no overlap, no stacking, **compared not added**.
-- **History:** only years/stages the API compares on the same basis (Enacted page: 2020–22, 2023–25, 2026, and 2027’s two versions where both exist — skip incomparable series, e.g. Iloilo 6th DEO before 2025 per About reading note).
-- **Accessibility:** status uses dot + text; teal/amber never alone. Amber **fills** use `#B7791F`; **text** uses `#7A5216` (see contrast).
-- **Alternative:** `#office-table` with columns office, proposed (NEP), House version, change — linked from chart footer.
+- **No office bar chart on Home.** Lead with a **responsive grid of office cards** (one per DEO in `portal.config.ts`): Lucide-style building icon, proposed (NEP) total, House version total, project record count, and **change** as signed amount + percentage in **neutral ink only** (no good/bad colour). Missing amounts: **—** with copy such as “no line in NEP”. Every figure tagged **Sample** in mockups. Grid: **1** column @ 360px, **2** @ tablet, **3** @ 1280px.
+- **`#office-table`** below the grid: accessible comparison (office, NEP, House, records, change). Cards are the visual lead; search and explorer stay high on the page.
+- **Progress:** do not show completion or progress percentages. One line: *Progress data: not available. These are budget amounts, not spending or completion.*
+- **Colour roles (elsewhere):** blue = chrome only; teal/amber for labelled **series** where still used (e.g. Enacted); office **change** stays ink-only.
+
+## Motion
+
+- Controls: **150–200ms** (tokens `--motion-control`).
+- **Office card values:** on load and when filters change, figures **fade + translateY** (**200–400ms**, `--motion-card` ~320ms). Final numbers are in the DOM immediately — **no count-up**, **no loops**. **`prefers-reduced-motion`** disables animation. Mockup: `overview-desktop.html` replays on bridge chip click. **Mark may revisit** timing and trigger points.
+
+## Logo
+
+Placeholder window mark in mockup headers only. **`logos.html` concepts are superseded** — Mark will supply the final logo in a later pass.
 
 ## Corrections (About page)
 
-The production **About** route (`/about`) should include a short **Corrections** section: invite readers to email **hello@iloilotransparency.info** (`mailto:`) for factual corrections or scope questions. Footer links on every page point to the same address. **Note:** inbox routing for this address still needs to be verified before `src/` footer/About code is changed.
+**hello@iloilotransparency.info** is the agreed placeholder (`mailto:` in mockups). Mark will set up routing later. **Do not wire into `src/` until routing is live** (mockups/README only for now).
 
 ## Dependencies (proposed)
 
@@ -86,11 +94,10 @@ Live reference: **`built_at`** `2026-10-26T08:46:14Z` → footer **data built Oc
 
 ## Open questions (Mark)
 
-1. **Logo direction** — window, bridge, or IT monogram (or wordmark-only)?
-2. **City vs Province split** — disabled “after classification” chip until geography is in scope?
-3. **Office chart vs filters** — should list filters recompute office bars, or stay scope-wide with a clear label?
-4. **Enacted mockup** — worth a dedicated `design/enacted.html` in R1?
-5. **Self-hosted fonts** — OK to add WOFF2 under `public/fonts/` in a later PR?
+1. **City vs Province split** — disabled “after classification” chip until geography is in scope?
+2. **Office cards vs filters** — should list filters recompute office card totals, or stay scope-wide with a clear label?
+3. **Enacted mockup** — worth a dedicated `design/enacted.html` in R1?
+4. **Self-hosted fonts** — OK to add WOFF2 under `public/fonts/` in a later PR?
 
 ## Files
 
