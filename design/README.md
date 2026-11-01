@@ -55,11 +55,13 @@ Mockups did not bundle WOFF2 files (network not required for review).
 
 ## Data refresh
 
-HGAB **project list** responses (and the scope loader’s first successful list) carry **`meta`** on the envelope (`src/api/types.ts`): **`built_at`** (API dataset build time in ISO UTC — **not** the date of source PDFs), **`source_repo`**, **`source_commit`**, and **`notice`** (footer disclaimer via `Chrome.tsx`). The HGAB overview document at `/api/v1/hgab/2027` returns **no** `meta` envelope in the typed client path; the portal still reads **`built_at`** from project-list **`meta`** after scope resolves. **GAA** responses use `meta` with `dataset: 'gaa'` and **no** `built_at`.
+HGAB **`meta`** (`built_at`, `source_repo`, `source_commit`, `notice`) is on **project list** envelopes and on the **overview** response (`GET /api/v1/hgab/2027`, what `overview()` calls) — the same fields the footer and About page use. **`built_at`** is the API dataset build time in ISO UTC (**not** the date of source PDFs). **GAA** responses use `meta` with `dataset: 'gaa'` and **no** `built_at`. If scope loading never hits a list envelope, the portal can still take **`meta`** from `overview()`.
 
-Live reference (Oct 2026): **`built_at`** `2026-10-26T08:46:14Z` → footer **data built October 26, 2026** (`date()` in `Asia/Manila`); **`source_commit`** `a0caa77`. Mockups summarise this as **Data built 26 Oct 2026 · from BetterGov.ph** alongside the full Chrome source line.
+Live reference: **`built_at`** `2026-10-26T08:46:14Z` → footer **data built October 26, 2026** (`date()` in `Asia/Manila`); About **Data version: comparison csiiiv, DPWH-NEP-HB-2027-ANALYSIS, a0caa77, built October 26, 2026.**
 
-**Proposal:** Keep **`meta.built_at`** as the canonical freshness line in the footer; About keeps **`source_commit`** detail. Do not substitute client fetch time for `built_at`.
+**Sample totals (mockups):** 400 project records; bridge chips 200 + 80 + 60 + 40 + 20 = 400; **40** House-version-only → **360** with a proposed (NEP) line; **20** proposed-only → **380** with a House version line.
+
+**Proposal:** Keep **`meta.built_at`** as the canonical freshness line in the footer; About keeps **`source_commit`** as above. Do not substitute client fetch time for `built_at`.
 
 ## WCAG 2.2 AA contrast (computed sRGB)
 

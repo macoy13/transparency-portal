@@ -7,6 +7,7 @@
 html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 
 body {
@@ -17,6 +18,8 @@ body {
   line-height: 1.5;
   color: var(--color-text);
   background: var(--color-page);
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 ::selection {
@@ -113,6 +116,7 @@ select:focus-visible {
 
 .footer-notice {
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .skip-link {
@@ -794,14 +798,38 @@ table.data-table {
 /* —— Viewport frames for mockup pages —— */
 .mockup-frame--desktop {
   max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
   box-shadow: 0 0 0 1px var(--color-border);
+  overflow-x: clip;
 }
 
 .mockup-frame--mobile {
-  max-width: 360px;
+  max-width: min(360px, 100%);
+  width: 100%;
   margin: 0 auto;
   box-shadow: 0 0 0 1px var(--color-border);
+  overflow-x: clip;
+}
+
+@media (max-width: 560px) {
+  .bar-series-row--stack {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-1) !important;
+  }
+
+  .bar-series-row--stack .bar-amount {
+    text-align: left;
+  }
+
+  .components-page .bar-series-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+
+  .components-page .bar-series-row .bar-amount {
+    text-align: left;
+  }
 }
 
 @media (max-width: 640px) {
