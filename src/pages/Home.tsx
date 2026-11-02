@@ -368,17 +368,14 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
     const showingLabel = status ? compactChipLabel(status, groups[status]?.label) : compactChipLabel('all');
     const displaySummary = narrowed ? filteredSummary : summary;
     const officeCount = scopeOfficeList.length || offices.length;
-    const compactLede =
-      config.home?.compactLede?.trim() ||
-      `Projects tied to ${name} in national budget documents — by office, program, and name.`;
     return (
       <>
         <PageHead
           eyebrow={<>NEP and House Bill 10858<span className="sep">·</span>{name}</>}
-          title={`Public budgets across ${name}`}
-          fyLabel="FY2027"
+          title={`${plural(summary.rows, 'project record')} for ${name} in the 2027 budget`}
+          fyLabel="FY 2027"
         >
-          <p>{compactLede}</p>
+          <Lede summary={summary} />
         </PageHead>
 
         <CompactSummaryCards

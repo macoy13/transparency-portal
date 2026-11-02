@@ -338,7 +338,7 @@ export function PageHead({
   eyebrow: ReactNode;
   title: ReactNode;
   children?: ReactNode;
-  /** Existing FY label only — no new selector state. Shown beside the H1 under compact chrome. */
+  /** Existing FY label only — no new selector state. Shown before the eyebrow under compact chrome. */
   fyLabel?: string;
 }) {
   const { config } = usePortal();
@@ -346,10 +346,12 @@ export function PageHead({
   if (compact && fyLabel) {
     return (
       <div className="page-head">
-        <p className="eyebrow">{eyebrow}</p>
+        <div className="page-head-kicker">
+          <span className="fy-badge">{fyLabel}</span>
+          <p className="eyebrow">{eyebrow}</p>
+        </div>
         <div className="page-head-row">
           <h1>{title}</h1>
-          <span className="fy-badge">{fyLabel}</span>
         </div>
         {children && <div className="lede">{children}</div>}
       </div>

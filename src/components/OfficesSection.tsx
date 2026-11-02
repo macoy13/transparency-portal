@@ -401,7 +401,6 @@ function CompactOffices({
   const { offices } = useMemo(() => buildOffices(cards, queries, projects), [cards, queries, projects]);
   const note = list[0]?.meta.representatives_note as string | undefined;
   const heldIds = useMemo(() => heldOutIdsFor(offices), [offices]);
-  const regionFallback = config.home?.compactRegionEyebrow?.trim() || null;
 
   // Cards always sum the same source: portal projects minus held-out lines.
   const sourceRows = compact.filtered;
@@ -482,7 +481,6 @@ function CompactOffices({
             row={row}
             scaleMax={scaleMax}
             status={compact.status}
-            regionFallback={regionFallback}
           />
         ))}
       </div>
@@ -606,12 +604,10 @@ function CompactOfficeCard({
   row,
   scaleMax,
   status,
-  regionFallback,
 }: {
   row: CardFigures;
   scaleMax: number;
   status: BridgeGroup | '';
-  regionFallback: string | null;
 }) {
   const { view, amounts, changePhpLabel, changePctLabel, changeLabel } = row;
   const { nep, house, nepRows, houseRows } = amounts;
@@ -620,7 +616,6 @@ function CompactOfficeCard({
   const wholeNep = office.years?.find((y) => y.fy === 2027 && y.stage === 'nep')?.php ?? null;
   const unconfirmed = f?.annotations?.unconfirmed_rows ?? 0;
   const held = f?.office_change?.rows ?? 0;
-  const region = office.region ?? regionFallback;
   // Primary legislative district for the rep block — first id the API lists for this office.
   const primary = districts[0] ?? null;
   const rep = primary?.card?.representative ?? null;
@@ -639,7 +634,6 @@ function CompactOfficeCard({
         <div className="ocard-title-row">
           <OfficeIcon />
           <div>
-            {region && <p className="ocard-eyebrow">{region}</p>}
             <h3 className="office-card-title">{printed}</h3>
           </div>
         </div>
@@ -648,6 +642,12 @@ function CompactOfficeCard({
         </span>
       </header>
 
+      <div className="ocard-lines">
+        <span className="stat-label">In this portal</span>
+        <Link to={filterHref} className="ocard-lines-link num anim-value">
+          <AnimValue text={`${plural(amounts.lines, 'line')} →`} />
+        </Link>
+      </div>
       <div className="ocard-amounts-row">
         <div className="ocard-amounts">
           <div>
@@ -665,6 +665,7 @@ function CompactOfficeCard({
         </div>
         <div className="change-pill-wrap anim-value" title={changeLabel}>
           <p className="change-pill">
+            <span className="stat-label">Change</span>
             <span className="change-php">
               <AnimValue text={changePhpLabel} />
             </span>
@@ -728,12 +729,12 @@ function CompactOfficeCard({
               <p className="odistrict-links">
                 {rep.bills_url && (
                   <External href={rep.bills_url}>
-                    Bills <span aria-hidden="true">↗</span>
+                    Bills
                   </External>
                 )}
                 {primary?.card && (
                   <External href={primary.card.url}>
-                    District page <span aria-hidden="true">↗</span>
+                    District page
                   </External>
                 )}
               </p>

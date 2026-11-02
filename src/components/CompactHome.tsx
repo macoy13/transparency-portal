@@ -69,6 +69,16 @@ export function CompactSummaryCards({
           <p className="stat-note">{houseNote}</p>
         </div>
       </div>
+      <div className="summary-card">
+        <DocPlusIcon />
+        <div>
+          <p className="stat-label">In the House bill only</p>
+          <p className="stat-value num">{summary.rows ? count(summary.groups.house_only.rows) : '—'}</p>
+          <p className="stat-note">
+            {summary.rows ? `${php(summary.groups.house_only.house_php)} · candidates to check, not confirmed insertions` : '—'}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -269,6 +279,15 @@ function CapitolIcon() {
       <path d="M3 21h18" />
       <path d="M5 21V7l7-4 7 4v14" />
       <path d="M9 21v-4h6v4" />
+    </svg>
+  );
+}
+
+function DocPlusIcon() {
+  return (
+    <svg className="summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" />
+      <path d="M14 2v6h6M12 11v8M8 15h8" />
     </svg>
   );
 }
