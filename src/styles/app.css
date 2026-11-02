@@ -750,8 +750,11 @@ html[data-chrome="compact"] .summary-cards {
   gap: 0.75rem;
   margin-bottom: 1.5rem;
 }
-@media (min-width: 720px) {
-  html[data-chrome="compact"] .summary-cards { grid-template-columns: repeat(3, 1fr); }
+@media (min-width: 600px) {
+  html[data-chrome="compact"] .summary-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  html[data-chrome="compact"] .summary-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 html[data-chrome="compact"] .summary-card {
   background: var(--paper);
@@ -916,6 +919,7 @@ html[data-chrome="compact"] .office-card {
 }
 html[data-chrome="compact"] .ocard-top {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
   gap: 0.5rem;
@@ -963,9 +967,8 @@ html[data-chrome="compact"] .records-badge {
   line-height: 1.25;
 }
 html[data-chrome="compact"] .ocard-amounts-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.75rem;
 }
 html[data-chrome="compact"] .ocard-amounts {
@@ -982,14 +985,17 @@ html[data-chrome="compact"] .ocard-fig {
   color: #192d50;
 }
 html[data-chrome="compact"] .change-pill-wrap {
-  margin: 0 0 0.15rem auto;
-  max-width: 100%;
-  text-align: right;
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  text-align: left;
 }
 html[data-chrome="compact"] .change-pill {
-  display: inline-flex;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 0.1rem;
   font-size: 0.75rem;
   font-weight: 700;
@@ -998,9 +1004,9 @@ html[data-chrome="compact"] .change-pill {
   border-radius: var(--radius);
   padding: 0.35rem 0.65rem;
   white-space: normal;
-  text-align: right;
+  text-align: left;
   line-height: 1.35;
-  max-width: 14rem;
+  max-width: none;
 }
 html[data-chrome="compact"] .change-php { font-size: 0.875rem; }
 html[data-chrome="compact"] .change-meta,
@@ -1375,3 +1381,60 @@ html[data-chrome="compact"] .hcard-2027-figs dd {
   color: #192d50;
 }
 html[data-chrome="compact"] .hcard .congresses { display: none; }
+
+/* Office figures and representative hierarchy. */
+html[data-chrome="compact"] .ocard-lines {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+html[data-chrome="compact"] .ocard-lines-link,
+html[data-chrome="compact"] .ocard-fig,
+html[data-chrome="compact"] .stat-value,
+html[data-chrome="compact"] .change-php {
+  font-family: var(--font-hero);
+  font-weight: 700;
+}
+html[data-chrome="compact"] .ocard-lines-link { font-size: 1rem; }
+html[data-chrome="compact"] .ocard-fig { font-size: 1.5rem; }
+html[data-chrome="compact"] .change-php { font-size: 1.25rem; }
+html[data-chrome="compact"] .rep-name {
+  font-family: var(--font-hero);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0.15rem 0;
+  overflow-wrap: anywhere;
+}
+
+/* Compact, figure-led introduction with an inline fiscal-year badge. */
+html[data-chrome="compact"] .page-head,
+html[data-chrome="compact"] .page-head .lede,
+html[data-chrome="compact"] .section-lede {
+  max-width: none;
+  width: 100%;
+}
+html[data-chrome="compact"] .page-head-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+html[data-chrome="compact"] .page-head-kicker .eyebrow { margin: 0; }
+html[data-chrome="compact"] .fy-badge {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  min-height: 0;
+  padding: 0.3rem 0.6rem;
+  letter-spacing: normal;
+}
+html[data-chrome="compact"] .page-head h1 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  line-height: 1.2;
+}
+html[data-chrome="compact"] .page-head .lede p { margin: 0.75rem 0 0; }
