@@ -21,7 +21,6 @@ export default function App() {
     <ChromeRoot>
       {canonical && <link rel="canonical" href={canonical} />}
       {canonical && <meta property="og:url" content={canonical} />}
-      <ScrollToTop />
       <Masthead />
       {problems.length > 0 && (
         <div className="page config-warning" role="alert">
@@ -46,6 +45,7 @@ export default function App() {
         />
       </Routes>
       <Footer />
+      <ScrollToTop />
     </ChromeRoot>
   );
 }
