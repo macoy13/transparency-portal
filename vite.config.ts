@@ -39,8 +39,8 @@ function compactIconLinks(): string {
 
 /** The portal's name and description in the HTML itself, for link previews and search engines. */
 function portalHtml(api: string): Plugin {
-  const title = `${portal.name} · FY 2027 budget projects`;
-  const description = `Every FY 2027 project for ${shortNameOf(portal)} in the NEP and the House bill (House Bill 10858), with the source page for each, and the enacted budgets 2020–2026. Data from the BetterGov.ph Budget API.`;
+  const title = portal.seo?.title ?? `${portal.name} · FY 2027 budget projects`;
+  const description = portal.seo?.description ?? `Every FY 2027 project for ${shortNameOf(portal)} in the NEP and the House bill (House Bill 10858), with the source page for each, and the enacted budgets 2020–2026. Data from the BetterGov.ph Budget API.`;
   const socialImage = portal.socialImage && portal.siteUrl
     ? new URL(portal.socialImage.path, portal.siteUrl).href
     : null;

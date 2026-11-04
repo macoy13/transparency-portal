@@ -85,6 +85,8 @@ export interface PortalConfig {
   };
   /** Canonical URL of this deployment, for link previews. */
   siteUrl?: string;
+  /** Optional homepage copy for search results and link previews. */
+  seo?: { title: string; description: string };
   /** Optional image for social previews. Relative paths use siteUrl. */
   socialImage?: { path: string; alt: string };
   /**
