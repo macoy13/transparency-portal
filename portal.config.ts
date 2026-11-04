@@ -56,7 +56,10 @@ export default defineConfig({
   },
   name: 'Iloilo Transparency',
   shortName: 'Iloilo',
-  operator: { name: 'Iloilo Transparency, an independent volunteer project' },
+  operator: {
+    name: 'Iloilo Transparency, an independent volunteer project',
+    email: 'hello@iloilotransparency.info',
+  },
   siteUrl: 'https://iloilotransparency.info',
   scope: {
     offices: [
