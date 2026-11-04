@@ -61,6 +61,10 @@ export default defineConfig({
     email: 'hello@iloilotransparency.info',
   },
   siteUrl: 'https://iloilotransparency.info',
+  socialImage: {
+    path: '/brand/iloilo/share-card-2027.png',
+    alt: 'Explore Iloilo’s proposed 2027 budget at iloilotransparency.info',
+  },
   scope: {
     offices: [
       'Iloilo City District Engineering Office',

@@ -41,6 +41,18 @@ function compactIconLinks(): string {
 function portalHtml(api: string): Plugin {
   const title = `${portal.name} · FY 2027 budget projects`;
   const description = `Every FY 2027 project for ${shortNameOf(portal)} in the NEP and the House bill (House Bill 10858), with the source page for each, and the enacted budgets 2020–2026. Data from the BetterGov.ph Budget API.`;
+  const socialImage = portal.socialImage && portal.siteUrl
+    ? new URL(portal.socialImage.path, portal.siteUrl).href
+    : null;
+  const socialImageTags = socialImage && portal.socialImage
+    ? [
+        '<meta name="twitter:card" content="summary_large_image" />',
+        `<meta property="og:image" content="${escape(socialImage)}" />`,
+        `<meta property="og:image:alt" content="${escape(portal.socialImage.alt)}" />`,
+        `<meta name="twitter:image" content="${escape(socialImage)}" />`,
+        `<meta name="twitter:image:alt" content="${escape(portal.socialImage.alt)}" />`,
+      ].join('\n    ')
+    : '<meta name="twitter:card" content="summary" />';
   const compact = compactChrome(portal);
   const fontLinks = compact ? COMPACT_FONT_LINKS : MAIN_FONT_LINKS;
   const iconLinks = compact ? compactIconLinks() : MAIN_ICON_LINKS;
@@ -57,7 +69,8 @@ function portalHtml(api: string): Plugin {
           .replaceAll('%PORTAL_API%', escape(api))
           .replaceAll('%PORTAL_FONT_LINKS%', fontLinks)
           .replaceAll('%PORTAL_ICON_LINKS%', iconLinks)
-          .replaceAll('%PORTAL_THEME_COLOR%', themeColor);
+          .replaceAll('%PORTAL_THEME_COLOR%', themeColor)
+          .replaceAll('%PORTAL_SOCIAL_IMAGE%', socialImageTags);
         // So compact tokens apply on first paint (no useEffect flash).
         if (compact) out = out.replace('<html lang="en">', '<html lang="en" data-chrome="compact">');
         return out;
