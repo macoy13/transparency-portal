@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, type ReactNode } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   KIND_LABELS,
@@ -157,18 +157,34 @@ function DefaultMasthead() {
 function CompactMasthead() {
   const { config } = usePortal();
   const { pathname, hash } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuToggle = useRef<HTMLButtonElement>(null);
   const lockup = config.brand?.lockup;
   const lockup2x = config.brand?.lockup2x;
   return (
     <>
       <a className="skip-link" href="#main">Skip to content</a>
-      <header className="site-header">
+      <header
+        className="site-header"
+        onKeyDown={(event) => {
+          if (event.key === 'Escape' && menuOpen) {
+            setMenuOpen(false);
+            menuToggle.current?.focus();
+          }
+        }}
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setMenuOpen(false);
+        }}
+      >
         <div className="site-header-bar">
           <Link
             to="/"
             className="nav-brand"
             aria-label={`${config.name}, home`}
-            onClick={() => pathname === '/' && window.scrollTo(0, 0)}
+            onClick={() => {
+              setMenuOpen(false);
+              if (pathname === '/') window.scrollTo(0, 0);
+            }}
           >
             {lockup ? (
               <img
@@ -187,7 +203,21 @@ function CompactMasthead() {
               <span className="sr-only">,</span> Unofficial
             </span>
           </Link>
-          <nav className="site-nav" aria-label="Primary">
+          <button
+            ref={menuToggle}
+            className="site-menu-toggle"
+            type="button"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="site-nav"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <path d={menuOpen ? 'M6 6l12 12M18 6L6 18' : 'M4 6h16M4 12h16M4 18h16'} />
+            </svg>
+          </button>
+          <nav id="site-nav" className="site-nav" aria-label="Primary">
             {COMPACT_NAV.map((n) => {
               // Hash links never get aria-current. Overview only when on `/` with no hash;
               // other path links when their pathname matches.
@@ -202,7 +232,11 @@ function CompactMasthead() {
                   key={n.label}
                   to={{ pathname: n.to, hash: n.hash }}
                   aria-current={currentPage ? 'page' : undefined}
-                  onClick={() => !n.hash && pathname === n.to && window.scrollTo(0, 0)}
+                  onClick={() => {
+                    if (menuOpen && menuToggle.current?.getClientRects().length) menuToggle.current.focus();
+                    setMenuOpen(false);
+                    if (!n.hash && pathname === n.to) window.scrollTo(0, 0);
+                  }}
                 >
                   {n.label}
                 </Link>
