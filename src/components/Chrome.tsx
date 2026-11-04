@@ -294,7 +294,7 @@ function CompactFooter() {
             {config.operator.email && (
               <>
                 {' '}
-                · Corrections: <a href={`mailto:${config.operator.email}`}>{config.operator.email}</a>
+                · Questions, feedback, or data corrections? <a href={`mailto:${config.operator.email}`}>{config.operator.email}</a>
               </>
             )}
             {' · '}

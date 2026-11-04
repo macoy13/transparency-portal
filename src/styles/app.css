@@ -1175,6 +1175,7 @@ html[data-chrome="compact"] .compare-callout {
   color: var(--ink-3);
   max-width: 16rem;
 }
+html[data-chrome="compact"] .compare-section > .chips { margin-bottom: 0.75rem; }
 html[data-chrome="compact"] .compare-scroll-hint { display: none; }
 @media (max-width: 640px) {
   html[data-chrome="compact"] .compare-scroll-hint {
