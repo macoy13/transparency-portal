@@ -61,6 +61,15 @@ export default defineConfig({
     email: 'hello@iloilotransparency.info',
   },
   siteUrl: 'https://iloilotransparency.info',
+  seo: {
+    title: 'Iloilo Budget 2027: Proposed Projects | Iloilo Transparency',
+    description:
+      'Search proposed 2027 national budget projects for Iloilo City and Province, compare the NEP with the House bill, and browse enacted budgets from 2020 to 2026.',
+  },
+  socialImage: {
+    path: '/brand/iloilo/share-card-2027.png',
+    alt: 'Explore Iloilo’s proposed 2027 budget at iloilotransparency.info',
+  },
   scope: {
     offices: [
       'Iloilo City District Engineering Office',
