@@ -65,6 +65,8 @@ export interface CompactOfficesProps {
   scoped: ScopedProject[];
   /** All portal projects (for unfiltered whole-office card figures). */
   all: ScopedProject[];
+  /** Active project search. */
+  search: string;
   /** Active bridge status, or '' for All. */
   status: BridgeGroup | '';
   /** Active office filter printed name, or ''. */
@@ -480,6 +482,7 @@ function CompactOffices({
             key={row.view.office.id}
             row={row}
             scaleMax={scaleMax}
+            search={compact.search}
             status={compact.status}
           />
         ))}
@@ -533,7 +536,16 @@ function CompactOffices({
             );
           })}
         </div>
-        <div className="data-table-wrap">
+        <p className="compare-scroll-hint" id="compare-scroll-hint">
+          Swipe or scroll sideways to see all columns.
+        </p>
+        <div
+          className="data-table-wrap"
+          role="region"
+          aria-labelledby="compare-h"
+          aria-describedby="compare-scroll-hint"
+          tabIndex={0}
+        >
           <table className="data-table">
             <caption className="sr-only">
               NEP and House amounts by DPWH office, compared not added
@@ -603,10 +615,12 @@ function AnimValue({ text }: { text: string }) {
 function CompactOfficeCard({
   row,
   scaleMax,
+  search,
   status,
 }: {
   row: CardFigures;
   scaleMax: number;
+  search: string;
   status: BridgeGroup | '';
 }) {
   const { view, amounts, changePhpLabel, changePctLabel, changeLabel } = row;
@@ -621,7 +635,10 @@ function CompactOfficeCard({
   const rep = primary?.card?.representative ?? null;
   const localPortrait = primary ? LOCAL_PORTRAITS[primary.id] : undefined;
   const portraitSrc = localPortrait ?? rep?.portrait?.url;
-  const filterHref = `/?office=${encodeURIComponent(printed)}${status ? `&status=${status}` : ''}#projects`;
+  const filters = new URLSearchParams({ office: printed });
+  if (search) filters.set('q', search);
+  if (status) filters.set('status', status);
+  const filterHref = `/?${filters}#projects`;
   const scaleNote = `shared scale ₱0–${php(scaleMax)} across offices shown`;
   const nepPct = nep != null ? (nep / scaleMax) * 100 : 0;
   const housePct = house != null ? (house / scaleMax) * 100 : 0;

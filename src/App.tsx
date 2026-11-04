@@ -1,4 +1,4 @@
-import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { ChromeRoot, Footer, Masthead } from './components/Chrome';
 import ScrollToTop from './components/ScrollToTop';
 import { configProblems } from './config';
@@ -10,9 +10,17 @@ import Enacted from './pages/Enacted';
 
 export default function App() {
   const { config } = usePortal();
+  const { pathname } = useLocation();
+  const route = pathname.replace(/\/+$/, '') || '/';
+  const isCanonicalRoute = route === '/' || route === '/gaa' || route === '/about';
+  const canonical = config.siteUrl && isCanonicalRoute
+    ? new URL(route, config.siteUrl).href
+    : null;
   const problems = import.meta.env.DEV ? configProblems(config) : [];
   return (
     <ChromeRoot>
+      {canonical && <link rel="canonical" href={canonical} />}
+      {canonical && <meta property="og:url" content={canonical} />}
       <ScrollToTop />
       <Masthead />
       {problems.length > 0 && (
