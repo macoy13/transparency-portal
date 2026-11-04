@@ -41,9 +41,6 @@ function compactIconLinks(): string {
 function portalHtml(api: string): Plugin {
   const title = `${portal.name} · FY 2027 budget projects`;
   const description = `Every FY 2027 project for ${shortNameOf(portal)} in the NEP and the House bill (House Bill 10858), with the source page for each, and the enacted budgets 2020–2026. Data from the BetterGov.ph Budget API.`;
-  const url = portal.siteUrl
-    ? `<link rel="canonical" href="${escape(portal.siteUrl)}" />\n    <meta property="og:url" content="${escape(portal.siteUrl)}" />`
-    : '';
   const compact = compactChrome(portal);
   const fontLinks = compact ? COMPACT_FONT_LINKS : MAIN_FONT_LINKS;
   const iconLinks = compact ? compactIconLinks() : MAIN_ICON_LINKS;
@@ -58,7 +55,6 @@ function portalHtml(api: string): Plugin {
           .replaceAll('%PORTAL_NAME%', escape(portal.name))
           .replaceAll('%PORTAL_DESCRIPTION%', escape(description))
           .replaceAll('%PORTAL_API%', escape(api))
-          .replaceAll('%PORTAL_URL_META%', url)
           .replaceAll('%PORTAL_FONT_LINKS%', fontLinks)
           .replaceAll('%PORTAL_ICON_LINKS%', iconLinks)
           .replaceAll('%PORTAL_THEME_COLOR%', themeColor);

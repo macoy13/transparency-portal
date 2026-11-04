@@ -15,24 +15,15 @@ import { shortNameOf } from '../config';
 export function CompactSummaryCards({
   summary,
   totalRows,
-  totalOffices,
-  shownOffices,
   filtered,
 }: {
   summary: Summary;
-  /** Portal-wide project count (denominator when filtered). */
   totalRows: number;
-  /** Configured / portal office count. */
-  totalOffices: number;
-  /** Offices represented in the current summary rows. */
-  shownOffices: number;
   filtered: boolean;
 }) {
   const recordsNote = filtered
-    ? `${count(summary.rows)} shown of ${plural(totalRows, 'record')} · ${count(shownOffices)} of ${plural(totalOffices, 'office')}`
-    : totalOffices
-      ? `${plural(totalOffices, 'office')} · ${plural(summary.rows, 'record')}`
-      : plural(summary.rows, 'record');
+    ? `${count(summary.rows)} shown of ${plural(totalRows, 'record')} across the portal`
+    : 'Across the portal';
 
   const nepValue = summary.nep.rows ? php(summary.nep.php) : '—';
   const houseValue = summary.house.rows ? php(summary.house.php) : '—';

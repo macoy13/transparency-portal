@@ -14,7 +14,6 @@ import OfficesSection from '../components/OfficesSection';
 import { projectsCsv, downloadText } from '../lib/csv';
 import { compactChipLabel } from '../lib/compact-chips';
 import { count, php, phpDelta, plural } from '../lib/format';
-import { countVisibleCompactOffices, heldOutLineIdsFromDistricts } from '../lib/office-figures';
 import { usePortal } from '../lib/portal-context';
 import { summarise, type ScopedProject, type ScopeResult, type Summary } from '../lib/scope';
 import { useTitle } from '../lib/use-title';
@@ -354,20 +353,9 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
     </section>
   );
 
-  const heldIds = useMemo(
-    () => (districts.status === 'ready' ? heldOutLineIdsFromDistricts(districts.value) : new Set<string>()),
-    [districts],
-  );
-  const scopeOfficeList = useMemo(() => config.scope.offices ?? [], [config.scope.offices]);
-  const visibleOfficeCount = useMemo(
-    () => countVisibleCompactOffices(scopeOfficeList, filtered, heldIds),
-    [scopeOfficeList, filtered, heldIds],
-  );
-
   if (compact) {
     const showingLabel = status ? compactChipLabel(status, groups[status]?.label) : compactChipLabel('all');
     const displaySummary = narrowed ? filteredSummary : summary;
-    const officeCount = scopeOfficeList.length || offices.length;
     return (
       <>
         <PageHead
@@ -381,8 +369,6 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
         <CompactSummaryCards
           summary={displaySummary}
           totalRows={summary.rows}
-          totalOffices={officeCount}
-          shownOffices={visibleOfficeCount}
           filtered={narrowed}
         />
 
@@ -440,6 +426,7 @@ function Projects({ scope, datasets }: { scope: ScopeResult; datasets: DatasetIn
             filtered,
             scoped,
             all,
+            search: q,
             status,
             office,
             chipLabel: (g) => compactChipLabel(g, g === 'all' ? undefined : groups[g]?.label),

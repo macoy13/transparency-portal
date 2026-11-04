@@ -1175,6 +1175,19 @@ html[data-chrome="compact"] .compare-callout {
   color: var(--ink-3);
   max-width: 16rem;
 }
+html[data-chrome="compact"] .compare-scroll-hint { display: none; }
+@media (max-width: 640px) {
+  html[data-chrome="compact"] .compare-scroll-hint {
+    display: block;
+    margin: 0 0 0.5rem;
+    color: var(--ink-3);
+    font-size: 0.875rem;
+  }
+}
+html[data-chrome="compact"] .data-table-wrap:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 html[data-chrome="compact"] .data-table-wrap {
   overflow-x: auto;
   border: 1px solid var(--rule);
